@@ -1,0 +1,52 @@
+DNS主服务器：centos6.6
+
+  DNS主要作为解析IP地址和域名存在；分别应用有正向解析、反向解析。其中主从服务可作为自己实验使用。下面是技术分享。
+
+Install过程：
+	操作系统：centos6.6  2台
+	软件安装：bind、bind-chroot
+
+Install_Master:
+	# yum -y install bind bind-chroot
+	# vim /var/named/chroot/etc/named.conf
+		options {
+			directory "/var/named";
+		};
+
+		zone "example.com" {
+			type master;
+			file "example.com.zone";
+			allow-tranfer {"slave-address;"};
+		};
+
+	# vim /var/named/chroot/var/named/example.com.zone
+		$TTL 3600
+		@  IN  SOA  example.com.  root.example.com. (
+		                     		Date
+		                     		1H
+		                     		1D
+		                     		3W
+		                     		15H )
+		example.com.	IN    NS	ns1.example.com.
+		example.com.	IN 	  NS 	ns2.example.com.
+
+		ns1		IN 		A 	master-DNS-address
+		ns2		IN 		A 	slaves-DNS-address
+
+		www		IN 		A 	web-server-address
+
+Install-Slaves:
+	# yum -y install bind bind-chroot
+	# vim /var/named/chroot/etc/named.conf
+		options {
+			directory "/var/named";
+		};
+
+		zone "example.com" {
+			type slave;
+			file "slaves/example.com";
+			masters {Master-address;};
+		};
+	# service named restart
+
+指定客户端DNS，测试http://www.example.com

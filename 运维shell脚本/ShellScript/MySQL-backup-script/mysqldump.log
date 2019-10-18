@@ -1,0 +1,128 @@
+spawn scp host_mysqldump.sh sauser@10.8.16.101:/home/sauser/
+sauser@10.8.16.101's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4323     1.9MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.102:/home/sauser/
+sauser@10.8.16.102's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4323     2.2MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.99:/home/sauser/
+sauser@10.8.16.99's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     2.6MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.68:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     2.3MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.71:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     2.6MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.74:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     1.5MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.83:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     2.5MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.86:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     2.8MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.151:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4323     2.7MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.3.12.2:/home/sauser/
+sauser@10.3.12.2's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4321     1.0MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.50:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     2.5MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.51:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     2.7MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.52:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     3.1MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.53:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     2.3MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.54:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     1.6MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.55:/home/sauser/
+sauser@10.8.16.55's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     1.4MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.56:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     2.2MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.57:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     2.4MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.60:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322   794.3KB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.181.5:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     1.5MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.50.12:/home/sauser/
+sauser@10.8.50.12's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     1.6MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.50.26:/home/sauser/
+sauser@10.8.50.26's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     3.3MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.50.32:/home/sauser/
+sauser@10.8.50.32's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     2.7MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.33.23:/home/sauser/
+sauser@10.8.33.23's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     1.5MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.180.24:/home/sauser/
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4323     1.5MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.50.40:/home/sauser/
+sauser@10.8.50.40's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     2.5MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.182.50:/home/sauser/
+sauser@10.8.182.50's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4323   669.1KB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.50.43:/home/sauser/
+sauser@10.8.50.43's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4322     3.3MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.16.126:/home/sauser/
+sauser@10.8.16.126's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4323     3.8MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.182.37:/home/sauser/
+sauser@10.8.182.37's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4323     2.1MB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.2.3.25:/home/sauser/
+sauser@10.2.3.25's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4321   749.8KB/s   00:00    
+spawn scp host_mysqldump.sh sauser@10.8.183.154:/home/sauser/
+sauser@10.8.183.154's password: 
+host_mysqldump.sh                               0%    0     0.0KB/s   --:-- ETAhost_mysqldump.sh                             100% 4324     3.0MB/s   00:00    
+spawn ssh sauser@10.8.16.101 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.8.16.101's password: 
+spawn ssh sauser@10.8.16.102 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.8.16.102's password: 
+spawn ssh sauser@10.8.16.99 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.8.16.99's password: 
+spawn ssh sauser@10.8.16.68 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.16.71 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.16.74 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.16.83 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.16.86 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.16.151 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.3.12.2 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.3.12.2's password: 
+spawn ssh sauser@10.8.16.50 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.16.51 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.16.52 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.16.53 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.16.54 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.16.55 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.8.16.55's password: 
+spawn ssh sauser@10.8.16.56 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.16.57 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.16.60 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.181.5 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.50.12 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.8.50.12's password: 
+spawn ssh sauser@10.8.50.26 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.8.50.26's password: 
+spawn ssh sauser@10.8.50.32 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.8.50.32's password: 
+spawn ssh sauser@10.8.33.23 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.8.33.23's password: 
+spawn ssh sauser@10.8.180.24 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.50.40 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.8.50.40's password: 
+spawn ssh sauser@10.8.182.50 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.8.182.50's password: 
+spawn ssh sauser@10.8.50.43 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.8.50.43's password: 
+spawn ssh sauser@10.8.16.126 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.8.16.126's password: 
+spawn ssh sauser@10.8.182.37 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.8.182.37's password: 
+spawn ssh sauser@10.2.3.25 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.2.3.25's password: 
+spawn ssh sauser@10.8.183.154 bash /home/sauser/host_mysqldump.sh > /dev/null 2>&1 &
+sauser@10.8.183.154's password: 

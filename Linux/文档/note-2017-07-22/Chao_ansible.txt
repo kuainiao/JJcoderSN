@@ -1,0 +1,158 @@
+Linux Ansible
+
+
+作用：
+
+	ansible是新出现的自动化运维工具，基于Python开发，集合了众多运维工具（puppet、cfengine、chef、func、fabric）
+	的优点，实现了批量系统配置、批量程序部署、批量运行命令等功能。
+
+
+特性
+1.no agent: 不需要在被管控主机上安装任何软件
+2.no server: 无服务器端,使用时直接运行命令即可
+3.modules in any languages：基于模块工作，可使用任意语言开发模块,
+4.yaml，not code：使用yaml语言定制剧本playbook,
+5.ssh by default：基于SSH工作
+
+
+优点
+(1)、轻量级，无需在客户端安装agent，更新时，只需在操作机上进行一次更新即可；
+(2)、批量任务执行可以写成脚本，而且不用分发到远程就可以执行；
+(3)、使用python编写，维护更简单，ruby语法过于复杂；
+(4)、支持sudo
+
+
+ansible是基于模块工作的，本身没有批量部署的能力。真正具有批量部署的是ansible所运行的模块，ansible只是提供一种框架。
+主要包括：
+(1)、连接插件connection plugins：负责和被监控端实现通信；
+(2)、host inventory：指定操作的主机，是一个配置文件里面定义监控的主机；
+(3)、各种模块核心模块、command模块、自定义模块；
+(4)、借助于插件完成记录日志邮件等功能；
+(5)、playbook(yaml语言)：剧本执行多个任务时，非必需可以让节点一次性运行多个任务。
+
+
+
+
+Install_Enviroment：
+			master：centos6.6
+			ipv4:192.168.3.56
+
+	slave1：centos6.6		slave2：centos6.6
+	ipv4:192.168.3.18		ipv4:192.168.3.19
+
+Config_File:
+	主配置文件：/etc/ansible/ansible.cfg
+	主机清单：  /etc/ansible/hosts
+
+
+Install_Master:
+	# yum -y install epel-release
+	# yum repolist
+	# yum -y install ansible
+
+	1）Master_定义客户端：
+	vim /etc/anisble/hosts
+
+		[storm_cluster]
+		192.168.3.18	#被管理的客户端
+		192.168.3.19	#被管理的客户端
+		[storm_cluster:vars]
+		ansible_ssh_pass='password'
+
+	2）生成密钥：
+	
+	# ssh_keygen -t rsa -P ''	(往下一路回车即可,此处的P 、 N 用哪个都行！)
+	
+	# cat /root/.ssh/id_rsa.pub >> /root/.ssh/authorized_keys
+	# chmod 600 /root/.ssh/authorized_keys
+	# scp /root/.ssh/authorized_keys 192.168.3.18:/root/.ssh/authorized_keys
+	
+	> 脚本传输密钥（ ping测试 ---> 生成ip.txt文件 ---> 利用这个 file 传输密钥）
+	
+	3) 指定密钥文件位置：
+	
+	vim /etc/ansible/ansible.cfg
+		......
+		remote_poet = 36000
+		privat_key_file = /root/.ssh/id_rsa
+		......
+
+Test_Client：
+	
+	1）测试系统时间：
+		
+		# ansible storm_cluster -m command -a 'uptime'
+	
+	2) 查看被管理服务器基本信息：	
+		
+		# ansible strom_cluster -a setup
+	
+	3）测试联通：
+	
+		# ansible strom_cluster -m ping
+	
+	4）执行shell命令：
+		
+		# ansible strom_cluster -m shell -a "cat /etc/passwd" -f 5
+
+	
+	5）查看某个模块的帮助：
+	
+		# ansible-doc -s modle_name
+
+*注：	
+	-f  指定并发数
+	-a  指定client上面执行的命令
+	-m  指定ansible模块
+	-h  指定定义好的ip地址<格式如上1)所示>
+
+以上是ansible 的基本配置。	
+
+Playbook剧本详解：（.yaml后缀文件）<执行命令：ansible-play modle_name.yaml>
+	
+	基本格式一:
+		---
+		- hosts: all
+		  
+		  tasks:
+		
+			- name: Install Http service
+		  	  command: yum -y install httpd
+		
+			- name: check_store
+		    	  command: rpm -qa httpd
+		
+			- name: Restart httpd
+		  	  command: service httpd restart
+		
+			- name: check_port
+		  	  command: netstat -anptu | grep httpd
+
+	基本格式二：
+		---
+
+		- hosts: all
+		  sudo： yes	#普通用户运行时
+	
+		  tasks:
+			- name: 安装apache
+			  yum: name={{ item }} state=present
+			  with_items: 
+				- httpd
+				- httpd-devel
+			- name: cp_file
+			  copy:
+				src: "{{ item.src }}"
+				dest: "{{ item.dest}}"
+				owner: root
+				group: root
+				mode: 0644
+			  with_items:
+			  - {
+				src: "/tmp/httpd.conf",
+				dest: "/etc/httpd/conf/httpd.conf" }
+			  - {
+				src: "/tmp/httpd-vhosts.conf",
+       				dest: "/etc/httpd/conf/httpd-vhosts.conf"}
+			- name: 检查apache的运行状态，并且开机启动
+			  service: name=httpd state=started enabled=yes

@@ -1,0 +1,56 @@
+2017年7月29日 Linux-云计算-第一次周考
+
+考试规则:
+  1.老师下发答题纸,考生需要将问题答案书写在答题纸上.
+  2.所有问题的答案都需要写出详细命令.
+  3.考试时可以在电脑上进行验证,但禁止查阅笔记等与考试内容相关的文档.
+  4.考试禁止大声喧哗,交头接耳,相互讨论,请考生保持考场肃静.
+  5.对考试有疑问的考生可以举手示意老师.
+  6.最后祝大家考试顺利!
+
+1. 画出TCP/IP的三次握手和四次挥手
+
+2. 创建组admin 
+  创建用户jack和tom属于该组（该组为他们的第二个组） 
+  创建用户tony，不属于admin，没有交互的shell 
+  他们的密码都是:qianfeng
+
+3. 拷贝/etc/fstab到/var/tmp/fstab，
+  属主和属组为root； 任何人都不能执行；
+  jack能读写； 
+  tom没有任何权限；
+  其他和将来的用户能够读。
+
+4. 创建共享目录/home/admins；属组为admin； 
+  admin组成员对目录有读写和执行的权限，其他所有用户没有任何权限（root除外) 
+  在/home/admins目录中创建的文件，会自动继承admin组
+
+5. 建立用户lacp，指定uid为6000
+
+6. 创建目录/module.属主和属组分别为 jack admin,
+  在/module下创建20个文件,文件名前缀为file,(file1,file2,file3.......file20)
+  并且新创建的文件属主属组也为 jack admin
+
+7. 把用户lacp,添加到admin组中(admin为lacp的第二个组)
+  并设置密码:qianfeng
+
+8. 利用'文件属性', 设置 /module 下 file2只能追加不能进行'删除'等其他操作
+
+9. 把用户lacp, 设置成具有管理员权限的用户(wheel组)
+
+10. 查看lacp , 都属于那几个组(写出命令)
+
+11. 查找/etc/passwd中, 
+  以ftp开头的行,
+  以sync结尾的行,
+  以/bin/bash结尾的行.
+
+12. 希望alice能够对/home以及以后在/home下新建的文件有读、写、执行权限
+
+13. 在使用root用户的情况下,切换用户到lacp,
+  利用lacp用户更改jack的密码为centos666
+
+14.设置别名ppt 可以查看/etc/sysconfig/network-script/ifcfg-name文件的内容
+(ifcfg-name是你的网卡的配置文件的名字)
+
+15.查看自己的IP地址怎么查看?(写出两个命令即可,多写加分!!!)

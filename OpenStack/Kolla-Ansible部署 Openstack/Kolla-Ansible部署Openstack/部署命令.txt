@@ -1,0 +1,92 @@
+vim /etc/selinux/config 
+systemctl stop firewall
+systemctl disable firewall
+reboot
+
+hostnamectl --static set-hostname node1
+cd /etc/sysconfig/network-scripts/
+cp ifcfg-eth0{,.bak}
+vim ifcfg-eth0
+systemctl restart network
+ping www.baidu.com
+cp ifcfg-eth0.bak ifcfg-eth1
+vim ifcfg-eth1
+systemctl restart network
+cp ifcfg-eth0.bak ifcfg-eth2
+vim ifcfg-eth2
+reboot
+ip a
+ping www.baidu.com
+
+
+yum install -y wget
+mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
+wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo
+wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo
+yum clean all
+yum makecache
+vim /etc/hosts
+
+yum install -y yum-utils
+yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+yum makecache fast
+yum install docker-ce-18.09.3 -y
+vim /usr/lib/systemd/system/docker.service 
+systemctl daemon-reload
+systemctl enable docker
+systemctl start docker
+systemctl status docker
+
+mkdir ~/.pip
+cat > ~/.pip/pip.conf << EOF 
+[global]
+trusted-host=mirrors.aliyun.com
+index-url=https://mirrors.aliyun.com/pypi/simple/
+EOF
+
+cat > /etc/docker/daemon.json << EOF
+{
+  "registry-mirrors": ["https://jzngeu7d.mirror.aliyuncs.com"]
+}
+EOF
+systemctl restart docker
+yum install -y epel-release 
+yum install -y python-pip
+pip install -U pip
+yum install -y python-devel libffi-devel gcc openssl-devel libselinux-python
+yum install -y ansible
+pip install -U ansible
+vim /etc/ansible/ansible.cfg 
+
+pip install --ignore-installed PyYAML
+pip install kolla-ansible
+cp -r /usr/share/kolla-ansible/etc_examples/kolla /etc/
+cp /usr/share/kolla-ansible/ansible/inventory/* /opt/
+
+ssh-keygen 
+ssh-copy-id node1
+ssh-copy-id node2
+ssh-copy-id node3
+vim /etc/kolla/globals.yml 
+cp /opt/all-in-one /opt/node
+sed -i "/^localhost/c node1" /opt/node
+vim /opt/node 
+lsblk
+parted /dev/sdb -s -- mklabel gpt mkpart KOLLA_CEPH_OSD_BOOTSTRAP 1 -1
+vim /usr/share/kolla-ansible/ansible/group_vars/all.yml 
+kolla-ansible -i /opt/node bootstrap-servers
+kolla-genpwd
+kolla-ansible -i /opt/node prechecks
+kolla-ansible -i /opt/node deploy
+
+docker exec ceph_mon ceph -s
+
+pip install --ignore-installed ipaddress
+pip install -U decorator 
+pip install python-openstackclient python-glanceclient python-neutronclient
+kolla-ansible post-deploy
+cd /etc/kolla
+chmod +x admin-openrc.sh 
+./admin-openrc.sh 
+openstack service list --long
+vim admin-openrc.sh 

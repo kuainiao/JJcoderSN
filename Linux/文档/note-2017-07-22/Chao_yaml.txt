@@ -1,0 +1,84 @@
+YAML_PalyBook
+
+	yaml是一种标记性语言，是ansible最核心的部分。在ansible中我们叫它playbook，对于反复执行
+的、较为复杂的任务，我们可以通过定义Playbook搞定。Playbook允许使用变量、条件、循环、模板等
+也能通过角色及指令来重用既有内容。书写中序列里的项用“-”来表示，Map里的键值对用“：”分隔。
+
+例子1：在远程客户端创建用户
+
+	---  
+	- name: create user  
+	hosts: vps  
+	user: root  
+	gather\_facts: false
+
+	vars:  
+	- user: "toy"
+
+	tasks:  
+	- name: create {{ user }} on vps  
+	user: name="{{ user }}"
+
+	#code解释：
+  		我们给 Playbook 指定了一个名称；
+    	通过 hosts 让该 Playbook 仅作用于 vps 组；
+    	user 指定以 root 帐号执行，Ansible 也支持普通用户以 sudo 方式执行；
+    	gather\_facts 的作用是搜集远端机器的相关信息，稍后可通过变量形式在 Playbook 中使用；
+    	vars 定义变量，也可单独放在文件中；
+    	tasks 指定要执行的任务。
+
+	执行yaml文件：
+		# ansible-playbook user.yml
+	执行playbook结果：
+		PLAY [create
+		user] ****************************************************
+
+		TASK: [create toy on
+		vps] *****************************************************
+		changed: [linuxtoy.org]
+
+		PLAY
+		RECAP ****************************************************  
+		linuxtoy.org : ok=1 changed=1 unreachable=0 failed=0
+
+yaml文件格式：
+
+	1)开始行都应该是 --- 表明一个文件的开始.
+	2)列表中的所有成员都开始于相同的缩进级别,并且使用一个"- "作为开头(一个横杠和一个空格)
+	3)一个字典是由一个简单的[键: 值]的形式组成(这个冒号后面必须是一个空格)
+	4)网址推荐：http://ansible-tran.readthedocs.io/en/latest/docs/playbooks.html
+
+例子2：
+		#这个是你选择的主机
+		- hosts: webservers
+		#这个是变量
+		  vars:
+		    http_port: 80
+		    max_clients: 200
+		#远端的执行权限
+		  remote_user: root
+		  tasks:
+		#利用yum模块来操作
+			  - name: ensure apache is at the latest version
+			    yum: pkg=httpd state=latest
+			  - name: write the apache config file
+			    template: src=/srv/httpd.j2 dest=/etc/httpd.conf
+		#触发重启服务器
+			    notify:
+			    - restart apache
+			 #- name: ensure apache is running
+			 #  service: name=httpd state=started
+		#这里的restart apache 和上面的触发是配对的。这就是handlers的作用。
+		  handlers:
+		      - name: restart apache
+		        service: name=httpd state=restarted
+
+		Code解释：
+			1)playbook中的每一个play的目的都是为了让某个或某些主机以某个指定的用户身份执行任务。
+			2)hosts用于指定要执行指定任务的主机，其可以是一个或多个由冒号分隔主机组；
+			3)remote_user则用于指定远程主机上的执行任务的用户。
+
+
+  “notify”这个action可用于在每个play的最后被触发，这样可以避免多次有改变发生时每次都执行
+指定的操作，取而代之，仅在所有的变化发生完成后一次性地执行指定操作。在notify中列出的操作
+称为handler，也即notify中调用handler中定义的操作。

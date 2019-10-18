@@ -1,0 +1,301 @@
+阿里云源：
+    # wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo
+    # yum -y install epel-release remi-release
+
+
+
+a. 检查你的系统是否支持虚拟化
+# grep -Ei 'vmx|svm' /proc/cpuinfo
+如果有输出内容，则支持，其中intel cpu支持会有vmx，amd cpu支持会有svm
+
+b. 通过yum安装虚拟化的软件包
+# yum install -y kvm virt-*  libvirt  bridge-utils qemu-img
+说明：
+	kvm:软件包中含有KVM内核模块，它在默认linux内核中提供kvm管理程序
+	libvirts:安装虚拟机管理工具，使用virsh等命令来管理和控制虚拟机。
+	bridge-utils:设置网络网卡桥接。
+	virt-*:创建、克隆虚拟机命令，以及图形化管理工具virt-manager
+	qemu-img:安装qemu组件，使用qemu命令来创建磁盘等。
+
+c. 检查kvm模块是否加载
+lsmod |grep kvm
+正常应该是：
+kvm_intel              55496  3
+kvm                   337772  1 kvm_intel
+注：如果没有，需要执行 
+modprobe kvm-intel
+还没有就重启一下试试
+
+d. 配置网卡
+# cd /etc/sysconfig/network-scripts/
+# cp ifcfg-eth0 ifcfg-br1
+分别编辑eth0 和 br1
+ifcfg-eth0改成如下：
+DEVICE=eth0
+HWADDR=A4:BA:DB:20:93:23
+TYPE=Ethernet
+UUID=488fe6b3-45e8-413b-881d-539c9b453e31
+ONBOOT=yes
+NM_CONTROLLED=yes
+BOOTPROTO=none
+BRIDGE=br1
+
+ifcfg-br1改成如下：
+DEVICE=br1
+#HWADDR=A4:BA:DB:20:93:23
+TYPE=Bridge
+#UUID=488fe6b3-45e8-413b-881d-539c9b453e31
+ONBOOT=yes
+NM_CONTROLLED=yes
+BOOTPROTO=static
+IPADDR=ip地址
+NETMASK=255.255.255.0
+GATEWAY=网关
+
+说明： 我的虚拟机是桥接模式，所以设置br1的ip和我的真机同样的网段，包括网关也是我路由器的ip，大家可以根据自己的环境去配置，目的是为了让虚拟机可以上网。
+
+/etc/init.d/network restart
+查看网卡如下：
+[root@daixuan network-scripts]# ifconfig
+br1       Link encap:Ethernet  HWaddr A4:BA:DB:20:93:23
+          inet addr:112.65.140.133  Bcast:112.65.140.135  Mask:255.255.255.248
+          inet6 addr: fe80::a6ba:dbff:fe20:9323/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:32 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:24 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:2114 (2.0 KiB)  TX bytes:3136 (3.0 KiB)
+ 
+em1       Link encap:Ethernet  HWaddr A4:BA:DB:20:93:23
+          inet6 addr: fe80::a6ba:dbff:fe20:9323/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:22 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:15 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000
+          RX bytes:1700 (1.6 KiB)  TX bytes:2472 (2.4 KiB)
+ 
+lo        Link encap:Local Loopback
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+ 
+virbr0    Link encap:Ethernet  HWaddr 52:54:00:5C:6D:1B
+          inet addr:192.168.122.1  Bcast:192.168.122.255  Mask:255.255.255.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:0 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0
+          RX bytes:0 (0.0 b)  TX bytes:0 (0.0 b)
+
+e. 启动或重启libvirtd服务和messagebus 服务
+[root@daixuan network-scripts]# /etc/init.d/libvirtd start
+[root@daixuan network-scripts]# /etc/init.d/messagebus restart
+此时可以查看网络接口列表
+brctl show 结果如下：
+[root@daixuan network-scripts]# brctl show
+bridge name     bridge id               STP enabled     interfaces
+br1             8000.a4badb209323       no              em1
+virbr0          8000.5254005c6d1b       yes             virbr0-nic
+
+
+4. 创建虚拟机
+mkdir /data/   //创建一个存储虚拟机虚拟磁盘的目录，该目录所在分区必须足够大
+
+[root@daixuan ~]# virt-install \
+--name  daixuan1 \
+--ram 512 \
+--disk path=/data/daixuan1.img,size=30 \
+--vcpus 1 \
+--os-type linux \
+--os-variant rhel6 \
+--network bridge=br1 \
+--graphics none \
+--console pty,target_type=serial \
+--location 'http://mirrors.163.com/centos/6.7/os/x86_64/' \
+--extra-args 'console=ttyS0,115200n8 serial'
+之后手动配置IP地址，该虚拟机能够上网，就可以进入安装界面了，Re-initilialize all,时区选择亚洲上海，省略linux安装过程。
+ 
+说明：
+--name  指定虚拟机的名字
+--ram 指定内存分配多少
+--vcpus 指定分配cpu几个
+--os-type 指定系统类型为linux
+--os-variant 指定系统版本
+--network  指定网络类型
+--graphics 指定安装通过哪种类型，可以是vnc，也可以没有图形，在这里我们没有使用图形直接使用文本方式
+--console 指定控制台类型
+--disk path 指定虚拟磁盘放到哪里，size=30 指定磁盘大小为30G,这样磁盘文件格式为raw，raw格式不能做快照，后面有说明，需要转换为qcow2格式，如果要使用qcow2格式的虚拟磁盘，需要事先创建qcow2格式的虚拟磁盘。 参考  http://www.361way.com/kvm-qcow2-preallocation-metadata/3354.html 
+示例:
+
+1、桥接模式(内存要足够)
+[root@daixuan ~]# qemu-img create -f qcow2 -o preallocation=metadata  /var/lib/libvirt/images/chao.img 10G
+[root@daixuan ~]# virt-install \
+--name  chao \
+--ram 512 \
+--disk path=/var/lib/libvirt/images/chao.qcow2,size=10,format=qcow2 \
+--vcpus 1 \
+--arch=x86_64
+--os-type=linux \
+--os-variant=rhel6 \
+--network bridge=br1 \
+--nographics \
+--hvm \
+--location 'http://mirrors.163.com/centos/6.7/os/x86_64/' \
+-x 'console=ttyS0'
+
+--location 指定安装介质地址，可以是网络地址，也可以是本地的一个绝对路径，（--location '/mnt/', 其中/mnt/下就是我们挂载的光盘镜像mount /dev/cdrom /mnt)如果是绝对路径，那么后面还需要指定一个安装介质，比如NFS，假如虚拟机设置ip后，不能连外网，那么就会提示让我们选择安装途径：
+
+# virsh	list    查看有什么虚拟机
+# virsh  console name   连接什么虚拟机
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Virt-install Command
+
+[root@uplooking ~]# virt-install --help
+[root@uplooking ~]# /usr/sbin/virt-install \
+        --graphics vnc \                              #添加显卡，图形使用VNC,spice    #文本安装虚拟机使用nographics 
+        --name=uplooking \                      #虚拟机名称
+        --ram=512 \                              -r   #内存
+        --vcpus=1 \                                    #cpu数量
+        --arch=x86_64 \                             #架构
+        --os-type=linux \                           #系统类型
+        --os-variant=rhel6 \                       #系统版本
+        --hvm \                                           #硬件虚拟化
+        --disk path=/var/lib/libvirt/images/uplooking.img,size=8,format=qcow2 \  -f#硬盘属性，qcow2支持快照和克隆,raw不支持
+        -w network=default \                     #网卡属性
+        --location=ftp://172.16.8.100/rhel6.4 \                      -l                #安装位置
+        --extra-args="ks=ftp://172.16.8.100/rhel6.4.ks"              -x          #kickstart
+        
+         -x "console=ttyS0"               #这条命令配置--nographics一起用<选用>
+
+Copy://local
+[root@Chaos ~]# virt-install -n Chaos -r 2048 \
+--disk /var/lib/libvirt/images/Chaos.img,size=10,format=qcow2 \
+--vcpus=1 \
+--arch=x86_64 \
+--os-type=linux \
+--os-variant=rhel7 \
+--hvm \
+-w network-default \
+--location=ftp://172.16.8.100/rhel6.4 \
+--extra-args="ks=ftp://172.16.8.100/rhel6.4.ks,console=ttyS0"
+
+
+
+[root@uplooking ~]# /usr/sbin/virt-install \
+        --graphics vnc,listen=0.0.0.0,port=5920,password=123  \
+        --noautoconsole \
+        --name=uplooking \
+        --ram=512 \
+        --vcpus=1 \
+        --arch=x86_64 \
+        --os-type=linux \
+        --os-variant=rhel6 \
+        --hvm \
+        --disk path=/var/lib/libvirt/images/uplooking.img,size=8,format=qcow2 \
+        --bridge=virbr0 \
+        --location=ftp://172.16.8.100/rhel6.4 \
+        --extra-args="ks=ftp://172.16.8.100/rhel6.4.ks"
+
+
+
+[root@uplooking ~]# /usr/sbin/virt-install \
+        --nographics \
+        --name=yang \
+        --ram=512 \
+        --vcpus=1 \
+        --arch=x86_64 \
+        --os-type=linux \
+        --os-variant=rhel6 \
+        --hvm \
+        --disk path=/var/lib/libvirt/images/yang.img,size=8,format=qcow2 \
+        --bridge=virbr0 \
+        --location=ftp://172.16.8.100/rhel6.4 \
+        --extra-args="ks=ftp://172.16.8.100/rhel6.4.ks console=ttyS0"
+
+
+
+
+
+
+虚拟机相关文件
+[root@uplooking ~]# virsh list --all
+ Id    Name                           State
+----------------------------------------------------
+ -     node1                          shut off
+ -     uplooking                        shut off
+
+
+
+
+
+1. 配置文件
+虚拟机配置文件xml
+[root@uplooking ~]# ls /etc/libvirt/qemu
+autostart networks  node1.xml  uplooking.xml
+
+[root@uplooking ~]# virsh edit uplooking
+[root@uplooking ~]# virsh dumpxml uplooking > newhost.xml
+
+设置自动运行vm
+[root@uplooking ~]# virsh autostart uplooking
+Domain uplooking marked as autostarted
+
+[root@uplooking ~]# ls /etc/libvirt/qemu/autostart/
+uplooking.xml
+
+[root@uplooking ~]# ll /etc/libvirt/qemu/autostart/uplooking.xml 
+lrwxrwxrwx. 1 root root 29 Jul 30 13:46 /etc/libvirt/qemu/autostart/uplooking.xml -> /etc/libvirt/qemu/uplooking.xml
+
+
+
+网络配置文件xml(默认)
+[root@uplooking ~]# ls /etc/libvirt/qemu/networks/
+autostart  default.xml
+[root@uplooking ~]# 
+[root@uplooking ~]# ls /etc/libvirt/qemu/networks/autostart/
+default.xml
+
+
+
+存储池配置文件xml（默认
+[root@uplooking ~]# ls /etc/libvirt/storage/
+autostart  default.xml
+[root@uplooking ~]# ls /etc/libvirt/storage/autostart/
+default.xml
+
+
+2. 镜像文件[磁盘文件]
+[root@uplooking ~]# ls /var/lib/libvirt/images/
+node1.img  uplooking.img

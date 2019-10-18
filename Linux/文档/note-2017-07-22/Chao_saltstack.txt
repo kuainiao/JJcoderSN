@@ -1,0 +1,58 @@
+SaltStack高级运维工具：
+
+Env_Change:
+	# iptables -F; service iptables save; service iptables stop; chkconfig iptables off
+	# getenforce; setenforce 0; sed -i s/SELINUX=enforcing/SELINUX=disabled/g /etc/selinux/config
+	# vim /etc/hosts
+	master-salt 	master-address
+	slave-salt 		slave-address
+
+1、Install_Inter
+
+	Master:
+		# yum -y install epel-release
+		# yum -y install salt-master
+	Slave:
+		# yum -y install epel-release
+		# yum -y install salt-minion
+
+	Install_Student端：
+		配置172.16.8.100，yum源
+		[cenos]
+		name=cenos
+		baseurl=ftp://172.16.8.100/centos6.6
+		enabled=1
+		gpgcheck=0
+		# yum -y install yum-utils pciutils python-crypto createrepo
+
+		配置local_yum：
+		[cenos]
+		name=cenos
+		baseurl=ftp://172.16.8.100/centos6.6
+		enabled=0
+		gpgcheck=0
+
+		[salt]
+		name=salt
+		baseurl=file:///root/SaltStack
+		enabled=1
+		gpgcheck=0
+
+2、configurl:
+
+	1)edit_config_slave:
+		# vim /etc/salt/minion
+		master: salt-master
+		id: node1.slave
+	
+	2)start_server:
+		# /etc/init.d/salt-master start
+		# /etc/init.d/salt-minion start
+		# /etc/init.d/salt-minion start
+	
+	3)master_accept_keys:
+		# salt-key -L		//查看证书申请
+		# salt-key -A -y 	//通过证书申请
+	
+	4)test_salt:
+		# salt '*' test.ping	//测试连通性

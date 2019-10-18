@@ -1,0 +1,95 @@
+LVS+Keepalive
+
+部署：
+
+	ENV ：CentOS 6.6  x4 <  keepalive x2 、 realserver x2>
+	Software: openssl openssl-devel pcre pcre-devel gcc gcc-c++ ipvsadm     ----->rpm_pakge
+			    keepalive-1.2.19.tar.gz     -----> Source code
+
+	Install keepalived:
+		# tar xf keepalived-1.2.19.tar.gz
+		# cd keepalived-1.2.19
+		# ./configurl --disable-fwmark
+		# make && make install
+		# mkdir /etc/keepalived
+		# cp /usr/local/etc/sysconfig/keepalived 	/etc/sysconfig
+		# cp /usr/local/etc/rc.d/init.d/keepalived 	/etc/init.d/	
+		# cp /usr/local/sbin/keepalived 	/sbin
+		# chkconfig --add keepalived
+		# chkconfig keepalived on
+
+# vim /etc/keepalived/keepalived.conf
+
+vrrp_sync_group VG_1 {
+    group {
+        VI_1
+    }
+}
+vrrp_instance VI_1 {
+    state MASTER
+    interface eth0
+    track_interface {
+        eth0
+    }
+    garp_master_delay 30
+    virtual_router_id 52
+    priority 150
+    advert_int 1
+    authentication {
+        auth_type PASS
+        auth_pass uplooking
+    }
+    virtual_ipaddress {
+        10.1.6.120/32 dev eth0
+    }
+}
+virtual_server 10.1.6.120 80 {
+    delay_loop 6
+    lb_algo wrr
+    lb_kind DR
+    persistence_timeout 50
+    protocol TCP
+
+    real_server 192.168.122.82 80 {
+        weight 10
+        HTTP_GET {
+            url {
+              path /test.html
+              digest 640205b7b0fc66c1ea91c463fac6334d
+            }
+            connect_port 80
+            connect_timeout 2
+            nb_get_retry 3
+            delay_before_retry 1
+        }
+    }
+
+    real_server 192.168.122.69 80 {
+        weight 10
+        HTTP_GET {
+            url {
+              path /test.html
+              digest 640205b7b0fc66c1ea91c463fac6334c
+            }
+            connect_port 80
+            connect_timeout 2
+            nb_get_retry 3
+            delay_before_retry 1
+        }
+    }
+}
+
+切换到realserver中，执行下列操作
+# vim /etc/sysctl.conf
+net.ipv4.conf.eth0.arp_ignore = 1
+net.ipv4.conf.eth0.arp_announce = 2
+net.ipv4.conf.all.arp_ignore = 1
+net.ipv4.conf.all.arp_announce = 2
+
+# ifconfig lo:0 10.1.6.12 netmask 255.255.255.255 broadcast 10.1.6.12 up
+# route add -host 10.1.6.12 dev lo:0
+
+切换到Direct，执行下列操作
+# service  keepalived  restart
+
+client :   curl http://192.168.122.56/test.html

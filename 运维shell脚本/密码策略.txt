@@ -1,0 +1,15 @@
+
+密码复杂度策略中设置的特殊字符个数
+vim /etc/pam.d/system-auth
+password requisite pam_cracklib.so ucredit=-1 lcredit=-1 dcredit=-1
+
+ucredit=-1 lcredit=-1 dcredit=-1 ocredit=-1   ucredit：大写字母个数；lcredit：小写字母个数；dcredit：数字个数；ocredit：特殊字符个数
+
+最小密码长度
+vim /etc/login.defs
+PASS_MIN_LEN
+
+禁止wheel组之外的用户su为root(使用PAM认证模块)
+vi /etc/pam.d/su
+auth sufficient pam_rootok.so
+auth required pam_wheel.so group=wheel

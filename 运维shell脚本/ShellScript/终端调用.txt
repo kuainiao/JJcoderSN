@@ -1,0 +1,664 @@
+Shell Script 之终端调用
+=======================================================
+执行命令
+gnome-terminal --tab -x bash -c "ssh user@ip"
+执行脚本
+gnome-terminal --tab -x bash -c "要执行的脚本;exec bash;"
+gnome-terminal --help--all 获取帮助信息
+gnome-terminal -t "终端名字" -x bash -c "要执行的脚本;exec bash;"
+--window   打开一个新窗口，其中包含一个带有默认配置文件的选项卡
+--tab  在最后打开的窗口中带有默认配置文件的新选项卡
+-x 后面的为要在打开的终端中执行的脚本，根据需要自己修改就行了。
+exec bash;是让打开的终端在执行完脚本后不关闭。
+
+Shell Script 之 PING 检测
+=======================================================
+函数实现ping测试 ，（ping3次，防止误检测）
+--------------------------------------------------------------------------------------------------------------------------------
+#!/bin/env bash
+$ping count 3
+ping_sucess(){
+        ping -c1 -W1 $ip &>/dev/null
+        if [ $? -eq 0 ]; then
+                echo "$ip is ok"
+                continue
+        fi
+        }
+while read ip
+do
+        ping_success
+        ping_success
+        ping_success
+        echo "$ip ping is failure"
+done < ip.txt
+-------------------------------------------------------------------------------------------------------------------------------
+数组实现ping测试 ，（ping3次，防止误检测）
+-------------------------------------------------------------------------------------------------------------------------------
+#!/bin/bash
+while read ip
+do
+        for count in {1..3}
+        do
+                ping -c1 -W1 $ip &>/dev/null
+                if [ $? -eq 0 ]; then
+                        echo "$ip pint is ok"
+                        break
+                else
+                        echo "$ip ping is failure:$count"
+                        fail_count[$count]=$ip
+                fi
+        done
+        if [ ${#fail_count[*]} -eq 3 ]; then
+                echo "${fail_count[1]} pint is failure"
+                unset fail_count[*]
+        fi
+done<ip.txt
+------------------------------------------------------------------------------------------------------------------------------
+变量实现ping测试 ，（ping3次，防止误检测）
+------------------------------------------------------------------------------------------------------------------------------
+#!/bin/bash
+while read ip
+do
+        fail_count=0
+        for i in {1..3}
+        do
+                ping -c1 -W1 $ip &>/dev/null
+                if [ $? -eq 0 ];then
+                        echo "$ip ping is ok"
+                        break
+                else
+                        echo "$ip ping is failure: $ip"
+                        let fail_count++
+
+                fi
+        done
+        if [ $fail_count -eq 3 ]; then
+                echo "$ip ping is failure!"
+        fi
+done<ip.txt
+------------------------------------------------------------------------------------------------------------------------------       
+三种循环ping测试
+-----------------------------------------------------------------------------------------------------------------------------
+#!/bin/bash
+for i in {2..254}
+do
+        {
+        ip=
+        ping -c1 -W1 $ip &>/dev/null
+        if [ $? -eq 0 ];then
+                echo "$ip up"
+
+        fi
+        }&
+done
+wait
+echo "all finish"
+**********************************************
+i=2
+while [ $i -le 254 ]
+do 
+        {
+        ip=
+        ping -c1 -W1 $ip &>/dev/null
+        if [ $? -eq 0 ];then
+                echo "$ip up"
+
+        fi
+        }&
+        let i++
+done
+wait
+echo "all finish"
+***********************************************
+until [ $i -gt 254 ]
+do 
+        {
+        ip=
+        ping -c1 -W1 $ip &>/dev/null
+        if [ $? -eq 0 ];then
+                echo "$ip up"
+
+        fi
+        }&
+        let i++
+done
+wait
+echo "all finish"
+--------------------------------------------------------------------------------------------------------------------------
+Shell Script 之 安装软件
+=======================================================
+利用for循环实现
+-------------------------------------------------------------------------------------
+#!/bin/bash
+#install php
+#调用函数脚本（把函数写在独立脚本）
+#显示菜单
+echo
+echo
+echo
+echo
+echo
+#选择操作
+read -p "version[1-3]" version
+#根据选择判断
+if ["$version" = "1"]; then
+        install_php70
+elif ["$version" = "2"]; then
+        install_php56
+else
+        echo ""
+fi
+--------------------------------------------------------------------------------------
+利用wihle循环实现
+--------------------------------------------------------------------------------------
+#!/bin/bash
+#install php
+#调用函数脚本（把函数写在独立脚本）
+#1显示菜单
+echo
+echo
+echo
+echo
+echo
+#2选择操作
+read -p "version[1-3]" version
+#3根据选择判断
+case "$version" in
+1)
+        install_php56
+        ;;
+2)
+        install_php70
+        ;;
+esac
+----------------------------------------------------------------------------------------------------------
+Shell Script 之三种循环
+=================================================
+while循环创建账户（从文件读取用户名）
+----------------------------------------------------------------------------------------------------------
+#!/bin/bash
+#while create user
+#v1.0 name time
+while read user
+
+do
+        id $user &> /dev/null
+        if [ $? -eq 0 ];then
+                echo "user .."
+        else
+        useradd $user
+
+                if [ $? -eq 0 ];then
+                        echo "user $user create"
+                fi
+        fi
+done < user.txt
+-------------------------------------------------------------------------------------------------------------
+while循环创建账户（从文件读取用户名和密码）
+--------------------------------------------------------------------------------------------------------------
+#!/bin/bash
+#while create user
+#v1.0 name time
+while read line
+
+do      
+        if  [ ${$line} -eq 0 ]:then
+                continue
+        fi
+        user=$(echo $line | awk '{print $1}')
+        pass=$(echo $line | awk '{print $2}')
+        id $user &> /dev/null
+        if [ $? -eq 0 ];then
+                echo "user .."
+        else
+        useradd $user
+        echo "$pass" | passwd --stdin $user &>/dev/null
+                if [ $? -eq 0 ];then
+                        echo "user $user create"
+                fi
+        fi
+done < user.txt            
+-----------------------------------------------------------------------------------------------------------        
+三种循环求和
+----------------------------------------------------------------------------------------------------------------
+#!/bin/bash
+for i in {1..100}
+do
+        #let sum+=$i
+        let sum=$sum+$i
+done
+wait
+echo "for sum:$sum"
+*******************************************
+x=1
+while [ $x -le 100 ]
+do
+        let sum1=$sum1+$x
+        let x++
+done
+wait
+echo "while sum:$sum1"
+******************************************
+y=1
+until [ $y -gt 100 ]
+do
+        let sum2=$sum2+$y
+        let y++
+done
+wait
+echo "until sum:$sum2"
+--------------------------------------------------------------------------------------------------------------
+自定义执行进程并发个数
+----------------------------------------------------------------------------------
+#!/bin/bash
+#多进程并发
+thread=5                                        #限制并发个数
+tmp_fifofile=/tmp/$$.fifo                       #创建管道文件
+mkfifo $tmp_fifofile
+exec 8<> $tmp_fifofile
+rm $tmp_fifofile
+
+for i in $(seq $thread)
+do
+        echo >&8
+done
+
+for i in {1..254}
+do
+        read  -u 8
+        {
+        ping -c1 -W1 $ip &> /dev/null
+        if [ $? -eq 0 ]; then
+                echo "$ip up"
+        else
+                echo "$ip down"
+        fi
+        echo >&8
+        }&
+done
+wait
+exec 8<&-
+echo "all finsh"      
+--------------------------------------------------------------------------------------
+Shell Script 之 expect 实现自动应答配置
+==============================================
+expect 实现公钥推送
+--------------------------------------------------------------------------------------
+没有做判断
+**********************************************
+#!/bin/bash
+
+>ip.txt
+password=centos
+for i in {2..254}
+do
+        {
+        ip=192.168.122.$i
+        ping -c1 -W1 $ip &> /dev/null
+        if[ $? -eq 0 ];then
+                echo "$ip " >> ip.txt
+                #不能使用空格
+                /usr/bin/expect <<-EOF
+                set timeout 10
+                spawn ssh-copy-id $ip
+                expect {
+                        "yes/no" {send "yes\r"; exp_contiun}
+                        "password:" {send "$password\r"}
+                        }
+                expect eof
+                EOF
+        fi
+        }&
+done
+wait
+echo "Finish"
+**********************************************
+做判断
+**********************************************
+#!/bin/bash
+
+>ip.txt
+password=centos
+rpm -q expect &> /dev/null
+if [ $? -ne 0 ]; then
+        yum -y install expect
+fi
+if [ ! if ~/.ssh/id_rsa ];then
+        ssh-keygen -P "" -f ~/.ssh/id_rsa
+fi
+for i in {2..254}
+do
+        {
+        ip=192.168.122.$i
+        ping -c1 -W1 $ip &> /dev/null
+        if[ $? -eq 0 ];then
+                echo "$ip " >> ip.txt
+                #不能使用空格
+                /usr/bin/expect <<-EOF      注意！！！：缩进绝对不能用空格，必须回车
+                set timeout 10                   #设置超时时间
+                log_user 0                          #设置终端输出（重定向终端输出）（1开启|0关闭）
+                log_file chack.log               #设置记录日志（终端输入关闭，无法记录）
+                spawn ssh-copy-id $ip
+                expect {
+                        "yes/no" {send "yes\r"; exp_contiun}
+                        "password:" {send "$password\r"}
+                        }
+                expect eof
+                EOF
+        fi
+        }&
+---------------------------------------------------------------------------------------
+expect 实现ssh登录
+----------------------------------------------------------------------------------------
+直接以root身份登录（没有定义变量）
+******************************************
+#!/bin/expect
+spawn ssh root@192.168.122.128
+expect {
+        "yes/no" {send "yes\r"; exp_continue}
+        "password:" {send "centos\r"};
+        }
+interact
+*******************************************
+定义变量（用户，秘密，地址）
+*******************************************
+set ip 192.168.122.128
+set user root
+set password centos
+spawn ssh $user@$ip
+expect {
+        "yes/no" {send "yes\r"; exp_continue}
+        "password:" {send "$password\r"};
+        }
+interact            #登录后不退出
+*******************************************
+以参数的方式传递变量（用户，密码，地址），登录操作
+*******************************************
+#!/bin/expect
+set ip [lindex $argv 0]
+set user [lindex $argv 1]
+set password [lindex $argv 2]
+spawn ssh $user@$ip
+expect {
+        "yes/no" {send "yes\r"; exp_continue}
+        "password:" {send "$password\r"};
+        }
+expect "#"
+send "useradd yangyang\r"
+send "pwd\r"
+send "exit\r"
+expect eof
+--------------------------------------------------------------------------------------
+expect实现scp
+--------------------------------------------------------------------------------------
+#!/bin/expect
+set ip [lindex $argv 0]
+set user [lindex $argv 1]
+set password [lindex $argv 2]
+spawn scp -r /etc/hosts  $user@$ip:/tmp
+
+expect {
+        "yes/no" {send "yes\r"; exp_continue}
+        "password:" {send "$password\r"};
+        }
+expect eof
+----------------------------------------------------------------------------------------- 
+成功上传密钥后ssh修改密码
+-----------------------------------------------------------------------------------------
+#!/bin/bash
+#v1.0 
+read -P "Please enter a New Password: " pass
+
+for ip in $(cat ip.tx)
+do
+        {
+        ping -c1 -W1 $ip &> /dev/null
+        if [ $? -eq 0 ]; then
+                ssh $ip "echo $pass | passwd --stdin root"
+                if [ $? -eq 0 ]; then
+                        echo "$ip Modify successfully" >>$HOME/$(date +%F-%H)_password_success.txt
+                else
+                        echo "$ip Modify fail" |tee -a $HOME/$(date +%F-%F)_password_fail.txt
+                fi
+
+        else
+                echo"$ip" >> fail_$(date +%F-%H).txt
+        fi
+        }&
+done
+wait
+echo "finish"
+------------------------------------------------------------------------------------------------------------------------------------
+成功上传密钥后批量修改配置
+------------------------------------------------------------------------------------------------------------------------------------
+#!/bin/bash
+#v1.0
+success_conf=$(>$HOME/$(date +%F-%H)_conf_success.txt)
+fail_conf=$(>$HOME/$(date +%F-%F)_conf_fail.txt)
+for ip in $(cat ip.txt)
+do
+        {
+        ping -c1 -W1 $ip &> /dev/null
+        if [ $? -eq 0 ];then
+                ssh $ip "sed -ri '/^#UseDNS/cUseDNS no' /etc/ssh/sshd_config"
+                    if [ $? -eq 0];then
+                        echo "$ip -$(cat /etc/ssh/sshd_config | grep "UseDNS")" >> $success_conf
+                    else
+                        echo "$ip-UseDNS-Modify fail" |tee -a $fail_conf
+                
+                ssh $ip "sed -ri '/^GSSAPIAuthenticaton/cGSSAPIAuthentication no/' /etc/ssh/sshd_confing"
+                        if [ $? -eq 0];then
+                        echo "$ip -$(cat /etc/ssh/sshd_config | grep "GSSAPIAuthenticaton")" >> $success_conf
+                    else
+                        echo "$ip-GSSAPIAuthenticaton-Modify fail" |tee -a $fail_conf
+              
+                ssh $ip "sed -ri '/^SELINUX=/cSELINUX=disenabled' /etc/selinux/conf"
+                        if [ $? -eq 0];then
+                        echo "$ip -$(cat /etc/selinux/conf | grep "^SELINUX=")" >> $success_conf
+                    else
+                        echo "$ip-SELINUX-Modify fail" |tee -a $fail_conf
+                
+                ssh $ip "systemctl stop firewalld; systemctl disable firewalld"
+                         if [ $? -eq 0];then
+                        echo "$ip -firewalld-disable" >> $success_conf
+                    else
+                        echo "$ip-firewalld-Modify fail" | tee -a $fail_conf
+                
+                ssh $ip "setenforce 0"
+                        if [ $? -eq 0];then
+                        echo "$ip -firewalld-$(getenforce)" >> $success_conf
+                    else
+                        echo "$ip -firewalld-$(getenforce)" | tee -a $fail_conf
+                 
+        else
+                echo "The host $ip cannot connect. The operation failed" | tee -a $fail_conf     
+        fi
+        }&
+done
+wait
+echo "Configuration complete"
+---------------------------------------------------------------------------------------------------------------------------------------------------
+Shell Script 之数组
+======================================
+数组定义使用
+定义关联数组
+declare -A ass_array                  申明关联数组变量
+array2=([index1]=tom [index2]=jack [index3]=alice [index4]='bash shell')
+array+=（[Indexes]=value）  给关联数组增加一个索引和值
+array[indexes]++                     给索引的值加1
+查看数组
+declare -a                                 
+访问数组元数：
+# echo ${array1[0]}			访问数组中的第一个元数
+# echo ${array1[@]}			访问数组中所有元数  等同于 echo ${array1[*]}
+# echo ${#array1[@]}		统计数组元数的个数
+# echo ${!array2[@]}		获取数组元数的索引
+# echo ${array1[@]:1}		从数组下标1开始
+# echo ${array1[@]:1:2}	从数组下标1开始，访问两个元素
+访问数组元数：
+# echo ${ass_array2[index2]}			访问数组中的第二个元数
+# echo ${ass_array2[@]}					访问数组中所有元数  等同于 echo ${array1[*]}
+# echo ${#ass_array2[@]}				获得数组元数的个数
+# echo ${!ass_array2[@]}				    获得数组元数的索引
+-----------------------------------------------------------------------------------------------------------------
+数组实现读取文件，显示行(while 方式)
+-----------------------------------------------------------------------------------------------------------------
+for 循环默认分隔符时空格，tab，回车（忽略空白行）
+#!/bin/env  bash
+OLD_IFS=$IFS                    #备份默认分隔符
+IFS=$'\n'                               #设置分隔符
+for line in $(cat /etc/hosts)
+do
+        hosts[++j]=$line
+done
+
+for i in ${!hosts[@]}
+do
+        echo "$i: ${hosts[i]}"
+done
+IFS=$OLD_IFS                    #还原默认分隔符
+--------------------------------------------------------------------------------------------------------------
+数组实现读取文件，显示行(while 方式)
+------------------------------------------------------------------------------------------------------------
+while 循环默认分隔符是 回车 （会读取空白行）
+#!/bin/env bash
+while read line
+do
+        ip[++i]=$line
+
+done < $HOME/ip.txt
+
+for i in ${!ip[@]}
+do
+        echo "$i : ${ip[$i]}"
+done
+----------------------------------------------------------------------------------
+统计/etc/passwd 中shell的种类和数量
+把要统计的对象作为数组的索引   对值进行累加
+----------------------------------------------------------------------------
+#!/bin/bash
+#count shells
+declare -A shells
+while read line
+do
+        type=$(echo $line |awk -F':' '{print $NF}')
+        let shells[$type]++
+
+done < /etc/passwd
+
+for i in ${!shells[@]}
+do
+
+        echo "$i:${shells[$i]}"
+done
+----------------------------------------------------------------------------       
+awk -F ':' '{print $NF}' /etc/passwd | sort |uniq -c
+----------------------------------------------------------------------------
+统计TCP连接状态
+----------------------------------------------------------------------------
+手动实时显示状态  watch -n
+----------------------------------------------------------------------------
+#!/bin/bash
+#count tcp status
+declare -A status
+        type=$(ss -an | grep :80|awk '{print $2}')
+        for i in $type
+        do
+                let status[$i]++
+        done
+        for j in ${!status[@]}
+        do
+                echo "$j: ${status[$j]}"
+        done
+        sleep 1
+        clear
+---------------------------------------------------------------------------
+自动实时动态显示
+---------------------------------------------------------------------------
+#!/bin/bash
+#count tcp status
+while :
+do
+unset status
+declare -A status
+        type=$(ss -an | grep :80|awk '{print $2}')
+        for i in $type
+        do
+                let status[$i]++
+        done
+        for j in ${!status[@]}
+        do
+                echo "$j: ${status[$j]}"
+        done
+        sleep 1
+        clear
+done
+------------------------------------------------------------------------------
+ss -an | grep :80|awk '{print $2}' | sort | uniq -c
+------------------------------------------------------------------------------
+Shell Script 之 awk日志分析统计
+=========================================================================
+红色部分为要分析的日志和时间范围
+统计一个时间范围内访问量
+grep '01/Sep/2017' sz.mobiletrain.org.log | wc -l
+
+awk '$4>="[05/Sep/2017:08:00:00" && $4<="[05/Sep/2017:09:00:00" {print $0}' sz.mobiletrain.org.log | wc -l
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+统计一个时间范围内访问量前10的ip
+grep '05/Sep/2017' cd.mobiletrain.org.log | awk '{ips[$1]++} END{ for(i in ips){print i ,ips[i]}}' | sort -k2 -rn | head 
+
+awk '/05\/Sep\/2017/ {ips[$1]++} END{ for(i in ips){print i ,ips[i]}}' cd.mobiletrain.org.log | sort -k2 -rn | head 
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+统计一个时间范围内访问前10的页面
+grep '05/Sep/2017' cd.mobiletrain.org.log | awk '{ urls[$7]++} END{for(i in urls){print urls[i],i}}'|sort -k1 -rn |head
+
+awk '/05\/Sep\/2017/ { urls[$7]++} END{for(i in urls){print urls[i],i}}' cd.mobiletrain.org.log |sort -k1 -rn |head
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+统计一个时间范围内访问大于100次的ip
+ grep '05/Sep/2017' sz.mobiletrain.org.log | awk '{ ips[$1]++ } END{for (i in ips) {if(ips[i]>100) {print i,ips[i]}}}'
+ 
+awk '/05\/Sep\/2017/ { ips[$1]++ } END{for (i in ips) {if(ips[i]>100) {print i,ips[i]}}}'  sz.mobiletrain.org.log
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+统计一个时间范围访问前10的url
+awk '/05\/Sep\/2017/{urls[$7]++} END{for(i in urls){print i,urls[i]}}' sz.mobiletrain.org.log |sort -k2rn |head
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+统计一个时间范围内url访问总大小前10的url
+grep '05/Sep/2017' sz.mobiletrain.org.log | awk '{ urls[$7]++; size[$7]+=$10} END { for(i in urls ) { print urls[i],size[i],i}}'| sort -k1 -rn |head
+
+awk '/05\/Sep\/2017/{size[$7]+=$10} END{for(i in size){print i,size[i]}}' sz.mobiletrain.org.log |sort -k2rn |head
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+统计一个时间范围内每个访问ip的状态码数量
+grep '05/Sep/2017' sz.mobiletrain.org.log | awk '{ ip_code[ $1" "$9]++} END{ for(i in ip_code) {print i,ip_code[i]}}'| sort -k1 -rn | head 
+
+ awk '/05\/Sep\/2017/{ip_code[$1" "$9]++} END{for(i in ip_code){print i,ip_code[i]}}' sz.mobiletrain.org.log |sort -k1rn |head
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+统计一个时间范围内访问状态码时404的ip
+grep '05/Sep/2017' sz.mobiletrain.org.log | awk '{if($9="404"){ip_code[$1" "$9]++}} END{for(i in ip_code){print i,ip_code[i]}}'|sort -k3 -rn
+
+awk '$4>="[05/Sep/2017:08:00:00" && $4<="[05/Sep/2017:09:00:00" {if($9="404"){ip_code[$1" "$9]++}} END{for(i in ip_code){print i,ip_code[i]}}' sz.mobiletrain.org.log |sort -k3 -rn
+
+awk '/05\/Sep\/2017/{if($9=="404"){ip_code[$1" "$9]++}} END{for(i in ip_code){print i,ip_code[i]}}' sz.mobiletrain.org.log |sort -k3rn |head
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+统计前一分钟的访问量
+date=$(date -d '1 minute' +%d/%b/%Y:%H:%M); awk -v date=$date '$0 ~ date {i++} END{print i}' sz.mobiletrain.org.log
+                                                                                   #awk -v  带入外部变量
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+统计一个时间范围内出现的各种状态码
+grep '05/Sep/2017' sz.mobiletrain.org.log | awk '{code[$9]++} END{for(i in code){print i, code[i]}}'
+
+awk '/05\/Sep\/2017/ {code[$9]++}END{for(i in code){print i ,code[i]}}' sz.mobiletrain.org.log
+
+grep '05/Sep/2017' sz.mobiletrain.org.log | awk '{code[$9]++; total++} END{for(i in code){printf i" "; printf code[i]"\t";printf"%.2f", code[i]/total*100;print"%"}}'
+
+awk '/05\/Sep\/2017/{code[$9]++; total++} END{for(i in code){printf i " "; printf code[i]"\t"; printf"%.2f",code[i]/total*100;print"%"}}' sz.mobiletrain.org.log
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+

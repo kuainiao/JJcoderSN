@@ -1,0 +1,79 @@
+RAID磁盘阵列（仅介绍RAID０、RAID１、RAID５）
+
+	虚拟存储系统。RAID即独立的冗余磁盘阵列，其思想是将多块独立磁盘按不同的磁盘阵列按不同的方式组合为一个逻辑磁盘，从而提高存储
+容量，提升存储性能或提供数据备份功能。RAID存储系统的组合方式根据RAID级别定义。主要分为软件RAID和硬件RAID。
+
+	Window、Uinux、Linux中都集成了软RAID功能，软硬都可以实现相同的功能，软RAID没有独立的硬件控制设备，所以性能上不如硬RAID
+但是软RAID实现简单，不需要额外的硬件设备。硬件RAID通常需要有RAID卡，RAID卡本身会有独立的控制部件和内存，所以不会占有系统资源
+效率高、性能强。现在的RAID存储系统广泛应用于生产环境作为存储解决方案。
+
+1、RAID 0 （不含校验与冗余的条带存储）
+	多块磁盘组合成为RAID 0 后，数据将被分割并分别存储在每块硬盘当中，所以能最大的提升存储性能与存储空间，但是无法容错。该模式至
+少需要2块磁盘。磁盘利用率为100%
+
+	原理：如果有一个文件需要被存储，则该文件会被分割为多个部分，DATA１和DATA２，其他部分依此类推。读取该文件的时候，将从盘１
+与盘２中读取数据。
+	缺点：因为没有校验和备份，两块硬盘中如果有一块磁盘损坏，即磁盘中的任何一个数据块损坏将导致整个文件无法读取。一损俱损！！！
+
+２、RAID１（不含校验的镜像存储）
+	多块磁盘组合成为RAID１后，数据将被同时复制到没块磁盘中，制作这种磁盘阵列至少需要两块硬盘，该级别的RAID只要有一块硬盘可用就
+可以正常工作，该级别的阵列安全性是最好的，磁盘利用率是最低的。磁盘里利用率为５０％
+
+	原理：如果有一个文件要写入RAID１中，则该文件会写入盘１中，同时以复制备份的形式写入盘２中，DATA１与DATA２被同时写入盘１和
+盘２中，其他部分以此类推。读取数据的效率会很高，但是磁盘利用率低。
+	缺点：RAID１的写入效率底下。此外，磁盘利用率低，如果两块盘的存储空间均为１２０Ｇ，则RAID１的总存储空间为１２０Ｇ。
+
+３、RAID５（数据块级别的分布式校验条带存储）
+	多块磁盘组合成RAID５后，数据将以块为单位同步式分别存储在不同的硬盘中，并对数据进行海明码运算，与其他级别不同的是，该级别的
+海明码会被写入不同的磁盘中
+
+４、RAID１０和RAID０１
+
+RAID１０为：　利用四块磁盘组成两个RAID１，然后将两个RAID１组成一个RAID０
+RAID０１为：　利用四块磁盘组成两个RAID０，然后将两个RAID０组成一个RAID１
+
+
+以上是RAID的基础知识．
+＜＜＜＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＞＞＞
+
+创建和管理软RAID实例
+
+# ！！！注：硬盘RAID的格式代号为“fd”
+
+查看磁盘信息
+[root@localhost]# fdisk -cul
+
+给磁盘分区（每块盘两个分区！）
+[root@localhost]# fdisk /dev/sdb
+[root@localhost]# fdisk /dev/sdc
+
+刷新磁盘分区
+[root@localhost]# partprobe -a
+
+mdadm工具
+	格式：mdadm [模式] 选项 <设备>
+	选项：
+		-l 	指定RAID级别
+		-C 	创建RAID软件
+		-n	指定磁盘个数
+		-x	制定备用设备个数
+
+创建raid0
+[root@localhost]# mdadm -C /dev/raid0 -l 0 -n 2 /dev/sdb1 /dev/sdc1
+mdadm: array /dev/raid0 started.
+
+查看raid0
+[root@localhost]# mdadm --detail /dev/raid0
+
+格式化并挂载
+[root@localhost]# mkfs.ext4 /dev/raid0
+[root@localhost]# mkdir /raid0
+[root@localhost]# mount /dev/raid0 /raid0
+
+配置文件
+[root@localhost]# vim /etc/mdadm.conf
+DEVICE /dev/sdb1	/dev/sdc1	
+[root@localhost]# mdadm -Evs >>/dev/mdadm.conf
+
+[root@localhost]# vim /etc/fstab
+/dev/raid0	/raid0	ext4	defaults	0 0

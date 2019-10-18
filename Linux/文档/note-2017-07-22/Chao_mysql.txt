@@ -1,0 +1,187 @@
+MySQL源码安装
+
+例：源码包mysql-5.6.33.tar.gz
+
+LVM快照snapshot  
+
+	作用： 实现数据几乎热备份  
+
+注意：
+	1	原有逻辑卷数据变化，不会同步到快照 
+	2	快照应赋予只读权限
+	3	指定快照的生存周期(容量的方式)
+
+
+
+示例： 
+
+为逻辑卷创建快照mysqlsnapshot, 备份快照中的数据
+逻辑卷创建：
+	# pvcreate /dev/sdb1
+	# vgcreate vg_datadir /dev/sdb1
+	# lvcreate -L size -n lv_database vg_datadir 
+
+1） 创建快照 
+
+[root@disk ~]# lvcreate -s -p r -L 200M -n mysqlsnapshot /dev/vg_datadir/lv_database
+>>> -p r设置只读权限 
+  Logical volume "mysqlnapshot" created
+[root@disk ~]# lvscan 
+  ACTIVE   Original '/dev/vg_datadir/lv_database' [12.00 GiB] inherit
+  ACTIVE   Snapshot '/dev/vg_datadir/mysqlsnapshot' [200.00 MiB] inherit 
+
+2） 挂载快照，备份数据 
+
+[root@disk ~]# mount /dev/vg_datadir/mysqlsnapshot /snapshot/
+mount: block device /dev/mapper/vg_datadir-mysqlsnapshot is write-protected, mounting read-only
+[root@disk ~]# tar cjf /backup/mysql_`date +%F-%T`.tar.bz2 /snapshot/
+
+3） 删除快照 
+
+[root@disk ~]# umount /snapshot/
+[root@disk ~]# lvremove -f /dev/data/oraclesnapshot 
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+Install_enviroment
+
+1）卸载原有版本：
+	# rpm -qa | grep mysql 
+	mysql-libs-5.1.73-3.el6_5.x86_64
+	# rpm -e --nodeps mysql-libs
+
+2）创建数据目录并添加用户：
+	# mkdir -pv /mydata/data
+	# useradd -s /sbin/nologin mysql
+	# chown -R mysql.mysql /mydata/data
+
+3）安装三组开发工具，cmake编译器：
+	# yum groupinstall -y "Development tools" "Desktop Platform Development" "Server Platform Development"
+	# yum -y install cmake
+	
+4）解压缩源码包并安装：
+
+# tar xf mysql-5.6.33.tar.gz
+# cd mysql-5.6.33
+# cmake . -DCMAKE_INSTALL_PREFIX=/usr/local/mysql \
+-DMYSQL_DATADIR=/mydata/data/ \
+-DSYSCONFDIR=/etc \
+-DWITH_INNOBASE_STORAGE_ENGINE=1 \
+-DWITH_ARCHIVE_STORAGE_ENGINE=1 \
+-DWITH_BLACKHOLE_STORAGE_ENGINE=1 \
+-DWITH_SSL=system \
+-DWITH_ZLIB=system \
+-DMYSQL_UNIX_ADDR=/tmp/mysql.sock \
+-DDEFAULT_CHARSET=utf8 \
+-DDEFAULT_COLLATION=utf8_general_ci
+# make && make install
+# chown -R root.mysql /usr/local/mysql 		>>> 修改安装目录的属主属组
+
+以上为具体安装步骤！
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+Initialization_MySQL
+	
+	1）初始化数据库：
+		# cd /usr/local/mysql/scripts
+		# ./mysql_install_db --user=mysql --basedir=/usr/local/mysql/ --datadir=/mydata/data/
+
+	2）优化mysql命令路径：
+		# cd /usr/local/mysql/support-files
+		# cp mysql.server /etc/init.d/mysqld
+		# chmod a+x /etc/init.d/mysqld
+		# chkconfig --add mysqld
+		# chkconfig --list mysqld
+		# vim /etc/profile.d/mysql.sh
+			export PATH=$PATH:/usr/local/mysql/bin
+		# source /etc/profile.d/mysql.sh
+
+	3）导出库文件：
+		# vim /etc/ld.so.conf.d/mysql.conf
+			/usr/local/mysql/lib
+		# ldconfig
+
+	4）导出mysql的头文件：
+		# ln -s /usr/local/mysql/include/ /usr/include/mysql
+
+	5）配置mysql的住配置文件：
+		# cp /usr/local/mysql/support-files/my-default.cnf /etc/my.cnf
+		# vim /etc/my.cnf
+			
+			innodb_file_per_table = 1
+  			datadir = /mydata/data
+  			port = 3306
+  			user = mysql
+  			server_id = 1
+  			socket = /tmp/mysql.sock
+
+  		# service mysqld start
+
+Error：
+	[root@master ~]# service mysqld start
+	Starting MySQL...
+	The server quit without updating PID file （mydata/data/master.pid).[flase]
+	[root@master ~]# 
+
+Solve:
+	错误解释：没有找到.pid文件
+	错误原因：
+			1.内存不足
+			2.selinux未关闭
+			3.初始化未完全
+			4.配置文件格式不对
+
+	解决办法：
+			1.删除/etc/my.cnf，重新复制到/etc下再次编辑即可（内存充足、安装无错状态下）
+			
+			2.重新初始化：切换到mysql安装目录，查看属主属组（mysql.mysql），如不是请改变，之后切换到mysql用户，进入到/usr/local/mysql/scripts下，执行脚本
+			./mysql_install_db，再次重启mysql即可
+
+			3.删除/etc/my.cnf和/usr/local/mysql/my-default.cnf,之后重新初始化,再次cp
+			编辑/etc/my.cnf，重启服务即可
+
+			4.查看/mydata/data的属主属组改成mysql.mysql，重启即可生效
+
+
+以上为源码mysql的基本配置！
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+Configurl_MySQL
+
+配置基本安全：
+	# mysqladmin -u root -p password "#@!redhat#@!"
+	Warning: Using a password on the command line interface can be insecure.
+	该警告只是说不要在命令行中输入密码
+
+删除多余用户及空白库：
+	# mysql -u root -p
+
+	mysql> drop database test;
+	mysql> select User,Host,Password from mysql.user;
+	mysql> drop user (逐一删除)
+
+创建并授权相应的库
+	mysql> create database mysql0website;
+	mysql> grant all on mysql0website.* to root@localhost identified by "redhat#@!";
+	mysql> flush privileges;
+	
+	 
+
+＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
+
+MySQL_Oprate
+
+增删改查:
+	insert. delete. update. select.
+
+	Insert:
+		mysql> insert into table_name (字段名1，字段名2...) values (值1，值2...)
+	Select:
+		mysql> select * from tables_name;
+	Update:
+		mysql> update table_name set 字段名=值 where 条件;
+	Delete:
+		mysql> delete from 表名 where 条件
+
+Select:
+	

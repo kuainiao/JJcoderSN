@@ -1,0 +1,28 @@
+spawn scp host_mysqlbackup.sh sauser@10.8.24.54:/home/sauser/
+sauser@10.8.24.54's password: 
+host_mysqlbackup.sh                             0%    0     0.0KB/s   --:-- ETAhost_mysqlbackup.sh                           100% 4412     2.1MB/s   00:00    
+spawn scp host_mysqlbackup.sh sauser@10.8.24.8:/home/sauser/
+sauser@10.8.24.8's password: 
+host_mysqlbackup.sh                             0%    0     0.0KB/s   --:-- ETAhost_mysqlbackup.sh                           100% 4411     2.1MB/s   00:00    
+spawn scp host_mysqlbackup.sh sauser@10.8.131.12:/home/sauser/
+sauser@10.8.131.12's password: 
+host_mysqlbackup.sh                             0%    0     0.0KB/s   --:-- ETAhost_mysqlbackup.sh                           100% 4413     3.3MB/s   00:00    
+spawn scp host_mysqlbackup.sh sauser@10.8.131.13:/home/sauser/
+sauser@10.8.131.13's password: 
+host_mysqlbackup.sh                             0%    0     0.0KB/s   --:-- ETAhost_mysqlbackup.sh                           100% 4413     1.6MB/s   00:00    
+spawn scp host_mysqlbackup.sh sauser@10.8.16.157:/home/sauser/
+host_mysqlbackup.sh                             0%    0     0.0KB/s   --:-- ETAhost_mysqlbackup.sh                           100% 4413     2.5MB/s   00:00    
+spawn scp host_mysqlbackup.sh sauser@10.8.16.103:/home/sauser/
+sauser@10.8.16.103's password: 
+host_mysqlbackup.sh                             0%    0     0.0KB/s   --:-- ETAhost_mysqlbackup.sh                           100% 4413     2.5MB/s   00:00    
+spawn ssh sauser@10.8.24.54 bash /home/sauser/host_mysqlbackup.sh > /dev/null 2>&1 &
+sauser@10.8.24.54's password: 
+spawn ssh sauser@10.8.24.8 bash /home/sauser/host_mysqlbackup.sh > /dev/null 2>&1 &
+sauser@10.8.24.8's password: 
+spawn ssh sauser@10.8.131.12 bash /home/sauser/host_mysqlbackup.sh > /dev/null 2>&1 &
+sauser@10.8.131.12's password: 
+spawn ssh sauser@10.8.131.13 bash /home/sauser/host_mysqlbackup.sh > /dev/null 2>&1 &
+sauser@10.8.131.13's password: 
+spawn ssh sauser@10.8.16.157 bash /home/sauser/host_mysqlbackup.sh > /dev/null 2>&1 &
+spawn ssh sauser@10.8.16.103 bash /home/sauser/host_mysqlbackup.sh > /dev/null 2>&1 &
+sauser@10.8.16.103's password: 

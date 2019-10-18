@@ -1,0 +1,30 @@
+{
+    "funcConfig" : {
+        "backupLog" : {
+            "filters" : {
+                "include" : [
+                    "___room*",
+                    "_gameOverLog"
+                ],
+                "exclude" : [
+                    "copyer.cnf"
+                ]
+            }
+        }
+    },
+    "copys" : [
+        {
+            "from" : "",
+            "to" : "bakup#[TIME]",
+            "remove" : "remove",
+            "func" : "backupLog",
+            "retention":
+                {
+                    "zip": 30,
+                    "dir": 3
+                },
+            "show" : "<start compile>\n*** : backup log"
+        }
+    ]
+    
+}

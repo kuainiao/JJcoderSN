@@ -1,0 +1,19 @@
+---
+- hosts: hbhosts
+remote_user: root
+tasks:
+    - name: ensure heartbeat latest version
+      yum: name=heartbeat state=present
+    - name: authkeys configure file
+      copy: src=/root/hb_conf/authkeys dest=/etc/ha.d/authkeys
+    - name: authkeys mode 600
+      file: path=/etc/ha.d/authkeys mode=600
+      notify:
+        - restart heartbeat
+    - name: ha.cf configure file
+      copy: src=/root/hb_conf/ha.cf dest=/etc/ha.d/ha.cf
+      notify:
+        - restart heartbeat
+handlers:
+    - name: restart heartbeat
+      service: name=heartbeat state=restarted

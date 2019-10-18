@@ -1,0 +1,274 @@
+一、	shell脚本编写步骤
+1)	使用vim编辑器编写shell脚本
+2)	添加shell脚本的执行权限
+3)	执行shell脚本
+
+二、	重写向与管道符
+1、	输出重定向
+>：将命令结果输出到指定的文件中
+ps –aux >process.txt
+>>：将命令结果追加输出到指定文件中
+ps –aux >>process.txt
+
+2、	输入重定向
+<：从某个文件中读取内容作为命令的参数
+
+3、	错误重定向
+2>：将命令的错误信息输出到指定的文件中
+2>>：将命令的错误信息追加输出到指定的文件中
+tar czf etc.tar.gz /etc/ 2>error.log
+
+若希望将命令的正常输出信息及错误输出信息同时输出到指定的文件中，可以使用&>重定向操作
+tar czf etc.tar.gz &>infor.log
+
+三、	管道符操作
+df –hT | grep “/$” | awk ‘{print $1,$6}’
+|：代表Linux中的管道符，先执行管道符前面的命令，将命令的结果作为后一个命令的参数再继续执行
+
+awk命令：
+awk命令可以将输出的内容以某个字符（例如空格、制表符、冒号、分号等）为分隔，然后输出某几段的内容
+awk –F: ‘{print $1,$6}’：以冒号:分隔一行的内容，输出第1、6段的内容
+awk ‘{print $1,$3}’：默认以空格或者制表符分隔内容，输出第1，3段的内容
+
+四、shell变量
+1、自定义变量
+定义变量product，并输出变量的内容
+product=car
+echo $product
+定义变量product，输出变量与1.8T连接输出
+product=car
+echo ${product}1.8T
+
+	变量的赋值
+1)	使用双引号” ”将包括空格的变量值赋予变量
+car=”car 1.8T”
+2)	使用单引号’ ’将特殊字符（%,$,#,@）包括
+3)	变量值中如果有单引号，需要使用\转义符
+4)	变量值如果是一个命令的结果，需要使用``反撇号将命令括起来
+info=`ps aux | grep root`
+5)	如果命令在含有命令的嵌套，需要使用$()将命令括起来
+info=`rpm –qf $(which useradd)`
+	read命令
+使用read命令可以通过用户的输入为变量赋值
+read –p “请指定数据备份的目录：” dir1
+	变量的作用范围
+1)	变量的作用范围默认只限于本shell环境中，如果用户切换到其他的shell环境使用变量值时，变量的值为空
+2)	使用export可以将变量的作用范围设置为全局
+export name=”www.baidu.com”
+	变量运算符
+expr 变量1 运算符 变量2 运算符 变量3
+运算符：
+1)	+：加法运算     expr $x + $y
+2)	-：减法运算	  expr $x - $y
+3)	\*：乘法运算	  expr $x /* $y
+4)	/：除法运算
+5)	%：取两个数字的余数
+6)	变量与运算符之间必须用空格隔开
+
+2、环境变量
+环境变量是随着Linux系统的安装自动产生的变量，该类变量的值会随着用户的操作环境变化而变化
+使用env命令可以显示系统中存在的环境变量
+1)	USER：代表用户名
+2)	HOME：代表用户的宿主目录
+3)	HOSTNAME：代表计算机名
+4)	LANG：代表系统使用的语言
+5)	PATH：代表用户可以执行哪些目录下的命令
+6)	PWD：代表当前目录的位置 
+7)	SHELL：代表用户当前所使用的shell
+
+4、	位置变量（占位符）
+Linux shell脚本中，使用$1,$2……$9代表占用符
+例如编写以下脚本：
+vim service.sh
+#/bin/bash
+/etc/init.d/$1 restart
+用户在执行上面脚本时./service.sh network结果就是重启network服务
+
+5、	特殊变量
+1)	$#：代表某个命令的参数的个数
+2)	$*：代表某个命令的详细参数信息
+3)	$?：代表前一个命令的执行结果。结果为0代表命令正常执行
+4)	$0：代表当前执行的脚本或者命令的名称
+
+简单shell脚本举例
+显示系统中的进程数，显示当前登录系统的用户数及根文件系统的使用率
+vim count.sh
+#/bin/bash
+process_num=`ps aux | wc –l`
+account_num=`who | wc –l`
+use_percent=`df –hT | grep “/$” | awk ‘{print $6}’`
+echo “系统中的运行数为： $process_num”
+echo “登录系统的用户数： $account_num”
+echo “根分区的使用率为： $use_percent”
+
+五、条件测试
+语法： [ 条件表达式 ]
+条件表达式与方括号中间要用空格隔开，通过$?返回测试的结果，返回0代表测试通过，非0代表测试失败
+ 
+1、文件测试
+1)	[ -e 目录或者文件位置 ]：判断文件或者目录是否存在
+2)	[ -d 目录或者文件位置 ]：判断是否为一个目录
+3)	[ -f 目录或者文件位置 ]：判断是否为一个文件
+4)	[ -r 目录或者文件位置 ]：判断当前用户是否有读取权限
+5)	[ -w 目录或者文件位置 ]：判断当前用户是否有修改权限
+6)	[ -x 目录或者文件位置 ]：判断当前用户是否有执行权限
+
+2、整数值比较
+1)	[ number1 –eq number2]：判断两个数字是否相同
+2)	[ number1 –ne number2]：判断两个数字是否不同
+3)	[ number1 –lt number2]：判断第1个数字是否小于第2个数字
+4)	[ number1 –gt number2]：判断第1个数字是否大于第2个数字
+5)	[ number1 –le number2]：判断第1个数字是否小于等于第2个数字
+6)	[ number1 –ge number2]：判断第1个数字是否大于等于第2个数字
+
+3、字符串比较
+1)	[ 字符串1 = 字符串2 ]：判断两个字符串是否相同
+2)	[ 字符串1 != 字符串2 ]：判断两个字符串是否不同
+3)	[-z 字符串 ]：判断字符串是否为空
+
+4、逻辑判断
+[ 条件1 && 条件2 ]：两个条件都成立时，返回0
+[ 条件1 || 条件2 ]：两个条件有一个为0时，返回0
+[ !条件 ]：当条件不成立时，返回0
+
+六、if选择分支结构
+1)	语法1
+if [ 条件测试操作 ]
+then
+	条件完成执行的操作
+else
+	条件未完成执行的操作
+fi
+2)	语法2
+	if [ 条件测试操作1 ]
+	then
+		条件1完成执行的操作
+	elif [ 条件测试操作2 ]
+	then
+		条件2完成执行的操作
+	else
+		以上条件都未完成执行的操作
+	fi
+
+if分支举例：
+监控系统的CPU、内存、根分区使用率，如果CPU使用率大于80%，内存使用率大于90%，根分区使用率大于90%，分别显示相应的告警信息
+#!/bin/bash
+
+#获取根分区磁盘使用率
+disk_usage_root=`df -h | grep "/$" | awk '{print $5}' | awk -F% '{print $1}'`
+#获取CPU使用率
+cpu_idle=`mpstat | tail -1 | awk '{print $11}' | awk -F. '{print $1}'`
+cpu_usage=`expr 100 - $cpu_idle`
+#获取内存使用率
+mem_used=`free | grep "cache:" | awk '{print $3}'`
+mem_total=`free | grep "Mem:" | awk '{print $2}'`
+mem_usage=`expr $mem_used \* 100 / $mem_total`
+
+if [ $disk_usage_root -ge 90 ]
+then
+  echo "你的磁盘使用率已经高于90%，目前你的磁盘使用率是：${disk_usage_root}%"
+elif [ $cpu_usage -ge 80 ]
+then
+  echo "你的CPU使用率已经高于80%，目前你的CPU使用率是：${cpu_usage}%"
+elif [ $mem_usage -ge 90 ]
+then
+  echo "你的内存使用率已经高于90%，目前你的内存率是：${mem_usage}%"
+fi
+
+七、for循环结构
+语法：
+	for 变量名 in 变量取值列表
+	do
+		执行的操作
+	done
+
+根据用户列表文件中的内容，实现批量建立用户，用户的初始密码为123456
+#!/bin/bash
+
+userName=`cat /shell/user.list`
+for user in $userName
+do
+  useradd $user
+  echo "123456" | passwd --stdin $user &>/dev/null
+done
+
+八、while循环结构
+语法：
+	while [ 条件测试操作 ]
+	do
+		执行的操作
+		条件变化
+	done
+在while循环中，有两个特殊的条件分别是true和false；当条件指定为true时，会无限循环，直到遇到exit语句才会跳出结束脚本；条件指定为false时，循环不会执行 
+
+随机生成商品价格，用户猜测商品价格
+#!/bin/bash
+price=`expr $RANDOM % 1000`
+times=0;
+
+echo "商品实际价格范围为0-999，猜猜看是多少："
+
+while true
+do
+  read -p "请输入你猜测的价格：" int
+  let times++
+  if [ $int -eq $price ]
+  then
+    echo "恭喜你答对了，实际价格是：$price"
+    echo "你总共猜了${times}次"
+    exit 0
+  elif [ $int -gt $price ]
+  then
+    echo "太高了"
+  else
+    echo "太低了"
+  fi
+done
+
+九、case选择结构
+语法：
+	case 变量 in
+	取值1）
+		执行的操作
+		;;
+	取值2）
+		执行的操作
+		;;
+	*）
+		默认执行的操作
+*)：代表case默认执行的操作
+;;：表示中断一个case的操作
+
+使用case编写启动、停止、重启服务的脚本
+#!/bin/bash
+
+case "$1" in
+start)
+  echo -n "正在启动sleep服务…"
+  sleep 7200 &
+  if [ $? -eq 0 ]
+  then
+    echo "OK"
+  fi
+  ;;
+stop)
+  echo -n "正在停止sleep服务…"
+  pkill "sleep" &>/dev/null
+  echo "OK"
+  ;;
+status)
+  pgrep "sleep" &>/dev/null
+  if [ $? -eq 0 ]
+  then
+  echo "sleep服务已经启动"
+  else
+  echo "sleep服务已经停止"
+  fi
+  ;;
+restart)
+  $0 stop
+  $0 start
+  ;;
+*)
+  echo "用法： $0(start|stop|status|restart)"
+esac

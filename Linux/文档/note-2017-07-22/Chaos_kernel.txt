@@ -1,0 +1,33 @@
+内核模块中的基本命令
+
+	Linux 内核模块文件的命名方式通常为<模块名称.ko>,CentOS6.3系统的内核模块被集成在/lib/modules/`uname-r`目录下。
+
+1、lsmod来显示当前Linux内核模块状态，不使用参数时，会显示当前已经加载的所有内核模块。
+[root@tomcat ~]# lsmod 
+Module                  Size  Used by
+autofs4                26609  3 
+ip6t_REJECT             4628  2 
+nf_conntrack_ipv6       8337  3 
+nf_defrag_ipv6         27236  1 nf_conntrack_ipv6
+xt_state                1492  3 
+nf_conntrack           80390  2 nf_conntrack_ipv6,xt_state
+ip6table_filter         2889  1 
+ip6_tables             18732  1 ip6table_filter
+ipv6                  334932  283 ip6t_REJECT,nf_conntrack_ipv6,nf_defrag_ipv6
+microcode             112653  0 
+
+2、modprobe 动态的加载和卸载内核模块
+[root@tomcat ~]# modprobe ip_vs	# 动态的加载内核ip_vs
+[root@tomcat ~]# lsmod | grep ip_vs	# 查看模块是否加载成功
+ip_vs                 125694  0 
+libcrc32c               1246  1 ip_vs
+ipv6                  334932  284 ip_vs,ip6t_REJECT,nf_conntrack_ipv6,nf_defrag_ipv6
+[root@tomcat ~]# modprobe -r ip_vs	# 动态的卸载模块
+
+3、永久调整参数 
+	man proc可以获得大量的内核参数描述信息
+[root@tomcat ~]# vim /etc/sysctl.conf		# 修改内核文件
+net.ipv4.ip_forward=1	# 路由转发功能
+net.ipv4.icmp_ignore_all=1
+fs.file-max=108248
+[root@tomcat ~]# sysctl -p 	# 设置加载所改项，并永久生效

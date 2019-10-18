@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+#-*-coding:utf-8-*-
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.header import Header
+
+sender = 'ysluo@gaojihealth.com'
+
+user = 'ysluo@gaojihealth.com'
+password = 'Password1127'
+
+smtpserver = 'smtp.exmail.qq.com'
+
+receiver = ['luoyinsheng@outlook.com','18611142071@163.com','ysluo@gaojihealth.com'] 
+
+message = MIMEMultipart()
+message['From'] = Header('SCRM_Mysql_Backup_Info')
+message['To'] = Header('luoyinsheng@outlook.com; 18611142071@163.com; ysluo@gaojihealth.com')
+subject = 'SCRM_Mysql 备份成功'
+message['Subject'] = Header(subject,'utf-8')
+
+message.attach(MIMEText('<html><h1>Hello:<br/><h3>SCRM 数据库备份成功,具体备份细节请查看附件，谢谢。<h3><html>','html','utf-8'))
+
+att1 = MIMEText(open('SCRM_Mysql_Backup.txt','rb').read(),'base64','utf-8')
+att1['Content-Type'] = 'application/octet-stream'
+
+att1['Content-Disposition'] = 'attachment;filename="SCRM_Mysql_Backup.txt"'
+message.attach(att1)
+
+smtp = smtplib.SMTP_SSL()
+smtp.connect(smtpserver,465)
+smtp.login(user,password)
+smtp.sendmail(sender,receiver,message.as_string())
+smtp.quit()
