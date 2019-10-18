@@ -4,7 +4,7 @@
 
 
 
-## [#](http://www.liuwq.com/views/linux基础/tcp协议.html#tcp-的特性)TCP 的特性
+## TCP 的特性
 
 - TCP 提供一种**面向连接的、可靠的**字节流服务
 - 在一个 TCP 连接中，仅有两方进行彼此通信。广播和多播不能用于 TCP
@@ -14,7 +14,7 @@
 
 **注意**：TCP 并不能保证数据一定会被对方接收到，因为这是不可能的。TCP 能够做到的是，如果有可能，就把数据递送到接收方，否则就（通过放弃重传并且中断连接这一手段）通知用户。因此准确说 TCP 也不是 100% 可靠的协议，它所能提供的是数据的可靠递送或故障的可靠通知。
 
-## [#](http://www.liuwq.com/views/linux基础/tcp协议.html#三次握手与四次挥手)三次握手与四次挥手
+## 三次握手与四次挥手
 
 所谓三次握手(Three-way Handshake)，是指建立一个 TCP 连接时，需要客户端和服务器总共发送3个包。
 
@@ -72,7 +72,7 @@ TCP 的连接的拆除需要发送四个包，因此称为四次挥手(Four-way 
 
 ![img](http://img.liuwenqi.com/blog/2019-07-24-100837.jpg)
 
-## [#](http://www.liuwq.com/views/linux基础/tcp协议.html#syn攻击)SYN攻击
+## SYN攻击
 
 - 什么是 SYN 攻击（SYN Flood）？
 
@@ -95,7 +95,7 @@ TCP 的连接的拆除需要发送四个包，因此称为四次挥手(Four-way 
     - 过滤网关防护
     - SYN cookies技术
 
-## [#](http://www.liuwq.com/views/linux基础/tcp协议.html#tcp-keepalive)TCP KeepAlive
+## TCP KeepAlive
 
 TCP 的连接，实际上是一种纯软件层面的概念，在物理层面并没有“连接”这种概念。TCP 通信双方建立交互的连接，但是并不是一直存在数据交互，有些连接会在数据交互完毕后，主动释放连接，而有些不会。在长时间无数据交互的时间段内，交互双方都有可能出现掉电、死机、异常重启等各种意外，当这些意外发生之后，这些 TCP 连接并未来得及正常释放，在软件层面上，连接的另一方并不知道对端的情况，它会一直维护这个连接，长时间的积累会导致非常多的半打开连接，造成端系统资源的消耗和浪费，为了解决这个问题，在传输层可以利用 TCP 的 KeepAlive 机制实现来实现。主流的操作系统基本都在内核里支持了这个特性。
 
@@ -103,7 +103,7 @@ TCP KeepAlive 的基本原理是，隔一段时间给连接对端发送一个探
 
 [TCP-Keepalive-HOWTO](http://www.tldp.org/HOWTO/html_single/TCP-Keepalive-HOWTO/) 有对 TCP KeepAlive 特性的详细介绍，有兴趣的同学可以参考。这里主要说一下，TCP KeepAlive 的局限。首先 TCP KeepAlive 监测的方式是发送一个 probe 包，会给网络带来额外的流量，另外 TCP KeepAlive 只能在内核层级监测连接的存活与否，而连接的存活不一定代表服务的可用。例如当一个服务器 CPU 进程服务器占用达到 100%，已经卡死不能响应请求了，此时 TCP KeepAlive 依然会认为连接是存活的。因此 TCP KeepAlive 对于应用层程序的价值是相对较小的。需要做连接保活的应用层程序，例如 QQ，往往会在应用层实现自己的心跳功能。
 
-### [#](http://www.liuwq.com/views/linux基础/tcp协议.html#参考资料)参考资料
+### 参考资料
 
 - 计算机网络：自顶向下方法
 - [TCP三次握手及四次挥手详细图解](http://www.cnblogs.com/hnrainll/archive/2011/10/14/2212415.html)

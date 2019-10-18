@@ -2,7 +2,7 @@
 
 ------
 
-# [#](http://www.liuwq.com/views/linux基础/socket与TCP-IP关系.html#socket跟tcp-ip-的关系-单台服务器上的并发tcp连接数可以有多少)socket跟TCP/IP 的关系,单台服务器上的并发TCP连接数可以有多少
+# socket跟TCP/IP 的关系,单台服务器上的并发TCP连接数可以有多少
 
 ## [#](http://www.liuwq.com/views/linux基础/socket与TCP-IP关系.html#常识一：文件句柄限制)常识一：文件句柄限制
 
@@ -34,10 +34,6 @@ fs.file-max = 1000000
 net.ipv4.ip_conntrack_max = 1000000
 net.ipv4.netfilter.ip_conntrack_max = 1000000
 ```
-
-1
-2
-3
 
 ## [#](http://www.liuwq.com/views/linux基础/socket与TCP-IP关系.html#常识二：端口号范围限制？)常识二：端口号范围限制？
 

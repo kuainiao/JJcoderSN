@@ -2,7 +2,7 @@
 
 ------
 
-*kame* *11/13/2017*  4  *IP*
+
 
 ## [#](http://www.liuwq.com/views/linux基础/IP协议.html#ip-协议简介)IP 协议简介
 

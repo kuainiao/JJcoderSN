@@ -2,7 +2,7 @@
 
 ------
 
-*kame* *11/8/2016*  11  *nginx openssl SSL证书*
+
 
 **使用openssl制作证书**
 
@@ -32,11 +32,6 @@ openssl req -new -key key.pem -out cert.csr`
 #//会提示输入省份、城市、域名信息等，重要的是，email 一定要是你的域名后缀的你可以拿着这个文件去数字证书颁发机构（即CA）申请一个数字证书。
 CA会给你一个新的文件cacert.pem，那才是你的数字证书。
 ```
-
-1
-2
-3
-4
 
 **如果是自己做测试，就可以用下面这个命令来生成证书：**
 
@@ -73,30 +68,7 @@ server {
   }
 ```
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
+
 
 配置好后，重启nginx，采用 `https`打开网站，浏览器会提示证书错误，点击继续浏览即可。
 
@@ -107,8 +79,6 @@ server {
 ```shell
 # mkdir newcerts private conf server。
 ```
-
-1
 
 其中`newcerts`子目录将存放CA签署（颁发）过的数字证书（证书备份目录）。而`private`目录用于存放CA的私钥。目录conf只是用于存放一些简化参数
 
@@ -147,34 +117,7 @@ commonName              = supplied
 emailAddress            = optional
 ```
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
+
 
 ### [#](http://www.liuwq.com/views/网站架构/SSL数据传输nginx.html#使用脚本创建证书)使用脚本创建证书
 
@@ -202,23 +145,7 @@ touch index.txt
 openssl ca -gencrl -out /opt/nginx/ca/private/ca.crl -crldays 7 -config "/opt/nginx/ca/conf/openssl.conf"
 ```
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
+
 
 执行 `sh new_ca.sh`生成新的CA证书。
 
@@ -234,12 +161,7 @@ openssl req -new -key server/server.key -out server/server.csr
 openssl ca -in server/server.csr -cert private/ca.crt -keyfile private/ca.key -out server/server.crt -config "/opt/nginx/ca/conf/openssl.conf"
 ```
 
-1
-2
-3
-4
-5
-6
+
 
 执行 `sh new_server.sh`生成新服务器的证书
 
@@ -295,53 +217,7 @@ http {
 }
 ```
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43
-44
-45
-46
-47
+
 
 启动`nginx`,等待客户连接，如果此时连接服务器，将提示`400 Bad request certification`的错误，故还需要生成客户端证书。
 
@@ -368,24 +244,6 @@ openssl ca -in $base/users/client.csr -cert $base/private/ca.crt -keyfile $base/
 openssl pkcs12 -export -clcerts -in $base/users/client.crt -inkey $base/users/client.key -out $base/users/client.p12
 ```
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-
 执行 `sh new_user.sh`生成一个 `client`证书。
 
 按照提示一步一步来，这里要注意的是客户证书的几个项目要和根证书匹配。
@@ -398,11 +256,6 @@ stateOrProvinceName = match
 organizationName = match
 organizationalUnitName = match
 ```
-
-1
-2
-3
-4
 
 不一致的话无法生成最后的客户证书，证书生成后，客户端导入证书浏览器，即可打开网站。
 
@@ -418,10 +271,6 @@ cd /etc/init.d
 sudo touch nginx
 sudo chmod +x nginx
 ```
-
-1
-2
-3
 
 nginx内容：
 
