@@ -1,8 +1,4 @@
-# [项目实战9—企业级分布式存储应用与实战MogileFS、FastDFS](https://www.cnblogs.com/along21/p/7911676.html)
-
-分类: [Linux架构篇](https://www.cnblogs.com/along21/category/1114615.html)
-
-undefined
+# 企业级分布式存储应用与实战MogileFS、FastDFS
 
 ![img](%E4%BC%81%E4%B8%9A%E7%BA%A7%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8%E5%BA%94%E7%94%A8%E4%B8%8E%E5%AE%9E%E6%88%98MogileFS%E3%80%81FastDFS.assets/1216496-20171128192643253-1858308752.png)
 

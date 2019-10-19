@@ -2,17 +2,13 @@
 
 ------
 
-# [#](http://www.liuwq.com/views/网站架构/消息队列/redis_kafka_rabbitmq.html#kafka、rabbitmq、redis消息中间件对比)Kafka、RabbitMQ、Redis消息中间件对比
-
-------
-
 在分布式系统中，消息中间件常用于系统间的数据交换。
 
 > 前几天搭建ELKB集群，用了一些队列。Kafka、Redis、RabbitMQ这三个消息中间件对一个简单的对比
 
 **按照实际业务需求场景以及运维成本，可以选择是和自己的产品。**
 
-## [#](http://www.liuwq.com/views/网站架构/消息队列/redis_kafka_rabbitmq.html#相关概念性的介绍)相关概念性的介绍
+## 相关概念性的介绍
 
 - Kafka
 
@@ -40,36 +36,36 @@
 
     - 虽然它是一个Key-Value数据库存储系统，但它本身支持MQ功能，所以完全可以当做一个轻量级的队列服务来使用。
 
-## [#](http://www.liuwq.com/views/网站架构/消息队列/redis_kafka_rabbitmq.html#特性对比)特性对比
+## 特性对比
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/redis_kafka_rabbitmq.html#在应用场景方面)在应用场景方面
+### 在应用场景方面
 
 - `RabbitMQ`,遵循AMQP协议，由内在高并发的erlanng语言开发，用在实时的对可靠性要求比较高的消息传递上。
 - kafka是Linkedin于2010年12月份开源的消息发布订阅系统,它主要用于处理活跃的流式数据,大数据量的数据处理上。
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/redis_kafka_rabbitmq.html#在架构模型方面)在架构模型方面
+### 在架构模型方面
 
 - `RabbitMQ`遵循AMQP协议，RabbitMQ的broker由Exchange,Binding,queue组成，其中exchange和binding组成了消息的路由键；客户端Producer通过连接channel和server进行通信，Consumer从queue获取消息进行消费（长连接，queue有消息会推送到consumer端，consumer循环从输入流读取数据）。rabbitMQ以broker为中心；有消息的确认机制。
 - kafka遵从一般的MQ结构，producer，broker，consumer，以consumer为中心，消息的消费信息保存的客户端consumer上，consumer根据消费的点，从broker上批量pull数据；无消息确认机制。
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/redis_kafka_rabbitmq.html#在吞吐量方面)在吞吐量方面
+### 在吞吐量方面
 
 - `kafka`具有高的吞吐量，内部采用消息的批量处理，zero-copy机制，数据的存储和获取是本地磁盘顺序批量操作，具有O(1)的复杂度，消息处理的效率很高。
 - `rabbitMQ`在吞吐量方面稍逊于kafka，他们的出发点不一样，rabbitMQ支持对消息的可靠的传递，支持事务，不支持批量的操作；基于存储的可靠性的要求存储可以采用内存或者硬盘。
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/redis_kafka_rabbitmq.html#在可用性方面)在可用性方面
+### 在可用性方面
 
 - rabbitMQ支持miror的queue，主queue失效，miror queue接管。
 - kafka的broker支持主备模式。
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/redis_kafka_rabbitmq.html#在集群负载均衡方面)在集群负载均衡方面
+### 在集群负载均衡方面
 
 - kafka采用zookeeper对集群中的broker、consumer进行管理，可以注册topic到zookeeper上；通过zookeeper的协调机制，producer保存对应topic的broker信息，可以随机或者轮询发送到broker上；并且producer可以基于语义指定分片，消息发送到broker的某分片上。
 - rabbitMQ的负载均衡需要单独的loadbalancer进行支持。
 
-## [#](http://www.liuwq.com/views/网站架构/消息队列/redis_kafka_rabbitmq.html#应用场景)应用场景
+## 应用场景
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/redis_kafka_rabbitmq.html#rabbitmq比kafka可靠，kafka更适合io高吞吐的处理，比如elk日志收集)rabbitmq比kafka可靠，kafka更适合IO高吞吐的处理，比如ELK日志收集
+### rabbitmq比kafka可靠，kafka更适合IO高吞吐的处理，比如ELK日志收集
 
 Kafka和RabbitMq一样是通用意图消息代理，他们都是以分布式部署为目的。但是他们对消息语义模型的定义的假设是非常不同的。
 
@@ -77,7 +73,7 @@ a) 以下场景你比较适合使用Kafka。你有大量的事件(10万以上/�
 
 b) 以下场景你比较适合使用RabbitMQ。你有较少的事件（2万以上/秒）并且需要通过复杂的路由逻辑去找到消费者、你希望消息传递是可靠的、你并不关心消息传递的顺序、你需要现在就支持集群-节点级别的高可用或则说你需要7*24小时的付费支持（当然也可以通过论坛/IRC工具）。
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/redis_kafka_rabbitmq.html#redis-消息推送（基于分布式-pub-sub）多用于实时性较高的消息推送，并不保证可靠)redis 消息推送（基于分布式 pub/sub）多用于实时性较高的消息推送，并不保证可靠
+### redis 消息推送（基于分布式 pub/sub）多用于实时性较高的消息推送，并不保证可靠
 
 redis 消息推送（基于分布式 pub/sub）多用于实时性较高的消息推送，并不保证可靠。其他的mq和kafka保证可靠但有一些延迟（非实时系统没有保证延迟）。redis-pub/sub断电就清空，而使用redis-list作为消息推送虽然有持久化，也并非完全可靠不会丢。
 

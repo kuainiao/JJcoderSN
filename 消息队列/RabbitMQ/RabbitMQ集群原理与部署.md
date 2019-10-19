@@ -2,17 +2,11 @@
 
 ------
 
-
-
-# [#](http://www.liuwq.com/views/网站架构/消息队列/rabbitmq集群部署.html#rabbitmq集群原理与部署)RabbitMQ集群原理与部署
-
-------
-
 在项目中想要 RabbitMQ 变得更加健壮，就要使得其变成高可用，所以我们要搭建一个 RabbitMQ 集群，这样你可以从任何一台 RabbitMQ 故障中得以幸免，并且应用程序能够持续运行而不会发生阻塞。而 RabbitMQ 本身是基于 Erlang 编写的，Erlang 天生支持分布式（通过同步 Erlang 集群各节点的 cookie 来实现），因此不需要像 ActiveMQ、Kafka 那样通过 ZooKeeper 分别来实现 HA 方案和保存集群的元数据。
 
-## [#](http://www.liuwq.com/views/网站架构/消息队列/rabbitmq集群部署.html#集群架构)集群架构
+## 集群架构
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/rabbitmq集群部署.html#元数据)元数据
+### 元数据
 
 RabbitMQ 内部有各种基础构件，包括队列、交换器、绑定、虚拟主机等，他们组成了 AMQP 协议消息通信的基础，而这些构件以元数据的形式存在，它始终记录在 RabbitMQ 内部，它们分别是：
 
@@ -23,7 +17,7 @@ RabbitMQ 内部有各种基础构件，包括队列、交换器、绑定、虚�
 
 在单一节点上，RabbitMQ 会将上述元数据存储到内存上，如果是磁盘节点（下面会讲），还会存储到磁盘上。
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/rabbitmq集群部署.html#集群中的队列)集群中的队列
+### 集群中的队列
 
 这里有个问题需要思考，RabbitMQ 默认会将消息冗余到所有节点上吗？这样听起来正符合高可用的特性，只要集群上还有一个节点存活，那么就可以继续进行消息通信，但这也随之为 RabbitMQ 带来了致命的缺点：
 
@@ -32,13 +26,13 @@ RabbitMQ 内部有各种基础构件，包括队列、交换器、绑定、虚�
 
 解决这个问题就是通过集群中唯一节点来负责任何特定队列，只有该节点才会受队列大小的影响，其它节点如果接收到该队列消息，那么就要根据元数据信息，传递给队列所有者节点（也就是说其它节点上只存储了特定队列所有者节点的指针）。这样一来，就可以通过在集群内增加节点，存储更多的队列数据。
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/rabbitmq集群部署.html#分布交换器)分布交换器
+### 分布交换器
 
 交换器其实是我们想象出来的，它本质是一张查询表，里面包括了交换器名称和一个队列的绑定列表，当你将消息发布到交换器中，实际上是你所在的信道将消息上的路由键与交换器的绑定列表进行匹配，然后将消息路由出去。有了这个机制，那么在所有节点上传递交换器消息将简单很多，而 RabbitMQ 所做的事情就是把交换器拷贝到所有节点上，因此每个节点上的每条信道都可以访问完整的交换器了。
 
 ![img](http://img.liuwenqi.com/blog/2019-07-19-190921.jpg)
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/rabbitmq集群部署.html#内存节点与磁盘节点)内存节点与磁盘节点
+### 内存节点与磁盘节点
 
 关于上面队列所说的问题与解决办法，又有了一个伴随而来的问题出现：如果特定队列的所有者节点发生了故障，那么该节点上的队列和关联的绑定都会消失吗？
 
@@ -60,9 +54,9 @@ RabbitMQ 集群只要求至少有一个磁盘节点，这是有道理的，当�
 
 这是因为上述操作都需要持久化到磁盘节点上，以便内存节点恢复故障可以从磁盘节点上恢复元数据，解决办法是在集群添加 2 台以上的磁盘节点，这样其中一台发生故障了，集群仍然可以保持运行，且能够在任何时候保存元数据变更。
 
-## [#](http://www.liuwq.com/views/网站架构/消息队列/rabbitmq集群部署.html#集群部署)集群部署
+## 集群部署
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/rabbitmq集群部署.html#安装rabbitmq)安装rabbitmq
+### 安装rabbitmq
 
 ```text
 # 更新 yum源
@@ -70,7 +64,7 @@ yum install epel-release
 yum install -y rabbitmq-server
 ```
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/rabbitmq集群部署.html#设置主机名)设置主机名
+### 设置主机名
 
 由于 RabbitMQ 集群连接是通过主机名来连接服务的，必须保证各个主机名之间可以 ping 通，所以需要做以下操作：
 
@@ -90,7 +84,7 @@ $ sudo vim /etc/hosts
 172.16.249.122 node2
 ```
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/rabbitmq集群部署.html#复制-erlang-cookie)复制 Erlang cookie
+### 复制 Erlang cookie
 
 这里将 node1 的该文件复制到 node2，由于这个文件权限是 400 为方便传输，先修改权限，非必须操作，所以需要先修改 node2 中的该文件权限为 777
 
@@ -114,7 +108,7 @@ chown rabbitmq:rabbitmq /var/lib/rabbitmq/.erlang.cookie
 service rabbitmq-server start
 ```
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/rabbitmq集群部署.html#组成集群)组成集群
+### 组成集群
 
 在节点 2 执行如下命令：
 
@@ -159,7 +153,7 @@ $ rabbitmqctl stop
 $ rabbitmq-server -detached
 ```
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/rabbitmq集群部署.html#设置内存节点)设置内存节点
+### 设置内存节点
 
 如果节点需要设置成内存节点，则加入集群的命令如下：
 
@@ -192,7 +186,7 @@ Cluster status of node rabbit@node1 ...
 
 可以看到，节点 2 已经成为内存节点了。
 
-### [#](http://www.liuwq.com/views/网站架构/消息队列/rabbitmq集群部署.html#镜像队列)镜像队列
+### 镜像队列
 
 当节点发生故障时，尽管所有元数据信息都可以从磁盘节点上将元数据拷贝到本节点上，但是队列的消息内容就不行了，这样就会导致消息的丢失，那是因为在默认情况下，队列只会保存在其中一个节点上，我们在将集群队列时也说过。
 
@@ -246,7 +240,7 @@ $ rabbitmqctl set_policy ha-nodes "^nodes." '{"ha-mode":"nodes","ha-params":["ra
 
 ![img](http://img.liuwenqi.com/blog/2019-07-19-191014.jpg)
 
-## [#](http://www.liuwq.com/views/网站架构/消息队列/rabbitmq集群部署.html#集群的负载均衡)集群的负载均衡
+## 集群的负载均衡
 
 HAProxy 提供高可用性、负载均衡以及基于 TCP 和 HTTP 应用的代理，支持虚拟主机，它是免费、快速并且可靠的一种解决方案。
 

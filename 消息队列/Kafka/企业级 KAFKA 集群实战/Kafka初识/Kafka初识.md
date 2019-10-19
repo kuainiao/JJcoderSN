@@ -2,8 +2,6 @@
 
 **1、Kafka使用背景**
 
-
-
 在我们大量使用分布式数据库、分布式计算集群的时候，是否会遇到这样的一些问题：
 
 1. 我们想分析下用户行为（pageviews），以便我们设计出更好的广告位
@@ -16,7 +14,7 @@
 
 **2、Kafka的定义**
 
-What is Kafka：它是一个分布式消息系统，由linkedin使用scala编写，用作LinkedIn的活动流（Activity Stream）和运营数据处理管道（Pipeline）的基础。具有高水平扩展和高吞吐量。
+What is Kafka：它是一个分布式消息系统，由linkedin使用scala编写，用作LinkedIn的活动流（`Activity Stream`）和运营数据处理管道（Pipeline）的基础。具有高水平扩展和高吞吐量。
 
 **3、Kafka和其他主流分布式消息系统的对比** 
 
@@ -26,27 +24,25 @@ What is Kafka：它是一个分布式消息系统，由linkedin使用scala编写
 
 1、Java 和 scala都是运行在JVM上的语言。
 
-2、erlang和最近比较火的和go语言一样是从代码级别就支持高并发的一种语言，所以RabbitMQ天生就有很高的并发性能，但是 有RabbitMQ严格按照AMQP进行实现，受到了很多限制。kafka的设计目标是高吞吐量，所以kafka自己设计了一套高性能但是不通用的协议，他也是仿照AMQP（ Advanced Message Queuing Protocol   高级消息队列协议）设计的。 
+2、erlang和最近比较火的和go语言一样是从代码级别就支持高并发的一种语言，所以RabbitMQ天生就有很高的并发性能，但是 有RabbitMQ严格按照AMQP进行实现，受到了很多限制。kafka的设计目标是高吞吐量，所以kafka自己设计了一套高性能但是不通用的协议，他也是仿照AMQP（ `Advanced Message Queuing Protocol   高级消息队列协议`）设计的。 
 
-3、事物的概念：在数据库中，多个操作一起提交，要么操作全部成功，要么全部失败。举个例子， 在转账的时候付款和收款，就是一个事物的例子，你给一个人转账，你转成功，并且对方正常行收到款项后，这个操作才算成功，有一方失败，那么这个操作就是失败的。 
+3、**事物的概念：**在数据库中，多个操作一起提交，要么操作全部成功，要么全部失败。举个例子， 在转账的时候付款和收款，就是一个事物的例子，你给一个人转账，你转成功，并且对方正常行收到款项后，这个操作才算成功，有一方失败，那么这个操作就是失败的。 
 
 对应消在息队列中，就是多条消息一起发送，要么全部成功，要么全部失败。3个中只有ActiveMQ支持，这个是因为，RabbitMQ和Kafka为了更高的性能，而放弃了对事物的支持 。
 
-4、集群：多台服务器组成的整体叫做集群，这个整体对生产者和消费者来说，是透明的。其实对消费系统组成的集群添加一台服务器减少一台服务器对生产者和消费者都是无感之的。
+4、**集群：**多台服务器组成的整体叫做集群，这个整体对生产者和消费者来说，是透明的。其实对消费系统组成的集群添加一台服务器减少一台服务器对生产者和消费者都是无感之的。
 
-5、负载均衡，对消息系统来说负载均衡是大量的生产者和消费者向消息系统发出请求消息，系统必须均衡这些请求使得每一台服务器的请求达到平衡，而不是大量的请求，落到某一台或几台，使得这几台服务器高负荷或超负荷工作，严重情况下会停止服务或宕机。
+5、**负载均衡**：对消息系统来说负载均衡是大量的生产者和消费者向消息系统发出请求消息，系统必须均衡这些请求使得每一台服务器的请求达到平衡，而不是大量的请求，落到某一台或几台，使得这几台服务器高负荷或超负荷工作，严重情况下会停止服务或宕机。
 
-6、动态扩容是很多公司要求的技术之一，不支持动态扩容就意味着停止服务，这对很多公司来说是不可以接受的。 
+6、**动态扩容**是很多公司要求的技术之一，不支持动态扩容就意味着停止服务，这对很多公司来说是不可以接受的。 
 
 注：
 
-阿里巴巴的Metal,RocketMQ都有Kafka的影子，他们要么改造了Kafka或者借鉴了Kafka，最后Kafka的动态扩容是通过Zookeeper来实现的。 
+阿里巴巴的Metal,RocketMQ都有Kafka的影子，他们要么改造了Kafka或者借鉴了Kafka，最后`Kafka的动态扩容是通过Zookeeper来实现的`。 
 
 
 
- 
-
-Zookeeper是一种在分布式系统中被广泛用来作为：分布式状态管理、分布式协调管理、分布式配置管理、和分布式锁服务的集群。kafka增加和减少服务器都会在Zookeeper节点上触发相应的事件kafka系统会捕获这些事件，进行新一轮的负载均衡，客户端也会捕获这些事件来进行新一轮的处理。
+ Zookeeper是一种在分布式系统中被广泛用来作为：分布式状态管理、分布式协调管理、分布式配置管理、和分布式锁服务的集群。kafka增加和减少服务器都会在Zookeeper节点上触发相应的事件kafka系统会捕获这些事件，进行新一轮的负载均衡，客户端也会捕获这些事件来进行新一轮的处理。
 
 ## Kafka相关概念
 
@@ -68,9 +64,7 @@ Advanced Message Queuing Protocol （高级消息队列协议）
 
 3、AMQP服务端（broker）：用来接收生产者发送的消息并将这些消息路由给服务器中的队列，便于fafka将生产者发送的消息，动态的添加到磁盘并给每一条消息一个偏移量，所以对于kafka一个broker就是一个应用程序的实例
 
-kafka支持的客户端语言
-
-：Kafka客户端支持当前大部分主流语言，包括：C、C++、Erlang、Java、.net、perl、PHP、Python、Ruby、Go、Javascript
+**kafka支持的客户端语言**：Kafka客户端支持当前大部分主流语言，包括：C、C++、Erlang、Java、.net、perl、PHP、Python、Ruby、Go、Javascript
 
 可以使用以上任何一种语言和kafka服务器进行通信（即辨析自己的consumer从kafka集群订阅消息也可以自己写producer程序） 
 
@@ -125,13 +119,13 @@ ZooKeeper官网：<http://zookeeper.apache.org/>
 
 ```
 $ wget http://www-eu.apache.org/dist/zookeeper/zookeeper-3.5.1-alpha/zookeeper-3.5.1-alpha.tar.gz
-$ tar -zxvf zookeeper-3.5.1-alpha.tar.gz -c /opt/zookeeper12
+$ tar -zxvf zookeeper-3.5.1-alpha.tar.gz -c /opt/zookeeper
 ```
 
-进入Zookeeper的config目录下
+进入Zookeeper的conf目录下
 
 ```
-$ cd /opt/zookeeper/conf1
+$ cd /opt/zookeeper/conf
 ```
 
 拷贝zoo_sample.cfg文件重命名为zoo.cfg，然后修改dataDir属性
@@ -140,7 +134,7 @@ $ cd /opt/zookeeper/conf1
 # 数据的存放目录
 dataDir=/home/hadoop/zkdata
 # 端口，默认就是2181
-clientPort=21811234
+clientPort=2181
 ```
 
 配置环境变量
@@ -148,17 +142,17 @@ clientPort=21811234
 ```
 # Zookeeper Environment Variable
 export ZOOKEEPER_HOME=/opt/zookeeper
-export PATH=$PATH:$ZOOKEEPER_HOME/bin123
+export PATH=$PATH:$ZOOKEEPER_HOME/bin
 ```
 
 Zookeeper 启动停止命令
 
 ```
 $ zkServer.sh start
-$ zkServer.sh stop12
+$ zkServer.sh stop
 ```
 
-在安装完Zookeeper后，输入命令启动后，jps中并没有查看到QuorumPeerMain进程，说明没有启动成功，进入Zookeeper的log目录下查看日志，发现报了一个错误，如下
+在安装完Zookeeper后，输入命令启动后，ps中并没有查看到QuorumPeerMain进程，说明没有启动成功，进入Zookeeper的log目录下查看日志，发现报了一个错误，如下
 
 AdminServer$AdminServerException: Problem starting AdminServer on address 0.0.0.0, port 8080 and command URL /commands
 
@@ -185,7 +179,7 @@ listeners=PLAINTEXT://:9092
 # 日志目录
 log.dirs=/home/hadoop/kafka-logs
 # 配置zookeeper的连接（如果不是本机，需要该为ip或主机名）
-zookeeper.connect=localhost:218112345678
+zookeeper.connect=localhost:2181
 ```
 
 **启动Zookeeper**
@@ -194,19 +188,19 @@ zookeeper.connect=localhost:218112345678
 [hadoop@Master ~]$ zkServer.sh start
 ZooKeeper JMX enabled by default
 Using config: /opt/zookeeper/bin/../conf/zoo.cfg
-Starting zookeeper ... STARTED1234
+Starting zookeeper ... STARTED
 ```
 
 **启动Kafka**
 
 ```
-$ kafka-server-start.sh $KAFKA_HOME/config/server.properties1
+$ kafka-server-start.sh $KAFKA_HOME/config/server.properties
 ```
 
 打印的日志信息没有报错，可以看到如下信息
 
 ```
-[Kafka Server 0], started (kafka.server.KafkaServer)1
+[Kafka Server 0], started (kafka.server.KafkaServer)
 ```
 
 但是并不能保证Kafka已经启动成功，输入jps查看进程，如果可以看到Kafka进程，表示启动成功
@@ -219,7 +213,7 @@ $ kafka-server-start.sh $KAFKA_HOME/config/server.properties1
 [hadoop@Master ~]$ jps -m
 9472 Jps -m
 9173 Kafka /opt/kafka/config/server.properties
-8589 QuorumPeerMain /opt/zookeeper/bin/../conf/zoo.cfg12345678
+8589 QuorumPeerMain /opt/zookeeper/bin/../conf/zoo.cfg
 ```
 
 **创建topic**
