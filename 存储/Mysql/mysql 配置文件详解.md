@@ -1,9 +1,5 @@
 # mysql 配置文件详解
 
-------
-
-# Mysql配置文件my.cnf配置及配置参数详解
-
 > 以下是Mysql主配文件my.cnf参数和详解：
 
 ```yml

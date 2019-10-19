@@ -1,13 +1,5 @@
 # Apollo 与 superdiamond对比
 
-------
-
-*kame* *12/25/2018*  2  *apollo*
-
-**介绍 Apollo 之前先看下 与 superdiamond对比**
-
-# [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#superdiamond-与-apollo-对比)superdiamond 与 Apollo 对比
-
 | 功能                                 | superdiamond | Apollo |
 | ------------------------------------ | ------------ | ------ |
 | **统一管理不同环境、不同集群的配置** | Yes          | Yes    |
@@ -27,11 +19,11 @@
 
 > 下面主要介绍一款开源分布式配置中心 主要解决无法统一管理、审核配置文件，针对各个项目。
 
-# [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#apollo（阿波罗）分布式配置中心)Apollo（阿波罗）分布式配置中心
+# Apollo（阿波罗）分布式配置中心
 
 > 能够集中化管理应用不同环境、不同集群的配置，配置修改后能够实时推送到应用端，并且具备规范的权限、流程治理等特性，适用于微服务配置管理场景 服务端基于Spring Boot和Spring Cloud开发，打包后可以直接运行，不需要额外安装Tomcat等应用容器。 Java客户端不依赖任何框架，能够运行于所有Java运行时环境，同时对Spring/Spring Boot环境也有较好的支持。 .Net客户端不依赖任何框架，能够运行于所有.Net运行时环境。
 
-## [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#功能特点)功能特点
+## 功能特点
 
 - 统一管理不同环境、不同集群的配置
     - Apollo提供了一个统一界面集中式管理不同环境（environment）、不同集群（cluster）、不同命名空间（namespace）的配置。
@@ -63,9 +55,9 @@
     - 目前唯一的外部依赖是MySQL，所以部署非常简单，只要安装好Java和MySQL就可以让Apollo跑起来
     - Apollo还提供了打包脚本，一键就可以生成所有需要的安装包，并且支持自定义运行时参数
 
-## [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#apollo-at-a-glance)Apollo at a glance
+## Apollo at a glance
 
-### [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#基础模型)基础模型
+### 基础模型
 
 如下即是Apollo的基础模型：
 
@@ -75,7 +67,7 @@
 
 ![img](http://img.liuwenqi.com/blog/2019-07-19-190054.jpg)
 
-### [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#界面概览)界面概览
+### 界面概览
 
 ![img](http://img.liuwenqi.com/blog/2019-07-19-190118.jpg) **上图是Apollo配置中心中一个项目的配置首页**
 
@@ -83,7 +75,7 @@
 - 页面中央展示了两个namespace(application和FX.apollo)的配置信息，默认按照表格模式展示、编辑。用户也可以切换到文本模式，以文件形式查看、编辑。
 - 页面上可以方便地进行发布、回滚、灰度、授权、查看更改历史和发布历史等操作
 
-### [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#添加-修改配置项)添加/修改配置项
+### 添加/修改配置项
 
 用户可以通过配置中心界面方便的添加/修改配置项，更多使用说明请参见[应用接入指南](https://github.com/ctripcorp/apollo/wiki/应用接入指南)
 
@@ -91,7 +83,7 @@
 
 ![img](http://img.liuwenqi.com/blog/2019-07-19-190206.jpg)
 
-### [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#发布配置)发布配置
+### 发布配置
 
 通过配置中心发布配置：
 
@@ -99,7 +91,7 @@
 
 ![img](http://img.liuwenqi.com/blog/2019-07-19-190300.jpg)
 
-### [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#客户端监听配置变化（java-api样例）)客户端监听配置变化（Java API样例）
+### 客户端监听配置变化（Java API样例）
 
 配置发布后，就能在客户端获取到了，以Java为例，获取配置的示例代码如下。Apollo客户端还支持和Spring整合.
 
@@ -108,10 +100,6 @@ Config config = ConfigService.getAppConfig();
 Integer defaultRequestTimeout = 200;
 Integer requestTimeout = config.getIntProperty("requestTimeout", defaultRequestTimeout);
 ```
-
-1
-2
-3
 
 **不过在某些场景下，应用还需要在配置变化时获得通知，比如数据库连接的切换等，所以Apollo还提供了监听配置变化的功能，Java示例如下.**
 
@@ -131,23 +119,9 @@ config.addChangeListener(new ConfigChangeListener() {
 });
 ```
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-
 具体java使用参考：[java客户端使用指南](https://github.com/ctripcorp/apollo/wiki/Java客户端使用指南)
 
-### [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#spring集成样例)Spring集成样例
+### Spring集成样例
 
 **Apollo和Spring也可以很方便地集成，只需要标注@EnableApolloConfig后就可以通过@Value获取配置信息：**
 
@@ -169,23 +143,7 @@ public class SomeBean {
 }
 ```
 
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-
-### [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#介绍-apollo-几个核心概念)介绍 Apollo 几个核心概念
+### 介绍 Apollo 几个核心概念
 
 - application (应用)
     - 这个很好理解，就是实际使用配置的应用，Apollo客户端在运行时需要知道当前应用是谁，从而可以去获取对应的配置
@@ -203,7 +161,7 @@ public class SomeBean {
     - 应用可以直接读取到公共组件的配置namespace，如DAL，RPC等
     - 应用也可以通过继承公共组件的配置namespace来对公共组件的配置做调整，如DAL的初始数据库连接数
 
-## [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#总体设计)总体设计
+## 总体设计
 
 ![img](http://img.liuwenqi.com/blog/2019-07-19-190322.jpg)
 
@@ -217,7 +175,7 @@ public class SomeBean {
 - Portal通过域名访问Meta Server获取Admin Service服务列表（IP+Port），而后直接通过IP+Port访问服务，同时在Portal侧会做load balance、错误重试
 - 为了简化部署，我们实际上会把Config Service、Eureka和Meta Server三个逻辑角色部署在同一个JVM进程中
 
-## [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#客户端设计)客户端设计
+## 客户端设计
 
 ![img](http://img.liuwenqi.com/blog/2019-07-19-190340.jpg)
 
@@ -233,7 +191,7 @@ public class SomeBean {
     - 在遇到服务不可用，或网络不通的时候，依然能从本地恢复配置
 - 应用程序从Apollo客户端获取最新的配置、订阅配置更新通知
 
-## [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#配置更新推送实现)配置更新推送实现
+## 配置更新推送实现
 
 前面提到了Apollo客户端和服务端保持了一个长连接，从而能第一时间获得配置更新的推送。
 
@@ -246,7 +204,7 @@ public class SomeBean {
 - 客户端在收到服务端请求后会立即重新发起连接，回到第一步
 - 考虑到会有数万客户端向服务端发起长连，在服务端我们使用了async servlet(Spring DeferredResult)来服务Http Long Polling请求。
 
-## [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#可用性考虑)可用性考虑
+## 可用性考虑
 
 > 配置中心作为基础服务，可用性要求非常高，下面的表格描述了不同场景下Apollo的可用性：
 
@@ -260,21 +218,19 @@ public class SomeBean {
 | 全部portal下线         | 客户端无影响，portal无法更新配置     |                                       |                                                              |
 | 某个数据中心下线       | 无影响                               |                                       | 多数据中心部署，数据完全同步，Meta Server/Portal域名通过slb自动切换到其它存活的数据中心 |
 
-## [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#部署)部署
+## 部署
 
-### [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#单机测试部署)单机测试部署
+### 单机测试部署
 
-#### [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#docker部署)docker部署
+#### docker部署
 
 **参考** [docker部署](https://github.com/ctripcorp/apollo/wiki/Apollo-Quick-Start-Docker部署)
 
-### [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#分布式部署)分布式部署
+### 分布式部署
 
 **参考** [分布式部署](https://github.com/ctripcorp/apollo/wiki/分布式部署指南)
 
-> > 
-
-## [#](http://www.liuwq.com/views/网站架构/配置中心/Apollo.html#目前运维过程中遇到问题)目前运维过程中遇到问题
+## 目前运维过程中遇到问题
 
 - 配置中心问题
     - 没有统一配置中心，（微店使用superdiamond，拼餐使用svn，erp直接使用配置文件）

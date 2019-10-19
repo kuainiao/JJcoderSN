@@ -36,7 +36,6 @@
              --with-zlib=../zlib-1.2.11 \
              --with-pcre=../pcre-8.41 \
              --with-http_ssl_module
-复制代码
 ```
 
 # nginx 服务架构
@@ -160,7 +159,7 @@
 
 # nginx 配置文件实例
 
-```
+```yaml
 #定义 nginx 运行的用户和用户组
 user www www;
 
@@ -351,7 +350,6 @@ http {
         { expires 1h; }
     }
 }
-复制代码
 ```
 
 # nginx 服务器基础配置指令

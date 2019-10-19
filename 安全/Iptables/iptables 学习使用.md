@@ -2,15 +2,13 @@
 
 ------
 
+## netfilter/iptables学习
 
-
-## [#](http://www.liuwq.com/views/安全/iptables学习.html#netfilter-iptables学习)netfilter/iptables学习
-
-### [#](http://www.liuwq.com/views/安全/iptables学习.html#_1、链和表)1、链和表
+### 1、链和表
 
 表：filter：用于过滤的时候 nat：用于做nat的时候 链：INPUT:位于filter表，匹配目的IP是本机的数据包 FORWARD：位于filter表，匹配穿过本机的数据包 PREROUTING：位于nat表，用于修改目的地址（DNAT） POSTROUTING：位于nat表，用于修改源地址（SNAT）
 
-### [#](http://www.liuwq.com/views/安全/iptables学习.html#_2、iptables语法结构)2、iptables语法结构
+### 2、iptables语法结构
 
 > iptables [-t 要操作的表] <操作命令> [要操作的链] [规则号码] [匹配条件] [-j 匹配到以后的动作]
 
@@ -49,21 +47,21 @@ iptables -t nat -vnL  用详细方式列出nat表的所有链和规则，只显�
 iptables -t nat -vxnL PREROUTING     用详细方式列出nat表的PREROUTING链的所有规则及详细数字，不反解。
 ```
 
-## [#](http://www.liuwq.com/views/安全/iptables学习.html#_3、匹配条件)3、匹配条件
+## 3、匹配条件
 
 - 流入、流出接口（-i,-o）
 - 来源、目的地址(-s,-d)
 - 协议类型(-p)
 - 来源、目的端口(--sport,--dport)
 
-### [#](http://www.liuwq.com/views/安全/iptables学习.html#_1-、按网络接口匹配)(1)、按网络接口匹配
+### (1)、按网络接口匹配
 
 ```bash
     如：-i eth0    匹配是否从网络接口eth0进来
     -o eth0    匹配是否从网络接口eht0出去
 ```
 
-### [#](http://www.liuwq.com/views/安全/iptables学习.html#_2-、-匹配来源地址-s-匹配来源地址-来源地址可以是ip，net，domain-也可以为空)(2)、 匹配来源地址: -s [匹配来源地址] 来源地址可以是IP，net，domain,也可以为空
+### (2)、 匹配来源地址: -s [匹配来源地址] 来源地址可以是IP，net，domain,也可以为空
 
 ```bash
 如：-s 192.168.0.1    匹配来自192.168.0.1的数据包。
@@ -77,7 +75,7 @@ iptables -t nat -vxnL PREROUTING     用详细方式列出nat表的PREROUTING链
 
 
 
-### [#](http://www.liuwq.com/views/安全/iptables学习.html#_3-、按协议类型匹配)(3)、按协议类型匹配
+### (3)、按协议类型匹配
 
 ```bash
 -p <匹配协议类型>  协议类型可以是tcp,udp,icmp等，也可以为空。
@@ -86,7 +84,7 @@ iptables -t nat -vxnL PREROUTING     用详细方式列出nat表的PREROUTING链
     -p icmp --icmp-type 类型
 ```
 
-### [#](http://www.liuwq.com/views/安全/iptables学习.html#_4-、按来源目的端口匹配。)(4)、按来源目的端口匹配。
+### (4)、按来源目的端口匹配。
 
 ```bash
  --sport <匹配源端口>    源端口可以是个别端口，也可以是端口范围。
@@ -113,7 +111,7 @@ iptables -t nat -vxnL PREROUTING     用详细方式列出nat表的PREROUTING链
 条件越多，匹配越细致，匹配范围越小。
 ```
 
-## [#](http://www.liuwq.com/views/安全/iptables学习.html#_4、动作)4、动作
+## 4、动作
 
 ```bash
 ACCEPT
@@ -158,11 +156,11 @@ MASQUERADE
 如：iptables -t nat -A POSTROUTING -S 192.168.0.0/24 -j MASQUEREADE    将源地址是192.168.0.0/24的数据包进行地址伪装。
 ```
 
-## [#](http://www.liuwq.com/views/安全/iptables学习.html#_5、附加模块)5、附加模块
+## 5、附加模块
 
 按包状态匹配。（state） 按来源mac匹配（mac） 按包速率匹配（limit） 多端口匹配（multiport）
 
-### [#](http://www.liuwq.com/views/安全/iptables学习.html#_1）、-m-state-state-状态)1）、-m state --state 状态
+### 1）、-m state --state 状态
 
 ```bash
     状态：NEW、RELATED、ESTABLISHED、INVALID
@@ -173,14 +171,14 @@ MASQUERADE
     如：iptables -A INPUT -m state --state RELATED,ESTABLISHED -j ACCEPT
 ```
 
-### [#](http://www.liuwq.com/views/安全/iptables学习.html#_2-、-m-mac-mac-source-mac-匹配某个mac地址)2)、-m mac --mac-source MAC 匹配某个MAC地址
+### 2)、-m mac --mac-source MAC 匹配某个MAC地址
 
 ```bash
 如：iptables -A FORWARD -m mac --mac-source xx:xx:xx:xx:xx:xx -j DROP    阻断来自某MAC地址的数据包通过本机。
   注：报文在经过路由后，数据包中原有的MAC信息会被替换，所以在路由后的iptables中使用mac模块是没有意义的。
 ```
 
-### [#](http://www.liuwq.com/views/安全/iptables学习.html#_3-、-m-limit-limit-匹配速率-burst-缓冲数量-用一定的速率去匹配数据包)3)、-m limit --limit 匹配速率 [--burst 缓冲数量] 用一定的速率去匹配数据包
+### 3)、-m limit --limit 匹配速率 [--burst 缓冲数量] 用一定的速率去匹配数据包
 
 ```bash
 如：iptables -A FORWARD -d 192.168.0.1 -m limit --limit 50m/s -j ACCEPT
@@ -188,7 +186,7 @@ MASQUERADE
 注：limit英语上看是限制的意思，但实际上只是按一定速率去匹配，要想限制的话后面要再跟一条DROP
 ```
 
-### [#](http://www.liuwq.com/views/安全/iptables学习.html#_4-、multiport)4)、multiport
+### 4)、multiport
 
 ```bash
 -m multiport <--sports|--dports|--ports> 端口1[，端口2,..,端口n]  一次性匹配多个端口，可以匹分源端口，目的端口或不指定端口。

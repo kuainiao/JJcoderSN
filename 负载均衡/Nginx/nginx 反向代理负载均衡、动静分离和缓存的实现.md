@@ -1,8 +1,4 @@
-# [项目实战2.1—nginx 反向代理负载均衡、动静分离和缓存的实现](https://www.cnblogs.com/along21/p/7842729.html)
-
-分类: [Linux架构篇](https://www.cnblogs.com/along21/category/1114615.html)
-
-undefined
+# nginx 反向代理负载均衡、动静分离和缓存的实现
 
  ![img](nginx%20%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E3%80%81%E5%8A%A8%E9%9D%99%E5%88%86%E7%A6%BB%E5%92%8C%E7%BC%93%E5%AD%98%E7%9A%84%E5%AE%9E%E7%8E%B0.assets/1216496-20171116093056468-778964717.png)
 

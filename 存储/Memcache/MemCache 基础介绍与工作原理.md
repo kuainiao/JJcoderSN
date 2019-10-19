@@ -1,11 +1,5 @@
 # MemCache 基础介绍与工作原理
 
-------
-
-
-
-# MemCache 基础介绍与工作原理
-
 ## 1、什么是MemCache
 
 **官方说明：**
@@ -35,7 +29,7 @@ MemCache是这个项目的名称，而MemCached是服务器端的主程序名称
 
 **常用工作流程（如下图）：**
 
-![工作流程图](http://img.liuwenqi.com/blog/2019-07-23-131041.jpg)
+![工作流程图](MemCache%20%E5%9F%BA%E7%A1%80%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.assets/2019-07-23-131041.jpg)
 
 1. 客户端请求数据
 2. 检查MemCached中是否有对应数据
@@ -54,7 +48,7 @@ MemCached采用了C/S架构，在Server端启动后，以守护程序的方式�
 
 #### 内存结构
 
-![内存结构](http://img.liuwenqi.com/blog/2019-07-23-131122.jpg)
+![内存结构](MemCache%20%E5%9F%BA%E7%A1%80%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.assets/2019-07-23-131122.jpg)
 
 1. slab_class里，存放的是一组组chunk大小相同的slab
 2. 每个slab里面包含若干个page，page的默认大小是1M，如果slab大小100M，就包含100个page
@@ -65,7 +59,7 @@ MemCached采用了C/S架构，在Server端启动后，以守护程序的方式�
 1. Memcached利用slab allocation机制来分配和管理内存，它按照预先规定的大小，将分配的内存分割成特定长度的内存块，再把尺寸相同的内存块分成组，数据在存放时，根据键值大小去匹配slab大小，找就近的slab存放，所以存在空间浪费现象。而传统的内存管理方式是，使用完通过malloc分配的内存后通过free来回收内存，这种方式容易产生内存碎片并降低操作系统对内存的管理效率。
 2. 存放数据时，首先slab要申请内存，申请内存是以page为单位的。所以在放入第一个数据的时候，无论大小为多少，都会有1M大小的page被分配给该slab。申请到page后，slab会将这个page的内存按chunk的大小进行切分，这样就变成了一个chunk数组，最后从这个chunk数组中选择一个用于存储数据。
 
-**示例：** ![内存分配](http://img.liuwenqi.com/blog/2019-07-23-131142.jpg)
+**示例：** ![内存分配](MemCache%20%E5%9F%BA%E7%A1%80%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.assets/2019-07-23-131142.jpg)
 
 MemCache中的value存放位置是由value的大小决定，value会被存放到与chunk大小最接近的一个slab中，比如slab[1]的chunk大小为88字节、slab[2]的chunk大小为112字节、slab[3]的chunk大小为144字节（*默认相邻slab内的chunk基本以1.25为比例进行增长，MemCache启动时可以用-f指定这个比例*），那么一个100字节的value，将被放到2号slab中。
 
@@ -91,7 +85,7 @@ MemCached的目前版本是通过C实现，采用了单进程、单线程、异�
 
 Client端通过IP地址和端口号指定Server端，将需要缓存的数据是以key->value对的形式保存在Server端。key的值通过hash进行转换，根据hash值把value传递到对应的具体的某个Server上。当需要获取对象数据时，也根据key进行。首先对key进行hash，通过获得的值可以确定它被保存在了哪台Server上，然后再向该Server发出请求。Client端只需要知道保存hash(key)的值在哪台服务器上就可以了。
 
-![分布式原理图](http://img.liuwenqi.com/blog/2019-07-23-131241.jpg)
+![分布式原理图](MemCache%20%E5%9F%BA%E7%A1%80%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.assets/2019-07-23-131241.jpg)
 
 当向MemCached集群存入/取出key/value时，MemCached客户端程序根据一定的算法计算存入哪台服务器，然后再把key/value值存到此服务器中。也就是说，存取数据分二步走，第一步，选择服务器，第二步存取数据。
 
@@ -101,7 +95,7 @@ Client端通过IP地址和端口号指定Server端，将需要缓存的数据是
 
 2. 散列算法： 先算出MemCached服务器的散列值，并将其分布到0到2的32次方的圆上，然后用同样的方法算出存储数据的键的散列值并映射至圆上，最后从数据映射到的位置开始顺时针查找，将数据保存到查找到的第一个服务器上，如果超过2的32次方，依然找不到服务器，就将数据保存到第一台MemCached服务器上。如果添加了一台MemCached服务器，只在圆上增加服务器的逆时针方向的第一台服务器上的键会受到影响。
 
-    ![散列算法图](http://img.liuwenqi.com/blog/2019-07-23-131259.jpg)
+    ![散列算法图](MemCache%20%E5%9F%BA%E7%A1%80%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86.assets/2019-07-23-131259.jpg)
 
 ### （3）MemCached线程管理
 

@@ -4,11 +4,11 @@
 
 
 
-## [#](http://www.liuwq.com/views/监控/openfalcon_python.html#openfalcon-监控mysql备份报警)openfalcon 监控mysql备份报警
+## openfalcon 监控mysql备份报警
 
 > 思路：mysql备份输出日志 检测 errr 等相关字段 判断成功与否，将1或者0 传入openfalcon
 
-### [#](http://www.liuwq.com/views/监控/openfalcon_python.html#python-检测脚本)python 检测脚本
+### python 检测脚本
 
 > 执行python脚本的服务器 要有日志、已经安装并运行的openfalcon 客户端
 
@@ -96,7 +96,7 @@ r = requests.post("http://127.0.0.1:1988/v1/push", data=json.dumps(payload))
 print r.text
 ```
 
-### [#](http://www.liuwq.com/views/监控/openfalcon_python.html#openfalcon-报警设置)openfalcon 报警设置
+### openfalcon 报警设置
 
 [![img](http://img.liuwenqi.com/blog/2019-07-08-100424.jpg)](http://img.liuwenqi.com/blog/2019-07-08-100424.jpg)
 

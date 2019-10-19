@@ -1,8 +1,4 @@
-# [项目实战6—Mysql实现企业级日志管理、备份与恢复实战](https://www.cnblogs.com/along21/p/8005775.html)
-
-分类: [Linux架构篇](https://www.cnblogs.com/along21/category/1114615.html)
-
-undefined
+# Mysql实现企业级日志管理、备份与恢复实战
 
  
 

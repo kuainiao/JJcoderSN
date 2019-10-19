@@ -1,8 +1,4 @@
-# [项目实战7—Mysql实现企业级数据库主从复制架构实战](https://www.cnblogs.com/along21/p/8011596.html)
-
-分类: [Linux架构篇](https://www.cnblogs.com/along21/category/1114615.html), [数据库系列](https://www.cnblogs.com/along21/category/1369922.html)
-
-undefined
+# Mysql实现企业级数据库主从复制架构实战
 
 ![img](Mysql%E5%AE%9E%E7%8E%B0%E4%BC%81%E4%B8%9A%E7%BA%A7%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E6%9E%B6%E6%9E%84%E5%AE%9E%E6%88%98.assets/1216496-20171209152404183-1640789638.png)
 
