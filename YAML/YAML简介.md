@@ -34,7 +34,6 @@ AML全称是”YAML Ain’t a Markup Language”（YAML不是一种置标语言�
 name: "123\n123"
 ---------------------------
 输出： 123 换行 123
-复制代码
 ```
 
 如果`不加引号`将会转义特殊字符，当成字符串处理
@@ -49,7 +48,6 @@ name: "123\n123"
 value0: 'hello World!'
 value1: "hello World!"
 value2: hello World!
-复制代码
 ```
 
 ### **2.布尔值**
@@ -65,7 +63,6 @@ value2: hello World!
 13.4 ＃浮点数 
 1.2e+34 ＃指数 
 .inf空值 ＃无穷大
-复制代码
 ```
 
 ### **4.空值**
@@ -78,7 +75,6 @@ value2: hello World!
 
 ```
 date: 2018-01-01t16:59:43.10-05:00
-复制代码
 ```
 
 **在springboot中yaml文件的时间格式 date: yyyy/MM/dd HH:mm:ss**
@@ -92,7 +88,6 @@ money: !!str
 123
 date: !Boolean
 true
-复制代码
 ```
 
 **内置类型列表**
@@ -108,7 +103,6 @@ true
 !!set # 集合 
 !!omap,!!pairs # 键值列表或对象列表
 !!seq # 序列，也是列表 !!map # 键值表
-复制代码
 ```
 
 ### 7.对象（重点）
@@ -119,21 +113,18 @@ Map（属性和值）（键值对）的形式： key:(空格)v ：表示一堆�
 car:
     color: red
     brand: BMW
-复制代码
 ```
 
 一行写法
 
 ```
 car:{color: red，brand: BMW}
-复制代码
 ```
 
 相当于JSON格式：
 
 ```
 {"color":"red","brand":"BMW"}
-复制代码
 ```
 
 ### 8.数组
@@ -145,21 +136,18 @@ brand:
    - audi
    - bmw
    - ferrari
-复制代码
 ```
 
 一行写法
 
 ```
 brand: [audi,bmw,ferrari]
-复制代码
 ```
 
 相当于JSON
 
 ```
 ["auri","bmw","ferrari"]
-复制代码
 ```
 
 ------
@@ -173,7 +161,6 @@ value: |
    hello
    world!
 输出结果：hello 换行 world！
-复制代码
 ```
 
 `+`表示保留文字块末尾的换行，`-`表示删除字符串末尾的换行。
@@ -188,7 +175,6 @@ hello
 value: |+
 hello
 输出：hello\n hello hello\n\n(有多少个回车就有多少个\n)
-复制代码
 ```
 
 **注意 “|” 与 文本之间须另起一行**
@@ -199,7 +185,6 @@ hello
 value: > hello
 world!
 输出：hello 空格 world！
-复制代码
 ```
 
 **注意 “>” 与 文本之间的空格**
@@ -217,7 +202,6 @@ books:
    - python
 输出book： yaml 
 输出books：[java,yaml,python]
-复制代码
 ```
 
 **注意\*引用部分不能追加内容**
@@ -247,7 +231,6 @@ public class Person {
     private List<Object> tempList;
     private Dog dog;
     //省略getter和setter以及toString方法
-复制代码
 ```
 
 我们可以导入配置文件处理器，以后编写配置就有提示了，`@ConfigurationProperties`IDE会提示打开在线的帮助文档，配置依赖如下：
@@ -259,7 +242,6 @@ public class Person {
     <artifactId>spring-boot-configuration-processor</artifactId>
     <optional>true</optional>
 </dependency>
-复制代码
 ```
 
 ### application.yaml文件
@@ -278,7 +260,6 @@ person:
   dog:
     dogName: 大黄
     dogAge: 4
-复制代码
 ```
 
 在test中进行测试如下
@@ -297,7 +278,6 @@ public class Demo03BootApplicationTests {
     }
 
 }
-复制代码
 ```
 
 输出结果为：`Person{name='胖先森', age=18, flag=false, birthday=Wed Dec 19 20:21:22 CST 2018, maps={bookName=西游记, author=吴承恩}, tempList=[红楼梦, 三国演义, 水浒传], dog=Dog{dogName='大黄', dogAge=4}}`
@@ -313,7 +293,6 @@ person123.maps.author=罗贯中
 person123.temp-list=一步教育,步步为赢
 person123.dog.dogName=小白
 person123.dog.dogAge=5
-复制代码
 ```
 
 java代码修改前缀
@@ -331,7 +310,6 @@ public class Person {
     private List<Object> tempList;
     private Dog dog;
     //省略getter和setter以及toString方法
-复制代码
 ```
 
 在test中进行测试如下
@@ -350,7 +328,6 @@ public class Demo03BootApplicationTests {
     }
 
 }
-复制代码
 ```
 
 输出结果为：`Person{name='ï¿½ï¿½ï¿½ï¿½', age=20, flag=null, birthday=Wed Dec 19 20:21:22 CST 2018, maps={bookName=Ë®ä°´ï¿½, author=ï¿½Þ¹ï¿½ï¿½ï¿½}, tempList=[Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ÎªÓ®], dog=Dog{dogName='Ð¡ï¿½ï¿½', dogAge=5}}`

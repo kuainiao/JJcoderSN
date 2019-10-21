@@ -4,7 +4,7 @@
 
 # git命令
 
-## [#](http://www.liuwq.com/views/linux基础/git常用命令合集.html#本地操作)本地操作
+## 本地操作
 
 ```shell
     git init   初始化一个本地仓库  新建为 master主分支
@@ -51,7 +51,7 @@
     git stash apply <stash@{0}>  恢复指定的暂存状态
 ```
 
-## [#](http://www.liuwq.com/views/linux基础/git常用命令合集.html#远征仓库操作)远征仓库操作:
+## 远征仓库操作:
 
 ```shell
     git clone <远程地址>  从远征仓库拷贝过来代码，相当于建立本地分支

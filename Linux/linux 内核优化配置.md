@@ -1,12 +1,6 @@
 # linux 内核优化配置
 
-------
-
-
-
-# [#](http://www.liuwq.com/views/linux基础/linux内核优化.html#系统内核优化配置)系统内核优化配置
-
-## [#](http://www.liuwq.com/views/linux基础/linux内核优化.html#系统sysctl-conf-配置优化)系统sysctl.conf 配置优化
+## 系统sysctl.conf 配置优化
 
 > 线上服务器
 
@@ -72,7 +66,7 @@
 
 
 
-## [#](http://www.liuwq.com/views/linux基础/linux内核优化.html#系统-etc-security-limits-conf)系统/etc/security/limits.conf
+## 系统/etc/security/limits.conf
 
 ```yml
         * soft nproc 65535

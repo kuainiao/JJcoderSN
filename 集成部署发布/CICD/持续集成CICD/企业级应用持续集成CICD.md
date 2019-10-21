@@ -83,12 +83,12 @@ git的工作区、暂存区和版本库
 
 如果你使用的系统是 Centos/RedHat 安装命令为：
 
-```
+```shell
 yum -y install curl-devel expat-devel gettext-devel openssl-devel zlib-devel
 yum -y install git-core
 
 git --version
-git version 1.7.1
+git version 1.8.3.1
 ```
 
 ##### 2、CentOS7源码安装
@@ -159,7 +159,7 @@ Git 提供了一个叫做 git config 的工具，专门用来配置或读取相�
 配置个人的用户名称和电子邮件地址：
 
 ```
-git config --global user.name "luoyinsheng"
+git config --global user.name "jjcoder"
 git config --global user.email test@qq.com
 ```
 
@@ -171,7 +171,7 @@ git config --global user.email test@qq.com
 
 设置Git默认使用的文本编辑器, 一般可能会是 Vi 或者 Vim。如果你有其他偏好，比如 Emacs 的话，可以重新设置：:
 
-```
+```shell
 git config --global core.editor emacs
 ```
 
@@ -179,7 +179,7 @@ git config --global core.editor emacs
 
 还有一个比较常用的是，在解决合并冲突时使用哪种差异分析工具。比如要改用 vimdiff 的话：
 
-```
+```shell
 git config --global merge.tool vimdiff
 ```
 
