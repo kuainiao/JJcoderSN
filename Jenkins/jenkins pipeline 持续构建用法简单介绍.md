@@ -21,7 +21,7 @@
 
 ### [#](http://www.liuwq.com/views/自动化工具/jenkins_type.html#架构思路)架构思路
 
-![img](http://img.liuwenqi.com/blog/2019-07-23-125238.jpg)
+![img](jenkins%20pipeline%20%E6%8C%81%E7%BB%AD%E6%9E%84%E5%BB%BA%E7%94%A8%E6%B3%95%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D.assets/2019-07-23-125238.jpg)
 
 git push 到gitlab >> 触发jenkins webhooks API >> 执行ansible
 
@@ -33,23 +33,23 @@ git push 到gitlab >> 触发jenkins webhooks API >> 执行ansible
 
 - jenkins
 
-![img](http://img.liuwenqi.com/blog/2019-07-03-022623.jpg)
+![img](jenkins%20pipeline%20%E6%8C%81%E7%BB%AD%E6%9E%84%E5%BB%BA%E7%94%A8%E6%B3%95%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D.assets/2019-07-03-022623.jpg)
 
 ![img](http://img.liuwenqi.com/blog/2019-07-03-022717.jpg)
 
 - Gitlab
 
-![img](http://img.liuwenqi.com/blog/2019-07-03-022744.jpg)
+![img](jenkins%20pipeline%20%E6%8C%81%E7%BB%AD%E6%9E%84%E5%BB%BA%E7%94%A8%E6%B3%95%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D.assets/2019-07-03-022744.jpg)
 
 URL 添写上面 jenkins api ,如：**http://IP:8080/job/pip_base_conf/build?token=123654**
 
 ![img](http://img.liuwenqi.com/blog/2019-07-03-022840.jpg)
 
-![img](http://img.liuwenqi.com/blog/2019-07-03-022903.jpg)
+![img](jenkins%20pipeline%20%E6%8C%81%E7%BB%AD%E6%9E%84%E5%BB%BA%E7%94%A8%E6%B3%95%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D.assets/2019-07-03-022903.jpg)
 
 ### [#](http://www.liuwq.com/views/自动化工具/jenkins_type.html#jenkins-pipeline-2)jenkins pipeline
 
-![img](http://img.liuwenqi.com/blog/2019-07-03-023019.jpg)
+![img](jenkins%20pipeline%20%E6%8C%81%E7%BB%AD%E6%9E%84%E5%BB%BA%E7%94%A8%E6%B3%95%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D.assets/2019-07-03-023019.jpg)
 
 ```yml
 pipeline {

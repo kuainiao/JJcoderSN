@@ -1,12 +1,6 @@
 # filebeat 安装测试
 
-------
-
-
-
-# [#](http://www.liuwq.com/views/日志中心/filebeat.html#filebeat-安装配置)filebeat 安装配置
-
-## [#](http://www.liuwq.com/views/日志中心/filebeat.html#安装)安装
+## 安装
 
 把filebeat RPM包 传输至安装服务器
 
@@ -14,7 +8,7 @@
 rpm -ivh filebeat-6.1.1-x86_64.rpm
 ```
 
-## [#](http://www.liuwq.com/views/日志中心/filebeat.html#修改配置文件)修改配置文件
+## 修改配置文件
 
 ```yml
    vim /etc/filebeat/filebeat.yml
@@ -37,7 +31,7 @@ rpm -ivh filebeat-6.1.1-x86_64.rpm
 
 
 
-## [#](http://www.liuwq.com/views/日志中心/filebeat.html#启动filebeat)启动filebeat
+## 启动filebeat
 
 ```
 service filebeat start` 检查下是否成功启动 `ps -ef | grep filebeat

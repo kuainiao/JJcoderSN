@@ -45,8 +45,6 @@ Cobbler 内置了一个轻量级配置管理系统，但它也支持和其它配
 
 **服务器端**
 
-复制
-
 ```
 第一步，启动Cobbler服务第二步，进行Cobbler错误检查，执行cobbler check命令第三步，进行配置同步，执行cobbler sync命令第四步，第一步，启动Cobbler服务
 第二步，进行Cobbler错误检查，执行cobbler check命令
@@ -60,8 +58,6 @@ Cobbler 内置了一个轻量级配置管理系统，但它也支持和其它配
 ```
 
 **客户端**
-
-复制
 
 ```
 第一步，客户端以PXE模式启动

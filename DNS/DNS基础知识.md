@@ -21,7 +21,7 @@ DNS 的结构跟Linux 文件系统很相似，像一棵倒立的树。 下面用
 
 
 
-![img](/home/coder/mydisk/coder/Documents/JJcoder个人博客/jjcoderzero.github.io/DNS/Untitled.assets/3a7b7303790037d1379d2ac829127aa0)
+![img](Untitled.assets/3a7b7303790037d1379d2ac829127aa0)
 
 
 
@@ -33,7 +33,7 @@ DNS 的结构跟Linux 文件系统很相似，像一棵倒立的树。 下面用
 
 
 
-![img](/home/coder/mydisk/coder/Documents/JJcoder个人博客/jjcoderzero.github.io/DNS/Untitled.assets/8bfc45c49feb40ec01409f53de41788b)
+![img](Untitled.assets/8bfc45c49feb40ec01409f53de41788b)
 
 
 
@@ -71,7 +71,7 @@ hosts:      files dns myhostname复制代码
 
 
 
-![img](/home/coder/mydisk/coder/Documents/JJcoder个人博客/jjcoderzero.github.io/DNS/Untitled.assets/5916fc89a789d7fc3ff24b981e7fe91d)
+![img](Untitled.assets/5916fc89a789d7fc3ff24b981e7fe91d)
 
 
 
@@ -79,7 +79,7 @@ hosts:      files dns myhostname复制代码
 
 
 
-![img](/home/coder/mydisk/coder/Documents/JJcoder个人博客/jjcoderzero.github.io/DNS/Untitled.assets/d30ca05abf14b4f94dfef920e91af412)
+![img](Untitled.assets/d30ca05abf14b4f94dfef920e91af412)
 
 
 
@@ -111,7 +111,7 @@ hosts:      files dns myhostname复制代码
 
 
 
-![img](/home/coder/mydisk/coder/Documents/JJcoder个人博客/jjcoderzero.github.io/DNS/Untitled.assets/772e5d20f133fb9c9ae3c4cada0e16bb)
+![img](Untitled.assets/772e5d20f133fb9c9ae3c4cada0e16bb)
 
 
 
@@ -143,7 +143,7 @@ bind配置文件位于`/etc/named.conf`，它主要负责bind功能配置，如z
 
 
 
-![img](/home/coder/mydisk/coder/Documents/JJcoder个人博客/jjcoderzero.github.io/DNS/Untitled.assets/ecba67163d2e153e943d6b45a5d53792)
+![img](Untitled.assets/ecba67163d2e153e943d6b45a5d53792)
 
 
 
@@ -155,7 +155,7 @@ zone的配置文件在bind配置文件中指定，下图是一份简单的zone�
 
 
 
-![img](/home/coder/mydisk/coder/Documents/JJcoder个人博客/jjcoderzero.github.io/DNS/Untitled.assets/8469d461fb37f4fadf503cf8d5d760a6)
+![img](Untitled.assets/8469d461fb37f4fadf503cf8d5d760a6)
 
 
 
@@ -180,7 +180,7 @@ Redirecting to /bin/systemctl restart  named.service复制代码
 
 
 
-![img](/home/coder/mydisk/coder/Documents/JJcoder个人博客/jjcoderzero.github.io/DNS/Untitled.assets/cedc58a110b25a1849cbc03cf14742eb)
+![img](Untitled.assets/cedc58a110b25a1849cbc03cf14742eb)
 
 
 
@@ -188,7 +188,7 @@ Redirecting to /bin/systemctl restart  named.service复制代码
 
 
 
-![img](/home/coder/mydisk/coder/Documents/JJcoder个人博客/jjcoderzero.github.io/DNS/Untitled.assets/02c09c201be13d66b370566ffe05381c)
+![img](Untitled.assets/02c09c201be13d66b370566ffe05381c)
 
 
 
@@ -225,7 +225,7 @@ www     IN      A       1.2.3.5复制代码
 
 
 
-![img](/home/coder/mydisk/coder/Documents/JJcoder个人博客/jjcoderzero.github.io/DNS/Untitled.assets/fd5a0a0fc010ecf504fe5d8c98358ef4)
+![img](Untitled.assets/fd5a0a0fc010ecf504fe5d8c98358ef4)
 
 
 
@@ -233,7 +233,7 @@ www     IN      A       1.2.3.5复制代码
 
 
 
-![img](/home/coder/mydisk/coder/Documents/JJcoder个人博客/jjcoderzero.github.io/DNS/Untitled.assets/7a53472a451c2d48faf81c84024288ab)
+![img](Untitled.assets/7a53472a451c2d48faf81c84024288ab)
 
 
 
@@ -267,7 +267,7 @@ OPS 常用的DNS调试工具有: host, nslookup, dig
 
 
 
-![img](/home/coder/mydisk/coder/Documents/JJcoder个人博客/jjcoderzero.github.io/DNS/Untitled.assets/3509832be6995eb9b009b4a664bc14af)
+![img](Untitled.assets/3509832be6995eb9b009b4a664bc14af)
 
 
 

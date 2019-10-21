@@ -4,11 +4,11 @@
 
 
 
-# [#](http://www.liuwq.com/views/日志中心/ELK_部署测试.html#elk-简单介绍部署和使用)ELK 简单介绍部署和使用
+# ELK 简单介绍部署和使用
 
 > 这里主要说明先ELK都是什么，具体都干什么用的。
 
-## [#](http://www.liuwq.com/views/日志中心/ELK_部署测试.html#elk-基本概念介绍)ELK 基本概念介绍
+## ELK 基本概念介绍
 
 - E=(elasticsearch): 主要是存储收集的日志数据用的，有点类似mongo的意思。Elasticsearch是一个实时分布式搜索和分析引擎。它让你以前所未有的速度处理大数据成为可能。
 
@@ -22,17 +22,17 @@
 
     [官网地址](https://www.elastic.co/cn/products/kibana)
 
-## [#](http://www.liuwq.com/views/日志中心/ELK_部署测试.html#架构图)架构图
+## 架构图
 
 > 本次部署架构图解，主要多了一步骤，Redis使用。
 
-![ ELK 架构图](http://img.sharkyun.com/ELK.png)
+![ ELK 架构图](ELK(elasticsearch%20+%20logstash%20+%20kabana)%20%E9%83%A8%E7%BD%B2%E6%B5%8B%E8%AF%95%E5%8F%8A%E4%BD%BF%E7%94%A8.assets/ELK.png)
 
-## [#](http://www.liuwq.com/views/日志中心/ELK_部署测试.html#部署)部署
+## 部署
 
 > 实验内容没有安装架构图来，服务器不够，都是单机模式，生产环境会改成分布式。
 
-### [#](http://www.liuwq.com/views/日志中心/ELK_部署测试.html#基本硬件需求)基本硬件需求
+### 基本硬件需求
 
 | 名称     | hosts             | 硬盘配置信息         | 网络     | 备注                                          |
 | -------- | ----------------- | -------------------- | -------- | --------------------------------------------- |
@@ -40,7 +40,7 @@
 | UI展示   | ELK-kabana        | 内存最低2GB/硬盘40GB | 内网联通 |                                               |
 | 数据采集 | ELK-logstash      |                      | 内网联通 | 这个主要根据你nginx_log以及收集日志的位置决定 |
 
-### [#](http://www.liuwq.com/views/日志中心/ELK_部署测试.html#下载)下载
+### 下载
 
 elasticsearch 下载地址：https://www.elastic.co/downloads/elasticsearch
 
@@ -59,9 +59,9 @@ cp -rf elasticsearch-5.6.3 /usr/local/elasticsearch
 
 > 每台服务器需要安装java，安装java版本在1.7及以上即可。
 
-### [#](http://www.liuwq.com/views/日志中心/ELK_部署测试.html#配置)配置
+### 配置
 
-#### [#](http://www.liuwq.com/views/日志中心/ELK_部署测试.html#elasticsearch)elasticsearch
+#### elasticsearch
 
 主要修改config/elasticsearch.yml
 
@@ -80,7 +80,7 @@ nohup runuser -l elsearch -c '/bin/bash /usr/local/elasticsearch/bin/elasticsear
 
 > > 说下为啥使用 runuser 因为elasticsearch启动用户是不能使用root的
 
-#### [#](http://www.liuwq.com/views/日志中心/ELK_部署测试.html#kibana)kibana
+#### kibana
 
 修改 config/kibana.yml
 
@@ -96,11 +96,11 @@ nohup runuser -l elsearch -c '/bin/bash /usr/local/elasticsearch/bin/elasticsear
 nohup ./bin/kibana  >>/tmp/kibana.log &
 ```
 
-#### [#](http://www.liuwq.com/views/日志中心/ELK_部署测试.html#logstash)logstash
+#### logstash
 
 > 这里重点说下
 
-##### [#](http://www.liuwq.com/views/日志中心/ELK_部署测试.html#logstash抓取数据到redis)logstash抓取数据到redis
+##### logstash抓取数据到redis
 
 **这里已抓取nginx log日志文件为例子:**
 
@@ -115,13 +115,7 @@ log_format access '$http_host $remote_addr - $remote_user [$time_local] "$reques
          '"$http_x_forwarded_for"';
 ```
 
-1
-2
-3
-4
-5
-6
-7
+
 
 > logstash.conf 配置文件
 
@@ -175,7 +169,7 @@ nohup ./bin/logstash -f logstash.conf >>/tmp/logstash.log
 
 > 这里为了省事直接用的nohup 可以使用supervisord 对进程进行管理
 
-##### [#](http://www.liuwq.com/views/日志中心/ELK_部署测试.html#logstash-把redis数据导入elasticsearch中)logstash 把redis数据导入elasticsearch中
+##### logstash 把redis数据导入elasticsearch中
 
 logstash 配置文件信息 logstash_redis_output.conf
 

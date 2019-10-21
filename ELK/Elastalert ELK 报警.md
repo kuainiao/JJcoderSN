@@ -1,14 +1,8 @@
 # Elastalert ELK 报警
 
-------
-
-
-
-# Elastalert ELK 报警
-
 > Elastalert是Yelp公司用python2.6写的一个报警框架，github地址为 https://github.com/Yelp/elastalert
 
-## [#](http://www.liuwq.com/views/日志中心/ELKalbert.html#install)Install
+## Install
 
 > 环境依赖 python 2.7
 
@@ -24,7 +18,7 @@ Python setup.py install
 
 
 
-#### [#](http://www.liuwq.com/views/日志中心/ELKalbert.html#安装过程问题处理)安装过程问题处理
+#### 安装过程问题处理
 
 ```shell
 Running blist-1.3.6/setup.py -q bdist_egg –dist-dir /tmp/easy_install-Gc6gbe/blist-1.3.6/egg-dist-tmp-Ik7LL2
@@ -52,13 +46,13 @@ easy_install PyOpenSSL error
 easy_install PyOpenSSL
 ```
 
-### [#](http://www.liuwq.com/views/日志中心/ELKalbert.html#在elasticsearch中创建elastalert的日志索引)在elasticsearch中创建elastalert的日志索引
+### 在elasticsearch中创建elastalert的日志索引
 
 ```
 elastalert-create-index
 ```
 
-### [#](http://www.liuwq.com/views/日志中心/ELKalbert.html#创建配置文件)创建配置文件
+### 创建配置文件
 
 ```shell
 cp config.yaml.example config.yaml
@@ -88,7 +82,7 @@ alert_time_limit:
   days: 2
 ```
 
-### [#](http://www.liuwq.com/views/日志中心/ELKalbert.html#配置报警规则)配置报警规则
+### 配置报警规则
 
 ```shell
 cd example_rules/
@@ -141,7 +135,7 @@ email:
 - "user1@example.com"
 ```
 
-### [#](http://www.liuwq.com/views/日志中心/ELKalbert.html#配置-smtp-auth-file-yaml)配置 smtp_auth_file.yaml
+### 配置 smtp_auth_file.yaml
 
 ```shell
 sudo touch smtp_auth_file.yaml
@@ -152,19 +146,19 @@ user: "no-reply@example.com"
 password: "password"
 ```
 
-### [#](http://www.liuwq.com/views/日志中心/ELKalbert.html#检测-配置文件是否正确)检测 配置文件是否正确
+### 检测 配置文件是否正确
 
 ```shell
 elastalert-test-rule ./my_rule.yaml
 ```
 
-### [#](http://www.liuwq.com/views/日志中心/ELKalbert.html#运行)运行
+### 运行
 
 ```shell
 python -m elastalert.elastalert --verbose --rule my_rule.yaml
 ```
 
-### [#](http://www.liuwq.com/views/日志中心/ELKalbert.html#system-自启动)system 自启动
+### system 自启动
 
 ```shell
 sudo mkdir /etc/elastalert
@@ -182,22 +176,22 @@ sudo cp /usr/local/dev/elastalert/example_rules/my_rule.yaml my_rule.yaml
 sudo cp /usr/local/dev/elastalert/example_rules/smtp_auth_file.yaml smtp_auth_file.yaml
 ```
 
-#### [#](http://www.liuwq.com/views/日志中心/ELKalbert.html#修改config-yaml)修改config.yaml
+#### 修改config.yaml
 
 ```yml
 rules_folder: /etc/elastalert/rules
 ```
 
-#### [#](http://www.liuwq.com/views/日志中心/ELKalbert.html#修稿-my-rule-yaml)修稿 my_rule.yaml
+#### 修稿 my_rule.yaml
 
 ```yaml
 smtp_auth_file: /etc/elastalert/rules/umu_smtp_auth_file.yaml
 ```
 
-#### [#](http://www.liuwq.com/views/日志中心/ELKalbert.html#创建systemd-服务)创建systemd 服务
+#### 创建systemd 服务
 
 ```yml
-cd /etc/systemd/system
+cd /etc/systemd/system
 sudo touch elastalert.service
 
 sudo vi elastalert.service
@@ -218,7 +212,7 @@ ExecStart=/usr/bin/elastalert --config /etc/elastalert/config.yaml --rule /etc/e
 WantedBy=multi-user.target
 ```
 
-#### [#](http://www.liuwq.com/views/日志中心/ELKalbert.html#启动)启动
+#### 启动
 
 ```
 systemctl start elastalert

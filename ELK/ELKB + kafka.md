@@ -2,17 +2,17 @@
 
 ------
 
-# [#](http://www.liuwq.com/views/日志中心/elk_filebeat_kafka.html#架构图)架构图
+# 架构图
 
 ![架构图](http://img.liuwenqi.com/blog/2019-07-24-025307.png)
 
-# [#](http://www.liuwq.com/views/日志中心/elk_filebeat_kafka.html#elk-加入kafka-消息队列)ELK 加入Kafka 消息队列
+# ELK 加入Kafka 消息队列
 
 > 在 elk-3 上面安装filebeat，通过filebeat 模板 抓取 system 日志
 
-## [#](http://www.liuwq.com/views/日志中心/elk_filebeat_kafka.html#filebeat)filebeat
+## filebeat
 
-### [#](http://www.liuwq.com/views/日志中心/elk_filebeat_kafka.html#加载-system-系统模板)加载 system 系统模板
+### 加载 system 系统模板
 
 ```shell
 /etc/filebeat/m
@@ -21,7 +21,7 @@ filebeat modules enable system
 false true
 ```
 
-### [#](http://www.liuwq.com/views/日志中心/elk_filebeat_kafka.html#filebeat-配置文件)filebeat 配置文件
+### filebeat 配置文件
 
 ```yml
 vim /etc/filebeat/filebeat.yml
@@ -71,7 +71,7 @@ output.kafka:
 #  hosts: ["127.0.0.1:5044"]
 ```
 
-## [#](http://www.liuwq.com/views/日志中心/elk_filebeat_kafka.html#logstash)logstash
+## logstash
 
 创建 文件
 
@@ -105,7 +105,7 @@ output {
 
 
 
-### [#](http://www.liuwq.com/views/日志中心/elk_filebeat_kafka.html#启动logstash)启动logstash
+### 启动logstash
 
 ```shell
 cd /opt/logstash-7.2.0
@@ -115,7 +115,7 @@ nohup ./bin/logstash -f logstash_kafka.conf &
 
 
 
-## [#](http://www.liuwq.com/views/日志中心/elk_filebeat_kafka.html#kabana)kabana
+## kabana
 
 创建索引
 

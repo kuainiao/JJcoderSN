@@ -4,15 +4,15 @@
 
 
 
-# [#](http://www.liuwq.com/views/日志中心/elk_mysql_slow_alert.html#关于elk-对-mysql-slow-慢日志报警)关于ELK 对 mysql slow 慢日志报警
+# 关于ELK 对 mysql slow 慢日志报警
 
 > 说下弄这个报警起因，之前一直想做这个事情，但是一直没时间就一拖再拖。终于出了一次事故。开发人员疏忽，使用全表查询语句。高峰期导致数据库读库game over。故此提上日程。
 
-## [#](http://www.liuwq.com/views/日志中心/elk_mysql_slow_alert.html#思路)思路
+## 思路
 
-![简单思维导图](http://img.sharkyun.com/blog/2019-07-14-141453.jpg)
+![简单思维导图](%E4%BD%BF%E7%94%A8ELK%20%E5%AF%B9mysql%20%E6%85%A2%E6%97%A5%E5%BF%97%E8%BF%9B%E8%A1%8C%E6%94%B6%E9%9B%86%EF%BC%8C%E6%8A%A5%E8%AD%A6%E5%A4%84%E7%90%86.assets/2019-07-14-141453.jpg)
 
-## [#](http://www.liuwq.com/views/日志中心/elk_mysql_slow_alert.html#基础环境及软件)基础环境及软件
+## 基础环境及软件
 
 - centos7
 - filebeat
@@ -21,7 +21,7 @@
 - python
 - elastalert
 
-## [#](http://www.liuwq.com/views/日志中心/elk_mysql_slow_alert.html#部署)部署
+## 部署
 
 **由于官网这些都系都很齐全，这里就不过多介绍** 可以参考我之前写的：
 
@@ -29,7 +29,7 @@
 - [elastalert 安装调试](https://www.liuwq.com/2018/03/01/ELKalbert/)
 - [elk 安装部署](https://www.liuwq.com/2017/05/11/ELK_部署测试/)
 
-### [#](http://www.liuwq.com/views/日志中心/elk_mysql_slow_alert.html#filebeat-相关配置)filebeat 相关配置
+### filebeat 相关配置
 
 安装完成后，打开 filebeat.yml(RPM 安装在/etc/filebeat/filebeat.yml)
 
@@ -56,7 +56,7 @@ slowlog:
   var.paths: ["/root/slow-queries.log"]
 ```
 
-### [#](http://www.liuwq.com/views/日志中心/elk_mysql_slow_alert.html#logstash-相关配置)logstash 相关配置
+### logstash 相关配置
 
 ```shell
 日志结构：
@@ -108,7 +108,7 @@ output {
 
 
 
-### [#](http://www.liuwq.com/views/日志中心/elk_mysql_slow_alert.html#elastalert-rules-调整)elastalert rules 调整
+### elastalert rules 调整
 
 ```yaml
 filter:

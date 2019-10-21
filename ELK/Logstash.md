@@ -1,24 +1,18 @@
 # Logstash
 
-------
+## Logstash概述
 
-
-
-# [#](http://www.liuwq.com/views/日志中心/logstash.html#logstash)Logstash
-
-## [#](http://www.liuwq.com/views/日志中心/logstash.html#logstash概述)Logstash概述
-
-### [#](http://www.liuwq.com/views/日志中心/logstash.html#集中、转换和存储数据)集中、转换和存储数据
+### 集中、转换和存储数据
 
 Logstash 是开源的服务器端数据处理管道，能够同时从多个来源采集数据，转换数据，然后将数据发送到您最喜欢的“存储库”中。
 
 [下载](https://www.elastic.co/cn/downloads/logstash)
 
-### [#](http://www.liuwq.com/views/日志中心/logstash.html#输入、过滤器和输出)输入、过滤器和输出
+### 输入、过滤器和输出
 
 Logstash 能够动态地采集、转换和传输数据，不受格式或复杂度的影响。利用 Grok 从非结构化数据中派生出结构，从 IP 地址解码出地理坐标，匿名化或排除敏感字段，并简化整体处理过程。
 
-### [#](http://www.liuwq.com/views/日志中心/logstash.html#采集各种样式、大小和来源的数据-（输入）)采集各种样式、大小和来源的数据 （输入）
+### 采集各种样式、大小和来源的数据 （输入）
 
 数据往往以各种各样的形式，或分散或集中地存在于很多系统中。 Logstash 支持 [各种输入选择](https://www.elastic.co/guide/en/logstash/current/input-plugins.html) ，可以在同一时间从众多常用来源捕捉事件。能够以连续的流式传输方式，轻松地从您的日志、指标、Web 应用、数据存储以及各种 AWS 服务采集数据。
 
@@ -36,7 +30,7 @@ Logstash 能够动态地采集、转换和传输数据，不受格式或复杂�
 
     我们的[过滤器库](https://www.elastic.co/guide/en/logstash/current/filter-plugins.html)丰富多样，拥有无限可能。
 
-## [#](http://www.liuwq.com/views/日志中心/logstash.html#选择您的存储库，导出您的数据-输出)选择您的存储库，导出您的数据 (输出)
+## 选择您的存储库，导出您的数据 (输出)
 
 尽管 Elasticsearch 是我们的首选输出方向，能够为我们的搜索和分析带来无限可能，但它并非唯一选择。
 
@@ -55,14 +49,7 @@ Logstash 提供[众多输出选择](https://www.elastic.co/guide/en/logstash/cur
 『众里寻他千百度，蓦然回首，那人却在灯火阑珊处』，随着日志量的增大，我们从日志中获取去所需信息，并找到各类关联事件的难度会逐渐加大，这个时候，就是 Logstash 登场的时候了
 ```
 
-1
-2
-3
-4
-5
-6
-7
-8
+
 
 Logstash 的主要优势，一个是在支持各类插件的前提下提供统一的管道进行日志处理（就是 input-filter-output 这一套），二个是灵活且性能不错
 
@@ -80,19 +67,13 @@ filter:对日志进行过滤
 output:输出哪里
 ```
 
-1
-2
-3
-4
-5
-6
-7
+
 
 ![img](http://img.liuwenqi.com/blog/2019-07-16-172956.png)
 
 ![img](http://img.liuwenqi.com/blog/2019-07-16-173010.png)
 
-## [#](http://www.liuwq.com/views/日志中心/logstash.html#下载安装)下载安装
+## 下载安装
 
 ```text
 ## 解压安装
@@ -108,7 +89,7 @@ cd /opt/logstash-7.2.0
 nohup ./bin/logstash -f  配置文件名  &
 ```
 
-### [#](http://www.liuwq.com/views/日志中心/logstash.html#filebeat-到-logstash)filebeat 到 logstash
+### filebeat 到 logstash
 
 filebeat 配置
 
@@ -199,9 +180,9 @@ output {
 
 ./bin/logstash -f logstash_nginx.yml
 
-## [#](http://www.liuwq.com/views/日志中心/logstash.html#filebeat-到-redis-到-logstash)filebeat 到 redis 到 logstash
+## filebeat 到 redis 到 logstash
 
-### [#](http://www.liuwq.com/views/日志中心/logstash.html#安装redis)安装redis
+### 安装redis
 
 在 elk-1 安装redis
 
