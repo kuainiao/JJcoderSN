@@ -101,7 +101,6 @@ class APIView(View):
         self.perform_authentication(request)
         self.check_permissions(request)
         self.check_throttles(request)
-复制代码
 ```
 
 ------
@@ -142,7 +141,6 @@ def user(self):
             # 经过一些判断之后，跳转到_authenticate()方法
             self._authenticate()
     return self._user
-复制代码
 ```
 
 1. 在Request类的_authenticate()方法中，执行 **authenticators（认证对象列表）** 中的每一个认证对象的 **authenticate()** 方法。

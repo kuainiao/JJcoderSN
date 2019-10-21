@@ -1,4 +1,4 @@
-# HttpRequest对象
+#  HttpRequest对象
 
 阅读: 16686     [评论](http://www.liujiangblog.com/course/django/138#comments)：4
 
