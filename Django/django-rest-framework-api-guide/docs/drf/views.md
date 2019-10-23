@@ -1,5 +1,3 @@
-> [官方原文链接](http://www.django-rest-framework.org/api-guide/views/)
-
 ## 基于类的视图
 
 REST framework  提供了一个 `APIView` 类，它继承于 Django 的 `View` 类。

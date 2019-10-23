@@ -1,7 +1,5 @@
 # Django模板语言详解
 
-阅读: 25156     [评论](http://www.liujiangblog.com/course/django/145#comments)：8
-
 本节将介绍Django模版系统的语法。Django模版语言致力于在性能和简单性上取得平衡。
 
 如果你有过其它编程背景，或者使用过一些在HTML中直接混入程序代码的语言，那么你需要记住，Django的模版系统并不是简单的将Python嵌入到HTML中。

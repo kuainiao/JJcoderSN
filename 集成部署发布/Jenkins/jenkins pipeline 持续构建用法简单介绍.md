@@ -19,7 +19,7 @@
 
 我选择**第二种方案**进行治理，也就是本文主要讲解内容。背景介绍完成，进入正题。
 
-### [#](http://www.liuwq.com/views/自动化工具/jenkins_type.html#架构思路)架构思路
+### 架构思路
 
 ![img](jenkins%20pipeline%20%E6%8C%81%E7%BB%AD%E6%9E%84%E5%BB%BA%E7%94%A8%E6%B3%95%E7%AE%80%E5%8D%95%E4%BB%8B%E7%BB%8D.assets/2019-07-23-125238.jpg)
 

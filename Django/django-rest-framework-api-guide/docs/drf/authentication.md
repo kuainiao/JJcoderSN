@@ -18,7 +18,7 @@ REST framework 提供了许多开箱即用的身份验证方案，同时也允�
 
 ## 如何确定身份验证
 
-认证方案总是被定义为一个类的列表。  REST framework 将尝试使用列表中的每个类进行认证，并将使用成功认证的第一个类的返回值来设置 `request.user` 和 `request.auth` 。
+认证方案总是被定义为一个**类的列表**。  REST framework 将尝试使用列表中的每个类进行认证，并将使用成功认证的第一个类的返回值来设置 `request.user` 和 `request.auth` 。
 
 如果没有类进行身份验证，则将 `request.user` 设置为 `django.contrib.auth.models.AnonymousUser` 的实例，并将 `request.auth` 设置为 `None`.
 
