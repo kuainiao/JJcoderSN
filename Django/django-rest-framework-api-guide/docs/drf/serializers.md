@@ -1,5 +1,3 @@
-> [官方原文链接](http://www.django-rest-framework.org/api-guide/serializers/)
-
 ## Serializers
 
 序列化器允许将诸如查询集和模型实例之类的复杂数据转换为原生 Python 数据类型，然后可以将它们轻松地呈现为 `JSON`，`XML` 或其他内容类型。序列化器还提供反序列化，在首次验证传入数据之后，可以将解析的数据转换回复杂类型。

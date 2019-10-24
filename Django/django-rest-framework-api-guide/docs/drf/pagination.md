@@ -1,7 +1,3 @@
-> [官方原文链接](http://www.django-rest-framework.org/api-guide/pagination/)  
-
-
-
 # 分页
 
 REST framework 包含对可定制分页样式的支持。这使你可以将较大的结果集分成单独的数据页面。

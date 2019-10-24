@@ -1,7 +1,5 @@
 # 表单的Widgets
 
-阅读: 12824     [评论](http://www.liujiangblog.com/course/django/155#comments)：0
-
 不要将Widget与表单的fields字段混淆。表单字段负责验证输入并直接在模板中使用。而Widget负责渲染网页上HTML表单的输入元素和提取提交的原始数据。widget是字段的一个内在属性，用于定义字段在浏览器的页面里以何种HTML元素展现。
 
 ## 一、指定使用的widget

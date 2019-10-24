@@ -1,7 +1,5 @@
 # Django表单API详解
 
-阅读: 17126     [评论](http://www.liujiangblog.com/course/django/153#comments)：3
-
 声明：以下的Form、表单等术语都指的的广义的Django表单。
 
 Form要么是绑定了数据的，要么是未绑定数据的。
@@ -212,7 +210,7 @@ False
 
 ## 五、访问cleaned_data
 
-Form.cleaned_data
+> Form.cleaned_data
 
 Form类中的每个字段不仅负责验证数据，还负责将它们转换为正确的格式。例如，DateField将输入转换为Python的datetime.date对象。无论你传递的是普通字符串'1994-07-15'、DateField格式的字符串、datetime.date对象、还是其它格式的数字，Django将始终把它们转换成datetime.date对象。
 

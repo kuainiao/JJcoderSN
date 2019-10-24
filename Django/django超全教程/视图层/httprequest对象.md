@@ -1,7 +1,5 @@
 #  HttpRequest对象
 
-阅读: 16686     [评论](http://www.liujiangblog.com/course/django/138#comments)：4
-
 每当一个用户请求发送过来，Django将HTTP数据包中的相关内容，打包成为一个HttpRequest对象，并传递给每个视图函数作为第一位置参数，也就是request，供我们调用。
 
 HttpRequest对象中包含了非常多的重要的信息和数据，应该熟练掌握它。

@@ -1,7 +1,5 @@
 # URL路由基础
 
-阅读: 26163     [评论](http://www.liujiangblog.com/course/django/134#comments)：6
-
 ### 路由的编写方式是Django2.0和1.11最大的区别所在。Django官方迫于压力和同行的影响，不得不将原来的正则匹配表达式，改为更加简单的path表达式，但依然通过re_path()方法保持对1.x版本的兼容。
 
 ------

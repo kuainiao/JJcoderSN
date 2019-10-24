@@ -22,7 +22,7 @@ class OperationHolderMixin:
         return OperandHolder(OR, other, self)
 
     def __invert__(self):
-        return SingleOperandHolder(NOT, self)
+    return SingleOperandHolder(NOT, self)
 
 
 class SingleOperandHolder(OperationHolderMixin):

@@ -367,7 +367,7 @@ function getUserStatus(){
     echo "----------"
     USEREmptyPassword=""
     for shell in $(grep -v "/sbin/nologin" /etc/shells);do
-            for user in $(echo "$pwdfile" | grep "$shell" | cut -d: -f1);do
+        for user in $(echo "$pwdfile" | grep "$shell" | cut -d: -f1);do
             r=$(awk -F: '$2=="!!"{print $1}' /etc/shadow | grep -w $user)
             if [ ! -z $r ];then
                 echo $r
@@ -506,13 +506,13 @@ function getFirewallStatus(){
         /etc/init.d/iptables status >/dev/null  2>&1
         status=$?
         if [ $status -eq 0 ];then
-                s="active"
+            s="active"
         elif [ $status -eq 3 ];then
-                s="inactive"
+            s="inactive"
         elif [ $status -eq 4 ];then
-                s="permission denied"
+            s="permission denied"
         else
-                s="unknown"
+            s="unknown"
         fi
     else
         s="$(getState iptables)"
@@ -627,53 +627,53 @@ function getNTPStatus(){
 
 function uploadHostDailyCheckReport(){
     json="{
-        \"DateTime\":\"$report_DateTime\",
-        \"Hostname\":\"$report_Hostname\",
-        \"OSRelease\":\"$report_OSRelease\",
-        \"Kernel\":\"$report_Kernel\",
-        \"Language\":\"$report_Language\",
-        \"LastReboot\":\"$report_LastReboot\",
-        \"Uptime\":\"$report_Uptime\",
-        \"CPUs\":\"$report_CPUs\",
-        \"CPUType\":\"$report_CPUType\",
-        \"Arch\":\"$report_Arch\",
-        \"MemTotal\":\"$report_MemTotal\",
-        \"MemFree\":\"$report_MemFree\",
-        \"MemUsedPercent\":\"$report_MemUsedPercent\",
-        \"DiskTotal\":\"$report_DiskTotal\",
-        \"DiskFree\":\"$report_DiskFree\",
-        \"DiskUsedPercent\":\"$report_DiskUsedPercent\",
-        \"InodeTotal\":\"$report_InodeTotal\",
-        \"InodeFree\":\"$report_InodeFree\",
-        \"InodeUsedPercent\":\"$report_InodeUsedPercent\",
-        \"IP\":\"$report_IP\",
-        \"MAC\":\"$report_MAC\",
-        \"Gateway\":\"$report_Gateway\",
-        \"DNS\":\"$report_DNS\",
-        \"Listen\":\"$report_Listen\",
-        \"Selinux\":\"$report_Selinux\",
-        \"Firewall\":\"$report_Firewall\",
-        \"USERs\":\"$report_USERs\",
-        \"USEREmptyPassword\":\"$report_USEREmptyPassword\",
-        \"USERTheSameUID\":\"$report_USERTheSameUID\",
-        \"PasswordExpiry\":\"$report_PasswordExpiry\",
-        \"RootUser\":\"$report_RootUser\",
-        \"Sudoers\":\"$report_Sudoers\",
-        \"SSHAuthorized\":\"$report_SSHAuthorized\",
-        \"SSHDProtocolVersion\":\"$report_SSHDProtocolVersion\",
-        \"SSHDPermitRootLogin\":\"$report_SSHDPermitRootLogin\",
-        \"DefunctProsess\":\"$report_DefunctProsess\",
-        \"SelfInitiatedService\":\"$report_SelfInitiatedService\",
-        \"SelfInitiatedProgram\":\"$report_SelfInitiatedProgram\",
-        \"RuningService\":\"$report_RuningService\",
-        \"Crontab\":\"$report_Crontab\",
-        \"Syslog\":\"$report_Syslog\",
-        \"SNMP\":\"$report_SNMP\",
-        \"NTP\":\"$report_NTP\",
-        \"JDK\":\"$report_JDK\"
-    }"
-    #echo "$json" 
-    curl -l -H "Content-type: application/json" -X POST -d "$json" "$uploadHostDailyCheckReportApi" 2>/dev/null
+    \"DateTime\":\"$report_DateTime\",
+    \"Hostname\":\"$report_Hostname\",
+    \"OSRelease\":\"$report_OSRelease\",
+    \"Kernel\":\"$report_Kernel\",
+    \"Language\":\"$report_Language\",
+    \"LastReboot\":\"$report_LastReboot\",
+    \"Uptime\":\"$report_Uptime\",
+    \"CPUs\":\"$report_CPUs\",
+    \"CPUType\":\"$report_CPUType\",
+    \"Arch\":\"$report_Arch\",
+    \"MemTotal\":\"$report_MemTotal\",
+    \"MemFree\":\"$report_MemFree\",
+    \"MemUsedPercent\":\"$report_MemUsedPercent\",
+    \"DiskTotal\":\"$report_DiskTotal\",
+    \"DiskFree\":\"$report_DiskFree\",
+    \"DiskUsedPercent\":\"$report_DiskUsedPercent\",
+    \"InodeTotal\":\"$report_InodeTotal\",
+    \"InodeFree\":\"$report_InodeFree\",
+    \"InodeUsedPercent\":\"$report_InodeUsedPercent\",
+    \"IP\":\"$report_IP\",
+    \"MAC\":\"$report_MAC\",
+    \"Gateway\":\"$report_Gateway\",
+    \"DNS\":\"$report_DNS\",
+    \"Listen\":\"$report_Listen\",
+    \"Selinux\":\"$report_Selinux\",
+    \"Firewall\":\"$report_Firewall\",
+    \"USERs\":\"$report_USERs\",
+    \"USEREmptyPassword\":\"$report_USEREmptyPassword\",
+    \"USERTheSameUID\":\"$report_USERTheSameUID\",
+    \"PasswordExpiry\":\"$report_PasswordExpiry\",
+    \"RootUser\":\"$report_RootUser\",
+    \"Sudoers\":\"$report_Sudoers\",
+    \"SSHAuthorized\":\"$report_SSHAuthorized\",
+    \"SSHDProtocolVersion\":\"$report_SSHDProtocolVersion\",
+    \"SSHDPermitRootLogin\":\"$report_SSHDPermitRootLogin\",
+    \"DefunctProsess\":\"$report_DefunctProsess\",
+    \"SelfInitiatedService\":\"$report_SelfInitiatedService\",
+    \"SelfInitiatedProgram\":\"$report_SelfInitiatedProgram\",
+    \"RuningService\":\"$report_RuningService\",
+    \"Crontab\":\"$report_Crontab\",
+    \"Syslog\":\"$report_Syslog\",
+    \"SNMP\":\"$report_SNMP\",
+    \"NTP\":\"$report_NTP\",
+    \"JDK\":\"$report_JDK\"
+}"
+#echo "$json" 
+curl -l -H "Content-type: application/json" -X POST -d "$json" "$uploadHostDailyCheckReportApi" 2>/dev/null
 }
 
 function check(){

@@ -105,7 +105,7 @@ WSGIPassAuthorization On
 
 如果成功通过身份验证，`BasicAuthentication` 将提供以下凭据。
 
-* `request.user` 是一个 Django `User` 实力.
+* `request.user` 是一个 Django `User` 实例.
 * `request.auth` 是 `None`.
 
 未经身份验证的响应被拒绝将导致 `HTTP 401 Unauthorized` 的响应和相应的 WWW-Authenticate header。例如：

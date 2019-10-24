@@ -1,7 +1,5 @@
 # 不返回QuerySets的API
 
-阅读: 16495     [评论](http://www.liujiangblog.com/course/django/131#comments)：7
-
 以下的方法不会返回QuerySets，但是作用非常强大，尤其是粗体显示的方法，需要背下来。
 
 | 方法名                 | 解释                             |
@@ -26,7 +24,7 @@
 
 ## 1. get()
 
-get(**kwargs)
+> get(**kwargs)
 
 返回按照查询参数匹配到的单个对象，参数的格式应该符合Field lookups的要求。
 
@@ -57,7 +55,7 @@ entry = Entry.objects.filter(...).exclude(...).get()
 
 ## 2. create()
 
-create(**kwargs)
+> create(**kwargs)
 
 在一步操作中同时创建并且保存对象的便捷方法.
 
@@ -72,19 +70,19 @@ p = Person(first_name="Bruce", last_name="Springsteen")
 p.save(force_insert=True)
 ```
 
-参数`force_insert`表示强制创建对象。如果model中有一个你手动设置的主键，并且这个值已经存在于数据库中, 调用create()将会失败并且触发IntegrityError因为主键必须是唯一的。如果你手动设置了主键，做好异常处理的准备。
+参数`force_insert`表示强制创建对象。如果model中有一个你手动设置的主键，并且这个值已经存在于数据库中, 调用create()将会失败并且触发`IntegrityError`因为主键必须是唯一的。如果你手动设置了主键，做好异常处理的准备。
 
 ## 3. get_or_create()
 
-get_or_create(defaults=None, **kwargs)
+> get_or_create(defaults=None, **kwargs)
 
 **通过kwargs来查询对象的便捷方法（如果模型中的所有字段都有默认值，可以为空），如果该对象不存在则创建一个新对象**。
 
-该方法**返回一个由(object, created)组成的元组**，元组中的object 是一个查询到的或者是被创建的对象， created是一个表示是否创建了新的对象的布尔值。
+该方法**返回一个由`(object, created)`组成的元组**，元组中的object 是一个查询到的或者是被创建的对象， created是一个表示是否创建了新的对象的布尔值。
 
 对于下面的代码：
 
-```
+```python
 try:
     obj = Person.objects.get(first_name='John', last_name='Lennon')
 except Person.DoesNotExist:
@@ -94,7 +92,7 @@ except Person.DoesNotExist:
 
 如果模型的字段数量较大的话，这种模式就变的非常不易用了。 上面的示例可以用`get_or_create()`重写 :
 
-```
+```python
 obj, created = Person.objects.get_or_create(
     first_name='John',
     last_name='Lennon',
@@ -104,7 +102,7 @@ obj, created = Person.objects.get_or_create(
 
 任何传递给`get_or_create()`的关键字参数，除了一个可选的defaults，都将传递给get()调用。 如果查找到一个对象，返回一个包含匹配到的对象以及False 组成的元组。 如果查找到的对象超过一个以上，将引发MultipleObjectsReturned。如果查找不到对象，`get_or_create()`将会实例化并保存一个新的对象，返回一个由新的对象以及True组成的元组。新的对象将会按照以下的逻辑创建:
 
-```
+```python
 params = {k: v for k, v in kwargs.items() if '__' not in k}
 params.update({k: v() if callable(v) else v for k, v in defaults.items()})
 obj = self.model(**params)
@@ -129,7 +127,7 @@ Foo.objects.get_or_create(defaults__exact='bar', defaults={'defaults': 'baz'})
 
 例如下面的模型：
 
-```
+```python
 class Chapter(models.Model):
     title = models.CharField(max_length=255, unique=True)
 
@@ -140,7 +138,7 @@ class Book(models.Model):
 
 可以通过Book的chapters字段使用`get_or_create()`，但是它只会获取该Book内部的上下文：
 
-```
+```python
 >>> book = Book.objects.create(title="Ulysses")
 >>> book.chapters.get_or_create(title="Telemachus")
 (<Chapter: Telemachus>, True)
@@ -158,7 +156,7 @@ class Book(models.Model):
 
 ## 4. update_or_create()
 
-update_or_create(defaults=None, **kwargs)
+> update_or_create(defaults=None, **kwargs)
 
 类似前面的`get_or_create()`。
 
@@ -201,7 +199,7 @@ kwargs中的名称如何解析的详细描述可以参见`get_or_create()`。
 
 ## 5. bulk_create()
 
-bulk_create(objs, batch_size=None)
+> bulk_create(objs, batch_size=None)
 
 以高效的方式（通常只有1个查询，无论有多少对象）将提供的对象列表插入到数据库中：
 
@@ -223,7 +221,7 @@ bulk_create(objs, batch_size=None)
 
 ## 6. count()
 
-count()
+> count()
 
 返回在数据库中对应的QuerySet对象的个数。count()永远不会引发异常。
 
@@ -238,7 +236,7 @@ Entry.objects.filter(headline__contains='Lennon').count()
 
 ## 7. in_bulk()
 
-in_bulk(id_list=None)
+> in_bulk(id_list=None)
 
 获取主键值的列表，并返回将每个主键值映射到具有给定ID的对象的实例的字典。 如果未提供列表，则会返回查询集中的所有对象。
 
@@ -261,7 +259,7 @@ in_bulk(id_list=None)
 
 ## 8. iterator()
 
-iterator()
+> iterator()
 
 提交数据库操作，获取QuerySet，并返回一个迭代器。
 
@@ -271,7 +269,7 @@ QuerySet通常会在内部缓存其结果，以便在重复计算时不会导致
 
 ## 9. latest()
 
-latest(field_name=None)
+> latest(field_name=None)
 
 使用日期字段field_name，按日期返回最新对象。
 
@@ -291,13 +289,13 @@ Entry.objects.filter(pub_date__isnull=False).latest('pub_date')
 
 ## 10. earliest()
 
-earliest(field_name=None)
+> earliest(field_name=None)
 
 类同latest()。
 
 ## 11. first()
 
-first()
+> first()
 
 返回结果集的第一个对象, 当没有找到时返回None。如果QuerySet没有设置排序,则将会自动按主键进行排序。例如：
 
@@ -316,13 +314,13 @@ except IndexError:
 
 ## 12. last()
 
-last()
+> last()
 
 工作方式类似first()，只是返回的是查询集中最后一个对象。
 
 ## 13. aggregate()
 
-aggregate(*args,* *kwargs)
+> aggregate(*args,* *kwargs)
 
 返回汇总值的字典（平均值，总和等）,通过QuerySet进行计算。每个参数指定返回的字典中将要包含的值。
 
@@ -345,13 +343,13 @@ aggregate(*args,* *kwargs)
 
 ## 14. exists()
 
-exists()
+> exists()
 
 如果QuerySet包含任何结果，则返回True，否则返回False。
 
 查找具有唯一性字段（例如primary_key）的模型是否在一个QuerySet中的最高效的方法是：
 
-```
+```python
 entry = Entry.objects.get(pk=123)
 if some_queryset.filter(pk=entry.pk).exists():
     print("Entry contained in queryset")
@@ -359,7 +357,7 @@ if some_queryset.filter(pk=entry.pk).exists():
 
 它将比下面的方法快很多，这个方法要求对QuerySet求值并迭代整个QuerySet：
 
-```
+```python
 if entry in some_queryset:
    print("Entry contained in QuerySet")
 ```
@@ -380,7 +378,7 @@ if some_queryset:
 
 ## 15. update()
 
-update(**kwargs)
+> update(**kwargs)
 
 **对指定的字段执行批量更新操作，并返回匹配的行数**（如果某些行已具有新值，则可能不等于已更新的行数）。
 
@@ -445,7 +443,7 @@ for e in Entry.objects.filter(pub_date__year=2010):
 
 ## 16. delete()
 
-delete()
+> delete()
 
 批量删除QuerySet中的所有对象，并返回删除的对象个数和每个对象类型的删除次数的字典。
 

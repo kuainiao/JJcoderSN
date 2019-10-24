@@ -1,7 +1,5 @@
 # QueryDict对象
 
-阅读: 14604     [评论](http://www.liujiangblog.com/course/django/139#comments)：3
-
 类的原型：class QueryDict[source]
 
 在HttpRequest对象中，GET和POST属性都是一个`django.http.QueryDict`的实例。也就是说你可以按本文下面提供的方法操作request.POST和request.GET。

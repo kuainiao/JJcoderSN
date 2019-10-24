@@ -1,7 +1,5 @@
 # Django内置模板标签
 
-阅读: 19353     [评论](http://www.liujiangblog.com/course/django/146#comments)：12
-
 ## Django内置标签总览
 
 可以查询下表来总览Django的内置标签：

@@ -1,7 +1,5 @@
 # HttpResponse对象
 
-阅读: 18321     [评论](http://www.liujiangblog.com/course/django/140#comments)：2
-
 类定义：class HttpResponse[source]
 
 HttpResponse类定义在django.http模块中。
