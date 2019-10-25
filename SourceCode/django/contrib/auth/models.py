@@ -13,8 +13,7 @@ from .validators import UnicodeUsernameValidator
 
 def update_last_login(sender, user, **kwargs):
     """
-    A signal receiver which updates the last_login date for
-    the user logging in.
+    一个信号接收器，用于更新用户登录的last_login日期。
     """
     user.last_login = timezone.now()
     user.save(update_fields=['last_login'])
@@ -32,18 +31,14 @@ class PermissionManager(models.Manager):
 
 class Permission(models.Model):
     """
-    The permissions system provides a way to assign permissions to specific
-    users and groups of users.
+    权限系统提供了一种将权限分配给特定用户和用户组的方法。
 
-    The permission system is used by the Django admin site, but may also be
-    useful in your own code. The Django admin site uses permissions as follows:
+    权限管理系统由Django管理站点使用，但在您自己的代码中也可能有用。 Django管理站点使用以下权限：
 
-        - The "add" permission limits the user's ability to view the "add" form
-          and add an object.
-        - The "change" permission limits a user's ability to view the change
-          list, view the "change" form and change an object.
-        - The "delete" permission limits the ability to delete an object.
-        - The "view" permission limits the ability to view an object.
+        -“添加”权限限制了用户查看“添加”表单和添加对象的能力。
+        -“更改”权限限制了用户查看更改列表，查看“更改”表单和更改对象的能力。
+        -“删除”权限限制了删除对象的能力。
+        -“查看”权限限制了查看对象的能力。
 
     Permissions are set globally per type of object, not per specific object
     instance. It is possible to say "Mary may change news stories," but it's
@@ -84,7 +79,7 @@ class Permission(models.Model):
 
 class GroupManager(models.Manager):
     """
-    The manager for the auth's Group model.
+    身份验证的群组模型的管理员。
     """
     use_in_migrations = True
 
@@ -188,7 +183,7 @@ def _user_has_perm(user, perm, obj):
 
 def _user_has_module_perms(user, app_label):
     """
-    A backend can raise `PermissionDenied` to short-circuit permission checking.
+   后端可以引发`PermissionDenied`来缩短权限检查。
     """
     for backend in auth.get_backends():
         if not hasattr(backend, 'has_module_perms'):
@@ -203,8 +198,7 @@ def _user_has_module_perms(user, app_label):
 
 class PermissionsMixin(models.Model):
     """
-    Add the fields and methods necessary to support the Group and Permission
-    models using the ModelBackend.
+    使用ModelBackend添加支持组和权限模型所需的字段和方法。
     """
     is_superuser = models.BooleanField(
         _('superuser status'),
@@ -239,9 +233,7 @@ class PermissionsMixin(models.Model):
 
     def get_group_permissions(self, obj=None):
         """
-        Return a list of permission strings that this user has through their
-        groups. Query all available auth backends. If an object is passed in,
-        return only permissions matching this object.
+        返回该用户通过其组拥有的权限字符串列表。查询所有可用的身份验证后端。如果传入对象，则仅返回与该对象匹配的权限。
         """
         permissions = set()
         for backend in auth.get_backends():

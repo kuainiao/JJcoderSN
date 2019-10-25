@@ -1,7 +1,5 @@
 # Django与缓存
 
-阅读: 8347     [评论](http://www.liujiangblog.com/course/django/177#comments)：2
-
 我们都知道Django建立的是动态网站，正常情况下，每次请求过来都经历了这样一个过程：
 
 ```

@@ -13,7 +13,7 @@ using the decorator multiple times, is harmless and efficient.
 
 
 class _EnsureCsrfToken(CsrfViewMiddleware):
-    # Behave like CsrfViewMiddleware but don't reject requests or log warnings.
+    # 表现得像CsrfViewMiddleware，但不拒绝请求或记录警告。
     def _reject(self, request, reason):
         return None
 

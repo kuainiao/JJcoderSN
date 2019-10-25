@@ -7,17 +7,12 @@ from django.utils.decorators import decorator_from_middleware_with_args
 
 def cache_page(timeout, *, cache=None, key_prefix=None):
     """
-    Decorator for views that tries getting the page from the cache and
-    populates the cache if the page isn't in the cache yet.
+    视图的装饰器，用于尝试从缓存中获取页面并在该页面不在缓存中时填充缓存。
 
-    The cache is keyed by the URL and some data from the headers.
-    Additionally there is the key prefix that is used to distinguish different
-    cache areas in a multi-site setup. You could use the
-    get_current_site().domain, for example, as that is unique across a Django
-    project.
+    URL和标头中的一些数据为缓存设置了密钥。此外，还有一个键前缀，用于区分多站点设置中的不同缓存区域。
+    例如，您可以使用get_current_site（）。domain，因为这在Django项目中是唯一的。
 
-    Additionally, all headers from the response's Vary header will be taken
-    into account on caching -- just like the middleware does.
+    此外，缓存时会考虑到响应的Vary标头中的所有标头，就像中间件一样。
     """
     return decorator_from_middleware_with_args(CacheMiddleware)(
         cache_timeout=timeout, cache_alias=cache, key_prefix=key_prefix
@@ -37,7 +32,7 @@ def cache_control(**kwargs):
 
 def never_cache(view_func):
     """
-    Decorator that adds headers to a response so that it will never be cached.
+    装饰器，将响应头添加到响应中，以便永远不会将其缓存。
     """
     @wraps(view_func)
     def _wrapped_view_func(request, *args, **kwargs):

@@ -1,7 +1,5 @@
 # 信号 signal
 
-阅读: 12153     [评论](http://www.liujiangblog.com/course/django/170#comments)：8
-
 django自带一套信号机制来帮助我们在框架的不同位置之间传递信息。也就是说，当某一事件发生时，信号系统可以允许一个或多个发送者（senders）将通知或信号（signals）发送给一组接受者（receivers）。
 
 信号系统包含以下三要素：

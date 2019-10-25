@@ -1,5 +1,5 @@
 """
-Provides a set of pluggable permission policies.
+提供一组可插入的权限策略。
 """
 from django.http import Http404
 
@@ -22,7 +22,8 @@ class OperationHolderMixin:
         return OperandHolder(OR, other, self)
 
     def __invert__(self):
-    return SingleOperandHolder(NOT, self)
+
+        return SingleOperandHolder(NOT, self)
 
 
 class SingleOperandHolder(OperationHolderMixin):
@@ -54,14 +55,14 @@ class AND:
 
     def has_permission(self, request, view):
         return (
-            self.op1.has_permission(request, view) and
-            self.op2.has_permission(request, view)
+                self.op1.has_permission(request, view) and
+                self.op2.has_permission(request, view)
         )
 
     def has_object_permission(self, request, view, obj):
         return (
-            self.op1.has_object_permission(request, view, obj) and
-            self.op2.has_object_permission(request, view, obj)
+                self.op1.has_object_permission(request, view, obj) and
+                self.op2.has_object_permission(request, view, obj)
         )
 
 
@@ -72,14 +73,14 @@ class OR:
 
     def has_permission(self, request, view):
         return (
-            self.op1.has_permission(request, view) or
-            self.op2.has_permission(request, view)
+                self.op1.has_permission(request, view) or
+                self.op2.has_permission(request, view)
         )
 
     def has_object_permission(self, request, view, obj):
         return (
-            self.op1.has_object_permission(request, view, obj) or
-            self.op2.has_object_permission(request, view, obj)
+                self.op1.has_object_permission(request, view, obj) or
+                self.op2.has_object_permission(request, view, obj)
         )
 
 
@@ -100,28 +101,25 @@ class BasePermissionMetaclass(OperationHolderMixin, type):
 
 class BasePermission(metaclass=BasePermissionMetaclass):
     """
-    A base class from which all permission classes should inherit.
+    所有权限类都应从中继承的基类。
     """
 
     def has_permission(self, request, view):
         """
-        Return `True` if permission is granted, `False` otherwise.
+        如果授予许可，则返回True，否则返回False。
         """
         return True
 
     def has_object_permission(self, request, view, obj):
         """
-        Return `True` if permission is granted, `False` otherwise.
+        如果授予许可，则返回True，否则返回False。
         """
         return True
 
 
 class AllowAny(BasePermission):
     """
-    Allow any access.
-    This isn't strictly required, since you could use an empty
-    permission_classes list, but it's useful because it makes the intention
-    more explicit.
+    允许任何访问。这不是严格要求的，因为您可以使用一个空的Permission_classes列表，但是它很有用，因为它使意图更加明确。
     """
 
     def has_permission(self, request, view):
@@ -203,7 +201,7 @@ class DjangoModelPermissions(BasePermission):
 
     def _queryset(self, view):
         assert hasattr(view, 'get_queryset') \
-            or getattr(view, 'queryset', None) is not None, (
+               or getattr(view, 'queryset', None) is not None, (
             'Cannot apply {} on a view that does not set '
             '`.queryset` or have a `.get_queryset()` method.'
         ).format(self.__class__.__name__)
@@ -223,7 +221,7 @@ class DjangoModelPermissions(BasePermission):
             return True
 
         if not request.user or (
-           not request.user.is_authenticated and self.authenticated_users_only):
+                not request.user.is_authenticated and self.authenticated_users_only):
             return False
 
         queryset = self._queryset(view)

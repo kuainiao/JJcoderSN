@@ -1,7 +1,6 @@
 """
-This module collects helper functions and classes that "span" multiple levels
-of MVC. In other words, these functions/classes introduce controlled coupling
-for convenience's sake.
+此模块收集“跨越”多个级别的辅助函数和类MVC。换句话说，这些功能/类引入了受控耦合
+为了方便起见。
 """
 import warnings
 
@@ -16,8 +15,7 @@ from django.utils.functional import Promise
 
 def render_to_response(template_name, context=None, content_type=None, status=None, using=None):
     """
-    Return a HttpResponse whose content is filled with the result of calling
-    django.template.loader.render_to_string() with the passed arguments.
+    返回一个HttpResponse，其内容充满了使用传递的参数调用django.template.loader.render_to_string（）的结果。
     """
     warnings.warn(
         'render_to_response() is deprecated in favor of render(). It has the '
@@ -30,8 +28,7 @@ def render_to_response(template_name, context=None, content_type=None, status=No
 
 def render(request, template_name, context=None, content_type=None, status=None, using=None):
     """
-    Return a HttpResponse whose content is filled with the result of calling
-    django.template.loader.render_to_string() with the passed arguments.
+    返回一个HttpResponse，其内容充满了使用传递的参数调用django.template.loader.render_to_string（）的结果。
     """
     content = loader.render_to_string(template_name, context, request, using=using)
     return HttpResponse(content, content_type, status)
@@ -39,8 +36,7 @@ def render(request, template_name, context=None, content_type=None, status=None,
 
 def redirect(to, *args, permanent=False, **kwargs):
     """
-    Return an HttpResponseRedirect to the appropriate URL for the arguments
-    passed.
+    将HttpResponseRedirect返回到所传递参数的相应URL。
 
     The arguments could be:
 
@@ -60,10 +56,8 @@ def redirect(to, *args, permanent=False, **kwargs):
 
 def _get_queryset(klass):
     """
-    Return a QuerySet or a Manager.
-    Duck typing in action: any class with a `get()` method (for
-    get_object_or_404) or a `filter()` method (for get_list_or_404) might do
-    the job.
+    返回查询集或管理器。
+    鸭子输入动作：任何具有get（）方法（对于get_object_or_404）或filter（）方法（对于get_list_or_404）的类都可以完成这项工作。
     """
     # If it is a model class or anything else with ._default_manager
     if hasattr(klass, '_default_manager'):

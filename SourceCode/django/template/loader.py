@@ -4,9 +4,7 @@ from .exceptions import TemplateDoesNotExist
 
 def get_template(template_name, using=None):
     """
-    Load and return a template for the given name.
-
-    Raise TemplateDoesNotExist if no such template exists.
+    加载并返回给定名称的模板。如果不存在这样的模板，请引发TemplateDoesNotExist。plate exists.
     """
     chain = []
     engines = _engine_list(using)
@@ -21,11 +19,7 @@ def get_template(template_name, using=None):
 
 def select_template(template_name_list, using=None):
     """
-    Load and return a template for one of the given names.
-
-    Try names in order and return the first template found.
-
-    Raise TemplateDoesNotExist if no such template exists.
+    加载并返回给定名称之一的模板。按顺序尝试名称，然后返回找到的第一个模板。如果不存在这样的模板，请引发TemplateDoesNotExist。
     """
     if isinstance(template_name_list, str):
         raise TypeError(
@@ -51,9 +45,9 @@ def select_template(template_name_list, using=None):
 
 def render_to_string(template_name, context=None, request=None, using=None):
     """
-    Load a template and render it with a context. Return a string.
+    加载模板并使用上下文呈现它。返回一个字符串。
 
-    template_name may be a string or a list of strings.
+    template_name可以是字符串或字符串列表
     """
     if isinstance(template_name, (list, tuple)):
         template = select_template(template_name, using=using)

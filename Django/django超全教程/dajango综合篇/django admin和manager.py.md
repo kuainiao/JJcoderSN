@@ -1,6 +1,4 @@
-# django-admin和manage.py
-
-阅读: 9995     [评论](http://www.liujiangblog.com/course/django/166#comments)：3
+# django-admin和manage.p
 
 ------
 

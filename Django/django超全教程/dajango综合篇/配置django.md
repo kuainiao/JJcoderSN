@@ -1,7 +1,5 @@
 # 配置 Django
 
-阅读: 14555     [评论](http://www.liujiangblog.com/course/django/163#comments)：1
-
 Django项目的设置文件位于项目同名目录下，名叫`settings.py`。这个模块，集合了整个项目方方面面的设置属性，是项目启动和提供服务的根本保证。
 
 ## 一、简述

@@ -1,6 +1,5 @@
 """
-Content negotiation deals with selecting an appropriate renderer given the
-incoming request.  Typically this will be based on the request's Accept header.
+内容协商涉及在给定的情况下选择合适的渲染器传入请求。通常，这将基于请求的Accept标头。
 """
 from django.http import Http404
 
@@ -24,8 +23,7 @@ class DefaultContentNegotiation(BaseContentNegotiation):
 
     def select_parser(self, request, parsers):
         """
-        Given a list of parsers and a media type, return the appropriate
-        parser to handle the incoming request.
+        给定解析器列表和媒体类型，请返回适当的解析器以处理传入的请求。
         """
         for parser in parsers:
             if media_type_matches(parser.media_type, request.content_type):
@@ -34,10 +32,9 @@ class DefaultContentNegotiation(BaseContentNegotiation):
 
     def select_renderer(self, request, renderers, format_suffix=None):
         """
-        Given a request and a list of renderers, return a two-tuple of:
-        (renderer, media type).
+       给定一个请求和一个渲染器列表，返回一个二元组的：（渲染器，媒体类型）。
         """
-        # Allow URL style format override.  eg. "?format=json
+        # 允许覆盖URL样式格式。例如。 “？format = json
         format_query_param = self.settings.URL_FORMAT_OVERRIDE
         format = format_suffix or request.query_params.get(format_query_param)
 

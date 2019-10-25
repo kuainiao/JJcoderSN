@@ -1,7 +1,5 @@
 # CSRF与AJAX
 
-阅读: 11282     [评论](http://www.liujiangblog.com/course/django/179#comments)：4
-
 CSRF（Cross-site request forgery）跨站请求伪造，是一种常见的网络攻击手段，具体内容和含义请大家自行百度。
 
 Django为我们提供了防范CSRF攻击的机制。

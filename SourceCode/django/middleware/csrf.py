@@ -1,8 +1,5 @@
 """
-Cross Site Request Forgery Middleware.
-
-This module provides a middleware that implements protection
-against request forgeries from other sites.
+跨站点请求伪造中间件。该模块提供实现保护的中间件反对来自其他站点的伪造请求。
 """
 import logging
 import re
@@ -34,7 +31,7 @@ CSRF_SESSION_KEY = '_csrftoken'
 
 
 def _get_failure_view():
-    """Return the view to be used for CSRF rejections."""
+    """返回用于CSRF拒绝的视图"""
     return get_callable(settings.CSRF_FAILURE_VIEW)
 
 
@@ -44,8 +41,7 @@ def _get_new_csrf_string():
 
 def _salt_cipher_secret(secret):
     """
-    Given a secret (assumed to be a string of CSRF_ALLOWED_CHARS), generate a
-    token by adding a salt and using it to encrypt the secret.
+    给定一个秘密（假设是CSRF_ALLOWED_CHARS的字符串），通过添加一个盐并将其用于加密秘密来生成令牌。
     """
     salt = _get_new_csrf_string()
     chars = CSRF_ALLOWED_CHARS
@@ -56,15 +52,13 @@ def _salt_cipher_secret(secret):
 
 def _unsalt_cipher_token(token):
     """
-    Given a token (assumed to be a string of CSRF_ALLOWED_CHARS, of length
-    CSRF_TOKEN_LENGTH, and that its first half is a salt), use it to decrypt
-    the second half to produce the original secret.
+    给定令牌（假定为字符串CSRF_ALLOWED_CHARS，长度为CSRF_TOKEN_LENGTH，并且其前半部分为盐），请使用该令牌解密后半部分以产生原始机密。
     """
     salt = token[:CSRF_SECRET_LENGTH]
     token = token[CSRF_SECRET_LENGTH:]
     chars = CSRF_ALLOWED_CHARS
     pairs = zip((chars.index(x) for x in token), (chars.index(x) for x in salt))
-    secret = ''.join(chars[x - y] for x, y in pairs)  # Note negative values are ok
+    secret = ''.join(chars[x - y] for x, y in pairs)  # 注意负值可以
     return secret
 
 
@@ -74,13 +68,9 @@ def _get_new_csrf_token():
 
 def get_token(request):
     """
-    Return the CSRF token required for a POST form. The token is an
-    alphanumeric value. A new token is created if one is not already set.
-
-    A side effect of calling this function is to make the csrf_protect
-    decorator and the CsrfViewMiddleware add a CSRF cookie and a 'Vary: Cookie'
-    header to the outgoing response.  For this reason, you may need to use this
-    function lazily, as is done by the csrf context processor.
+    返回POST表单所需的CSRF令牌。令牌是字母数字值。如果尚未设置新令牌，则会创建一个新令牌。
+    调用此函数的副作用是使csrf_protect装饰器和CsrfViewMiddleware向输出响应添加CSRF cookie和“ Vary：Cookie”标头。
+    因此，您可能需要像使用csrf上下文处理器一样延迟使用此功能。
     """
     if "CSRF_COOKIE" not in request.META:
         csrf_secret = _get_new_csrf_string()
@@ -93,8 +83,7 @@ def get_token(request):
 
 def rotate_token(request):
     """
-    Change the CSRF token in use for a request - should be done on login
-    for security purposes.
+    更改用于请求的CSRF令牌-出于安全目的，应在登录时完成。
     """
     request.META.update({
         "CSRF_COOKIE_USED": True,

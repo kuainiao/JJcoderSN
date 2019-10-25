@@ -1,7 +1,5 @@
 # Django 日志
 
-阅读: 11822     [评论](http://www.liujiangblog.com/course/django/176#comments)：7
-
 Django使用Python内置的logging模块实现它自己的日志系统。
 
 如果你没有使用过logging模块，请参考Python教程中的相关章节。

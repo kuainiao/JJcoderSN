@@ -1,7 +1,7 @@
 from urllib.parse import urlparse, urlunparse
 
 from django.conf import settings
-# Avoid shadowing the login() and logout() views below.
+# 避免遮盖下面的login（）和logout（）视图。
 from django.contrib.auth import (
     REDIRECT_FIELD_NAME, get_user_model, login as auth_login,
     logout as auth_logout, update_session_auth_hash,
@@ -37,7 +37,7 @@ class SuccessURLAllowedHostsMixin:
 
 class LoginView(SuccessURLAllowedHostsMixin, FormView):
     """
-    Display the login form and handle the login action.
+    显示登录表单并处理登录操作。
     """
     form_class = AuthenticationForm
     authentication_form = None

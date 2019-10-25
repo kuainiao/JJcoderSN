@@ -30,7 +30,7 @@ import zipfile
 
 class ArchiveException(Exception):
     """
-    Base exception class for all archive errors.
+    所有存档错误的基本异常类。
     """
 
 

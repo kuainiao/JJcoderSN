@@ -1,9 +1,6 @@
 """
-Basic building blocks for generic class based views.
-
-We don't bind behaviour to http method handlers yet,
-which allows mixin classes to be composed in interesting ways.
-"""
+基于通用类的视图的基本构建块。我们还没有将行为绑定到http方法处理程序，
+这允许以有趣的方式组合mixin类。"""
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
@@ -11,8 +8,9 @@ from rest_framework.settings import api_settings
 
 class CreateModelMixin:
     """
-    Create a model instance.
+    创建一个模型实例。
     """
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -32,8 +30,9 @@ class CreateModelMixin:
 
 class ListModelMixin:
     """
-    List a queryset.
+   列出查询集。
     """
+
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
 
@@ -48,8 +47,9 @@ class ListModelMixin:
 
 class RetrieveModelMixin:
     """
-    Retrieve a model instance.
+    检索模型实例。
     """
+
     def retrieve(self, request, *args, **kwargs):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
@@ -58,8 +58,9 @@ class RetrieveModelMixin:
 
 class UpdateModelMixin:
     """
-    Update a model instance.
+    更新模型实例
     """
+
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
@@ -68,8 +69,7 @@ class UpdateModelMixin:
         self.perform_update(serializer)
 
         if getattr(instance, '_prefetched_objects_cache', None):
-            # If 'prefetch_related' has been applied to a queryset, we need to
-            # forcibly invalidate the prefetch cache on the instance.
+            # 如果已将'prefetch_related'应用于查询集，则需要强制使实例上的预取缓存无效。
             instance._prefetched_objects_cache = {}
 
         return Response(serializer.data)
@@ -84,8 +84,9 @@ class UpdateModelMixin:
 
 class DestroyModelMixin:
     """
-    Destroy a model instance.
+    销毁模型实例。
     """
+
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         self.perform_destroy(instance)

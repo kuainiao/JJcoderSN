@@ -8,10 +8,10 @@ MODELS_MODULE_NAME = 'models'
 
 
 class AppConfig:
-    """Class representing a Django application and its configuration."""
+    """表示Django应用程序及其配置的类。"""
 
     def __init__(self, app_name, app_module):
-        # Full Python path to the application e.g. 'django.contrib.admin'.
+        # 应用程序的完整Python路径，例如'django.contrib.admin'。
         self.name = app_name
 
         # Root module for the application e.g. <module 'django.contrib.admin'
@@ -190,8 +190,7 @@ class AppConfig:
           an explicit intermediate table,
         - models that have been swapped out.
 
-        Set the corresponding keyword argument to True to include such models.
-        Keyword arguments aren't documented; they're a private API.
+        将相应的关键字参数设置为True以包括此类模型。关键字参数未记录；它们是私有API。
         """
         self.apps.check_models_ready()
         for model in self.models.values():
@@ -202,8 +201,7 @@ class AppConfig:
             yield model
 
     def import_models(self):
-        # Dictionary of models for this app, primarily maintained in the
-        # 'all_models' attribute of the Apps this AppConfig is attached to.
+        # 此应用程序的模型字典，主要在此AppConfig所附加的应用程序的'all_models'属性中维护。
         self.models = self.apps.all_models[self.label]
 
         if module_has_submodule(self.module, MODELS_MODULE_NAME):
@@ -212,5 +210,5 @@ class AppConfig:
 
     def ready(self):
         """
-        Override this method in subclasses to run code when Django starts.
+        在子类中重写此方法以在Django启动时运行代码。
         """

@@ -1,7 +1,5 @@
 # 使用MySQL数据库
 
-阅读: 27689     [评论](http://www.liujiangblog.com/course/django/165#comments)：6
-
 在实际生产环境，Django是不可能使用SQLite这种轻量级的基于文件的数据库作为生产数据库。一般较多的会选择MySQL。
 
 下面介绍一下如何在Django中使用MySQL数据库。

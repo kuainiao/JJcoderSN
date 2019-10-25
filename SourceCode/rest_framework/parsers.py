@@ -1,8 +1,6 @@
 """
-Parsers are used to parse the content of incoming HTTP requests.
-
-They give us a generic way of being able to handle various media types
-on the request, such as form content or json encoded data.
+解析器用于解析传入的HTTP请求的内容。它们为我们提供了一种处理各种媒体类型的通用方法
+根据请求，例如表单内容或json编码的数据。
 """
 import codecs
 from urllib import parse
@@ -30,16 +28,13 @@ class DataAndFiles:
 
 class BaseParser:
     """
-    All parsers should extend `BaseParser`, specifying a `media_type`
-    attribute, and overriding the `.parse()` method.
+    所有解析器都应该扩展BaseParser，指定一个media_type属性，并覆盖.parse（）方法。
     """
     media_type = None
 
     def parse(self, stream, media_type=None, parser_context=None):
         """
-        Given a stream to read from, return the parsed representation.
-        Should return parsed data, or a `DataAndFiles` object consisting of the
-        parsed data and files.
+        给定要读取的流，返回解析的表示形式。应该返回解析后的数据，或者返回一个包含解析后的数据和文件的DataAndFiles对象。
         """
         raise NotImplementedError(".parse() must be overridden.")
 
@@ -191,8 +186,7 @@ class FileUploadParser(BaseParser):
 
     def get_filename(self, stream, media_type, parser_context):
         """
-        Detects the uploaded file name. First searches a 'filename' url kwarg.
-        Then tries to parse Content-Disposition header.
+        检测上传的文件名。首先搜索“文件名”网址kwarg。然后尝试解析Content-Disposition标头。
         """
         try:
             return parser_context['kwargs']['filename']

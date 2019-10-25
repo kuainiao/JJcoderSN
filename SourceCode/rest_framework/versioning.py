@@ -53,11 +53,8 @@ class AcceptHeaderVersioning(BaseVersioning):
 
 class URLPathVersioning(BaseVersioning):
     """
-    To the client this is the same style as `NamespaceVersioning`.
-    The difference is in the backend - this implementation uses
-    Django's URL keyword arguments to determine the version.
-
-    An example URL conf for two views that accept two different versions.
+    对客户来说，这和`NamespaceVersioning`一样。区别在于后端-此实现使用Django的URL关键字参数确定版本。
+    两个接受两个不同版本的视图的示例URL conf。
 
     urlpatterns = [
         url(r'^(?P<version>[v1|v2]+)/users/$', users_list, name='users-list'),
