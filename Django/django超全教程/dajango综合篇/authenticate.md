@@ -1,7 +1,5 @@
 # Authentication
 
-阅读: 14570     [评论](http://www.liujiangblog.com/course/django/178#comments)：2
-
 Django自带一个用户认证系统，用于处理用户账户、群组、许可和基于cookie的用户会话。
 
 Django的认证系统包含了身份验证和权限管理两部分。简单地说，身份验证用于核实某个用户是否合法，权限管理则是决定一个合法用户具有哪些权限。往后，‘认证’这个词同时代指上面两部分的含义。

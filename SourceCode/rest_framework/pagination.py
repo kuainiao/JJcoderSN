@@ -1,6 +1,5 @@
 """
-Pagination serializers determine the structure of the output that should
-be used for paginated responses.
+分页序列化器确定应该用于分页响应的输出结构。
 """
 from base64 import b64decode, b64encode
 from collections import OrderedDict, namedtuple
@@ -21,7 +20,7 @@ from rest_framework.utils.urls import remove_query_param, replace_query_param
 
 def _positive_int(integer_string, strict=False, cutoff=None):
     """
-    Cast a string to a strictly positive integer.
+    将字符串强制转换为严格的正整数。
     """
     ret = int(integer_string)
     if ret < 0 or (ret == 0 and strict):
@@ -65,12 +64,10 @@ def _get_displayed_page_numbers(current, final):
     if final <= 5:
         return list(range(1, final + 1))
 
-    # We always include the first two pages, last two pages, and
-    # two pages either side of the current page.
+    # 我们总是包括前两页，最后两页，和两页的任何一边的当前页面。
     included = {1, current - 1, current, current + 1, final}
 
-    # If the break would only exclude a single page number then we
-    # may as well include the page number instead of the break.
+    # 如果中断只排除单个页码，那么也可以包含页码而不是中断。
     if current <= 4:
         included.add(2)
         included.add(3)
@@ -78,13 +75,13 @@ def _get_displayed_page_numbers(current, final):
         included.add(final - 1)
         included.add(final - 2)
 
-    # Now sort the page numbers and drop anything outside the limits.
+    # 现在对页码进行排序，并删除任何超出限制的内容。
     included = [
         idx for idx in sorted(list(included))
         if 0 < idx <= final
     ]
 
-    # Finally insert any `...` breaks
+    # 最后插入任何...中断
     if current > 4:
         included.insert(1, None)
     if current < final - 3:
@@ -94,8 +91,7 @@ def _get_displayed_page_numbers(current, final):
 
 def _get_page_links(page_numbers, current, url_func):
     """
-    Given a list of page numbers and `None` page breaks,
-    return a list of `PageLink` objects.
+    给定一个页码列表和“None”分页符，返回一个“PageLink”对象列表。
     """
     page_links = []
     for page_number in page_numbers:
@@ -117,6 +113,7 @@ def _reverse_ordering(ordering_tuple):
     Given an order_by tuple such as `('-created', 'uuid')` reverse the
     ordering and return a new tuple, eg. `('created', '-uuid')`.
     """
+
     def invert(x):
         return x[1:] if x.startswith('-') else '-' + x
 
@@ -157,8 +154,7 @@ class BasePagination:
 
 class PageNumberPagination(BasePagination):
     """
-    A simple page number based style that supports page numbers as
-    query parameters. For example:
+    一个简单的基于页码的样式，支持页码作为查询参数。例如:
 
     http://api.example.org/accounts/?page=4
     http://api.example.org/accounts/?page=4&page_size=100
@@ -169,7 +165,7 @@ class PageNumberPagination(BasePagination):
 
     django_paginator_class = DjangoPaginator
 
-    # Client can control the page using this query parameter.
+    # 客户端可以使用此查询参数控制页面。
     page_query_param = 'page'
     page_query_description = _('A page number within the paginated result set.')
 
@@ -190,8 +186,7 @@ class PageNumberPagination(BasePagination):
 
     def paginate_queryset(self, queryset, request, view=None):
         """
-        Paginate a queryset if required, either returning a
-        page object, or `None` if pagination is not configured for this view.
+        如果需要，可以对queryset进行分页，如果没有为此视图配置分页，则返回一个page对象，或者“None”。
         """
         page_size = self.get_page_size(request)
         if not page_size:
@@ -468,8 +463,8 @@ class LimitOffsetPagination(BasePagination):
             # When offset is not strictly divisible by the limit then we may
             # end up introducing an extra page as an artifact.
             final = (
-                _divide_with_ceil(self.count - self.offset, self.limit) +
-                _divide_with_ceil(self.offset, self.limit)
+                    _divide_with_ceil(self.count - self.offset, self.limit) +
+                    _divide_with_ceil(self.offset, self.limit)
             )
 
             if final < 1:
