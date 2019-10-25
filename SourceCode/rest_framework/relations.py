@@ -117,8 +117,7 @@ class RelatedField(Field):
         super().__init__(**kwargs)
 
     def __new__(cls, *args, **kwargs):
-        # We override this method in order to automagically create
-        # `ManyRelatedField` classes instead when `many=True` is set.
+        # 我们重写此方法是为了在设置`many = True`时自动创建`ManyRelatedField`类。
         if kwargs.pop('many', False):
             return cls.many_init(*args, **kwargs)
         return super().__new__(cls, *args, **kwargs)
@@ -147,7 +146,7 @@ class RelatedField(Field):
         return ManyRelatedField(**list_kwargs)
 
     def run_validation(self, data=empty):
-        # We force empty strings to None values for relational fields.
+        # 对于关系字段，我们将空字符串强制为None值。
         if data == '':
             data = None
         return super().run_validation(data)
@@ -181,7 +180,7 @@ class RelatedField(Field):
             except AttributeError:
                 pass
 
-        # Standard case, return the object instance.
+        # 标准情况下，返回对象实例。
         return super().get_attribute(instance)
 
     def get_choices(self, cutoff=None):

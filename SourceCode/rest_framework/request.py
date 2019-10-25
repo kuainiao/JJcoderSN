@@ -24,7 +24,7 @@ from rest_framework.settings import api_settings
 
 def is_form_media_type(media_type):
     """
-    Return True if the media type is a valid form media type.
+    如果介质类型是有效的表单介质类型，则返回True。
     """
     base_media_type, params = parse_header(media_type.encode(HTTP_HEADER_ENCODING))
     return (base_media_type == 'application/x-www-form-urlencoded' or
@@ -33,8 +33,7 @@ def is_form_media_type(media_type):
 
 class override_method:
     """
-    A context manager that temporarily overrides the method on a request,
-    additionally setting the `view.request` attribute.
+    一个上下文管理器，临时覆盖请求中的方法，另外设置`view.request`属性。
 
     Usage:
 
@@ -92,8 +91,7 @@ def _hasattr(obj, name):
 
 def clone_request(request, method):
     """
-    Internal helper method to clone a request, replacing with a different
-    HTTP method.  Used for checking permissions against other methods.
+    用于复制请求的内部帮助器方法，替换为其他HTTP方法。用于检查其他方法的权限。
     """
     ret = Request(request=request._request,
                   parsers=request.parsers,
@@ -125,8 +123,7 @@ def clone_request(request, method):
 
 class ForcedAuthentication:
     """
-    This authentication class is used if the test client or request factory
-    forcibly authenticated the request.
+    如果测试客户端或请求工厂对请求进行了强制认证，则使用此认证类。
     """
 
     def __init__(self, force_user, force_token):
@@ -154,7 +151,7 @@ class Request:
         assert isinstance(request, HttpRequest), (
             'The `request` argument must be an instance of '
             '`django.http.HttpRequest`, not `{}.{}`.'
-            .format(request.__class__.__module__, request.__class__.__name__)
+                .format(request.__class__.__module__, request.__class__.__name__)
         )
 
         self._request = request
@@ -190,7 +187,7 @@ class Request:
     @property
     def stream(self):
         """
-        Returns an object that may be used to stream the request content.
+        返回可以用于流式传输请求内容的对象。
         """
         if not _hasattr(self, '_stream'):
             self._load_stream()
@@ -402,8 +399,7 @@ class Request:
 
     def __getattr__(self, attr):
         """
-        If an attribute does not exist on this instance, then we also attempt
-        to proxy it to the underlying HttpRequest object.
+       如果该实例上不存在属性，则我们还将尝试将其代理到基础HttpRequest对象。
         """
         try:
             return getattr(self._request, attr)
@@ -419,7 +415,7 @@ class Request:
 
     @property
     def POST(self):
-        # Ensure that request.POST uses our request parsing.
+        # 确保request.POST使用我们的请求解析。
         if not _hasattr(self, '_data'):
             self._load_data_and_files()
         if is_form_media_type(self.content_type):
@@ -428,9 +424,7 @@ class Request:
 
     @property
     def FILES(self):
-        # Leave this one alone for backwards compat with Django's request.FILES
-        # Different from the other two cases, which are not valid property
-        # names on the WSGIRequest class.
+        # 请将其保留下来，以与Django的request向后兼容。FILES＃与其他两种情况不同，它们不是WSGIRequest类上的有效属性名称。
         if not _hasattr(self, '_files'):
             self._load_data_and_files()
         return self._files

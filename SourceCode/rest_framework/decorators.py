@@ -123,10 +123,8 @@ def schema(view_inspector):
 
 def action(methods=None, detail=None, url_path=None, url_name=None, **kwargs):
     """
-    Mark a ViewSet method as a routable action.
-
-    Set the `detail` boolean to determine if this action should apply to
-    instance/detail requests or collection/list requests.
+    将ViewSet方法标记为可路由操作。
+    设置`detail`布尔值以确定此操作是否应应用于实例/详细信息请求或集合/列表请求。
     """
     methods = ['get'] if (methods is None) else methods
     methods = [method.lower() for method in methods]
@@ -159,8 +157,7 @@ def action(methods=None, detail=None, url_path=None, url_name=None, **kwargs):
 
 class MethodMapper(dict):
     """
-    Enables mapping HTTP methods to different ViewSet methods for a single,
-    logical action.
+    启用一个逻辑操作即可将HTTP方法映射到不同的ViewSet方法。
 
     Example usage:
 
