@@ -1,10 +1,7 @@
 """
-The most important decorator in this module is `@api_view`, which is used
-for writing function-based views with REST framework.
-
-There are also various decorators for setting the API policies on function
-based views, as well as the `@action` decorator, which is used to annotate
-methods on viewsets that should be included by routers.
+这个模块中最重要的装饰器是@api_view，用于使用REST框架编写基于功能的视图。
+还有各种装饰器，用于在功能上设置API策略基于视图，以及用于注释的`@ action`装饰器
+路由器应包含的视图集上的方法。
 """
 import types
 
@@ -15,28 +12,26 @@ from rest_framework.views import APIView
 
 def api_view(http_method_names=None):
     """
-    Decorator that converts a function-based view into an APIView subclass.
-    Takes a list of allowed methods for the view as an argument.
+    将基于函数的视图转换为APIView子类的装饰器。将视图的允许方法列表作为参数。
     """
     http_method_names = ['GET'] if (http_method_names is None) else http_method_names
 
     def decorator(func):
-
         WrappedAPIView = type(
             'WrappedAPIView',
             (APIView,),
             {'__doc__': func.__doc__}
         )
 
-        # Note, the above allows us to set the docstring.
+        # 注意，以上内容使我们可以设置文档字符串
         # It is the equivalent of:
         #
         #     class WrappedAPIView(APIView):
         #         pass
         #     WrappedAPIView.__doc__ = func.doc    <--- Not possible to do this
 
-        # api_view applied without (method_names)
-        assert not(isinstance(http_method_names, types.FunctionType)), \
+        # api_view应用时不带（method_names）
+        assert not (isinstance(http_method_names, types.FunctionType)), \
             '@api_view missing list of allowed HTTP methods'
 
         # api_view applied with eg. string instead of list of strings
@@ -82,6 +77,7 @@ def renderer_classes(renderer_classes):
     def decorator(func):
         func.renderer_classes = renderer_classes
         return func
+
     return decorator
 
 
@@ -89,6 +85,7 @@ def parser_classes(parser_classes):
     def decorator(func):
         func.parser_classes = parser_classes
         return func
+
     return decorator
 
 
@@ -96,6 +93,7 @@ def authentication_classes(authentication_classes):
     def decorator(func):
         func.authentication_classes = authentication_classes
         return func
+
     return decorator
 
 
@@ -103,6 +101,7 @@ def throttle_classes(throttle_classes):
     def decorator(func):
         func.throttle_classes = throttle_classes
         return func
+
     return decorator
 
 
@@ -110,6 +109,7 @@ def permission_classes(permission_classes):
     def decorator(func):
         func.permission_classes = permission_classes
         return func
+
     return decorator
 
 
@@ -117,6 +117,7 @@ def schema(view_inspector):
     def decorator(func):
         func.schema = view_inspector
         return func
+
     return decorator
 
 
@@ -152,6 +153,7 @@ def action(methods=None, detail=None, url_path=None, url_name=None, **kwargs):
         func.kwargs['description'] = func.__doc__ or None
 
         return func
+
     return decorator
 
 
@@ -180,7 +182,7 @@ class MethodMapper(dict):
 
     def _map(self, method, func):
         assert method not in self, (
-            "Method '%s' has already been mapped to '.%s'." % (method, self[method]))
+                "Method '%s' has already been mapped to '.%s'." % (method, self[method]))
         assert func.__name__ != self.action.__name__, (
             "Method mapping does not behave like the property decorator. You "
             "cannot use the same method name for each mapping declaration.")

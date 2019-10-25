@@ -39,27 +39,25 @@ from rest_framework.utils.formatting import lazy_format
 
 class empty:
     """
-    This class is used to represent no data being provided for a given input
-    or output value.
+    此类用于表示没有为给定的输入或输出值提供任何数据。
 
-    It is required because `None` may be a valid input or output value.
+    这是必需的，因为“None”可能是有效的输入或输出值。
     """
     pass
 
 
 class BuiltinSignatureError(Exception):
     """
-    Built-in function signatures are not inspectable. This exception is raised
-    so the serializer can raise a helpful error message.
+    内置功能签名不可检查。引发此异常，因此序列化程序可以引发有用的错误消息。
     """
     pass
 
 
 def is_simple_callable(obj):
     """
-    True if the object is a callable that takes no arguments.
+    如果对象是不带参数的可调用对象，则为true。
     """
-    # Bail early since we cannot inspect built-in function signatures.
+    # 提早保释，因为我们无法检查内置函数签名。
     if inspect.isbuiltin(obj):
         raise BuiltinSignatureError(
             'Built-in function signatures are not inspectable. '
@@ -80,10 +78,7 @@ def is_simple_callable(obj):
 
 def get_attribute(instance, attrs):
     """
-    Similar to Python's built in `getattr(instance, attr)`,
-    but takes a list of nested attributes, instead of a single attribute.
-
-    Also accepts either attribute lookup on objects or dictionary lookups.
+    与Python内置的`getattr（instance，attr）`类似，但采用的是嵌套属性列表，而不是单个属性。还接受对对象的属性查找或字典查找。
     """
     for attr in attrs:
         try:
@@ -97,18 +92,17 @@ def get_attribute(instance, attrs):
             try:
                 instance = instance()
             except (AttributeError, KeyError) as exc:
-                # If we raised an Attribute or KeyError here it'd get treated
-                # as an omitted field in `Field.get_attribute()`. Instead we
-                # raise a ValueError to ensure the exception is not masked.
-                raise ValueError('Exception raised in callable attribute "{}"; original exception was: {}'.format(attr, exc))
+                # 如果我们在这里引发Attribute或KeyError，它将在.Field_get_attribute（）中被视为＃忽略的字段。
+                # 相反，我们引发ValueError以确保不掩盖该异常。
+                raise ValueError(
+                    'Exception raised in callable attribute "{}"; original exception was: {}'.format(attr, exc))
 
     return instance
 
 
 def set_value(dictionary, keys, value):
     """
-    Similar to Python's built in `dictionary[key] = value`,
-    but takes a list of nested keys instead of a single key.
+    类似于Python内置的“ dictionary [key] = value”，但采用嵌套键列表而不是单个键。
 
     set_value({'a': 1}, [], {'b': 2}) -> {'a': 1, 'b': 2}
     set_value({'a': 1}, ['x'], 2) -> {'a': 1, 'x': 2}
@@ -175,8 +169,9 @@ def flatten_choices_dict(choices):
 
 def iter_options(grouped_choices, cutoff=None, cutoff_text=None):
     """
-    Helper function for options and option groups in templates.
+    模板中选项和选项组的帮助功能.
     """
+
     class StartOptionGroup:
         start_option_group = True
         end_option_group = False
@@ -222,8 +217,7 @@ def iter_options(grouped_choices, cutoff=None, cutoff_text=None):
 
 def get_error_detail(exc_info):
     """
-    Given a Django ValidationError, return a list of ErrorDetail,
-    with the `code` populated.
+    给定Django ValidationError，返回ErrorDetail列表，其中填充了“ code”。
     """
     code = getattr(exc_info, 'code', None) or 'invalid'
 
@@ -245,10 +239,9 @@ def get_error_detail(exc_info):
 
 class CreateOnlyDefault:
     """
-    This class may be used to provide default values that are only used
-    for create operations, but that do not return any value for update
-    operations.
+    此类可以用于提供仅用于创建操作但不为更新操作返回任何值的默认值。
     """
+
     def __init__(self, default):
         self.default = default
 
@@ -354,18 +347,17 @@ class Field:
 
     def bind(self, field_name, parent):
         """
-        Initializes the field name and parent for the field instance.
-        Called when a field is added to the parent serializer instance.
+        初始化字段名称和字段实例的父级。在将字段添加到父序列化程序实例时调用。
         """
 
         # In order to enforce a consistent style, we error if a redundant
         # 'source' argument has been used. For example:
         # my_field = serializer.CharField(source='my_field')
         assert self.source != field_name, (
-            "It is redundant to specify `source='%s'` on field '%s' in "
-            "serializer '%s', because it is the same as the field name. "
-            "Remove the `source` keyword argument." %
-            (field_name, self.__class__.__name__, parent.__class__.__name__)
+                "It is redundant to specify `source='%s'` on field '%s' in "
+                "serializer '%s', because it is the same as the field name. "
+                "Remove the `source` keyword argument." %
+                (field_name, self.__class__.__name__, parent.__class__.__name__)
         )
 
         self.field_name = field_name
@@ -840,7 +832,8 @@ class SlugField(CharField):
         super().__init__(**kwargs)
         self.allow_unicode = allow_unicode
         if self.allow_unicode:
-            validator = RegexValidator(re.compile(r'^[-\w]+\Z', re.UNICODE), message=self.error_messages['invalid_unicode'])
+            validator = RegexValidator(re.compile(r'^[-\w]+\Z', re.UNICODE),
+                                       message=self.error_messages['invalid_unicode'])
         else:
             validator = RegexValidator(re.compile(r'^[-a-zA-Z0-9_]+$'), message=self.error_messages['invalid'])
         self.validators.append(validator)
@@ -1040,7 +1033,7 @@ class DecimalField(Field):
         if rounding is not None:
             valid_roundings = [v for k, v in vars(decimal).items() if k.startswith('ROUND_')]
             assert rounding in valid_roundings, (
-                'Invalid rounding option %s. Valid values for rounding are: %s' % (rounding, valid_roundings))
+                    'Invalid rounding option %s. Valid values for rounding are: %s' % (rounding, valid_roundings))
         self.rounding = rounding
 
     def to_internal_value(self, data):
@@ -1768,6 +1761,7 @@ class JSONField(Field):
                     ret = str.__new__(self, value)
                     ret.is_json_string = True
                     return ret
+
             return JSONString(dictionary[self.field_name])
         return dictionary.get(self.field_name, empty)
 
@@ -1821,6 +1815,7 @@ class HiddenField(Field):
     constraint on a pair of fields, as we need some way to include the date in
     the validated data.
     """
+
     def __init__(self, **kwargs):
         assert 'default' in kwargs, 'default is a required argument.'
         kwargs['write_only'] = True
@@ -1850,6 +1845,7 @@ class SerializerMethodField(Field):
         def get_extra_info(self, obj):
             return ...  # Calculate some data to return.
     """
+
     def __init__(self, method_name=None, **kwargs):
         self.method_name = method_name
         kwargs['source'] = '*'

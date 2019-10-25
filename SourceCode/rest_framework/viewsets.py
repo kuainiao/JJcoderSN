@@ -1,17 +1,13 @@
 """
-ViewSets are essentially just a type of class based view, that doesn't provide
-any method handlers, such as `get()`, `post()`, etc... but instead has actions,
-such as `list()`, `retrieve()`, `create()`, etc...
+ViewSet本质上只是基于类的视图的一种，它不提供任何方法处理程序，例如`get（）`，`post（）`等，但是具有操作，
+例如`list（）`，`retrieve（）`，`create（）`等。
 
-Actions are only bound to methods at the point of instantiating the views.
+A功能仅在实例化视图时绑定到方法。
 
     user_list = UserViewSet.as_view({'get': 'list'})
     user_detail = UserViewSet.as_view({'get': 'retrieve'})
 
-Typically, rather than instantiate views from viewsets directly, you'll
-register the viewset with a router and let the URL conf be determined
-automatically.
-
+通常，您将直接从视图集中实例化视图，而不是向路由器注册视图集，然后确定URL conf自动。
     router = DefaultRouter()
     router.register(r'users', UserViewSet, 'user')
     urlpatterns = router.urls
@@ -34,13 +30,8 @@ def _is_extra_action(attr):
 
 class ViewSetMixin:
     """
-    This is the magic.
-
-    Overrides `.as_view()` so that it takes an `actions` keyword that performs
-    the binding of HTTP methods to actions on the Resource.
-
-    For example, to create a concrete view binding the 'GET' and 'POST' methods
-    to the 'list' and 'create' actions...
+    这就是魔术。覆盖.as_view（），以便它采用一个actions关键字，该关键字将HTTP方法绑定到Resource上的操作。
+    例如，要创建将“ GET”和“ POST”方法绑定到“ list”和“ create”操作的具体视图...
 
     view = MyViewSet.as_view({'get': 'list', 'post': 'create'})
     """
@@ -48,25 +39,19 @@ class ViewSetMixin:
     @classonlymethod
     def as_view(cls, actions=None, **initkwargs):
         """
-        Because of the way class based views create a closure around the
-        instantiated view, we need to totally reimplement `.as_view`,
-        and slightly modify the view function that is created and returned.
+        由于基于类的视图围绕实例化视图创建闭包的方式，我们需要完全重新实现`.as_view`，并略微修改所创建和返回的视图函数。
         """
-        # The name and description initkwargs may be explicitly overridden for
-        # certain route configurations. eg, names of extra actions.
+        # 名称和说明initkwargs对于某些路由配置可以被显式覆盖。例如，额外动作的名称。
         cls.name = None
         cls.description = None
 
-        # The suffix initkwarg is reserved for displaying the viewset type.
-        # This initkwarg should have no effect if the name is provided.
-        # eg. 'List' or 'Instance'.
+        # 后缀initkwarg保留用于显示视图集类型。 如果提供了名称，此initkwarg应该无效。 例如“列表”或“实例”。
         cls.suffix = None
 
-        # The detail initkwarg is reserved for introspecting the viewset type.
+        # 详细信息initkwarg保留用于自检视图集类型。
         cls.detail = None
 
-        # Setting a basename allows a view to reverse its action urls. This
-        # value is provided by the router through the initkwargs.
+        # 设置基本名称允许视图反转其操作URL。该值由路由器通过initkwargs提供。
         cls.basename = None
 
         # actions must not be empty
@@ -209,7 +194,7 @@ class ReadOnlyModelViewSet(mixins.RetrieveModelMixin,
                            mixins.ListModelMixin,
                            GenericViewSet):
     """
-    A viewset that provides default `list()` and `retrieve()` actions.
+    提供默认`list（）`和`retrieve（）`操作的视图集。
     """
     pass
 
@@ -221,7 +206,6 @@ class ModelViewSet(mixins.CreateModelMixin,
                    mixins.ListModelMixin,
                    GenericViewSet):
     """
-    A viewset that provides default `create()`, `retrieve()`, `update()`,
-    `partial_update()`, `destroy()` and `list()` actions.
+    一个视图集，提供默认的create（），retrieve（），update（），partial_update（），destroy（）和list（）操作。
     """
     pass

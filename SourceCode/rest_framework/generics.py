@@ -1,5 +1,5 @@
 """
-Generic views that provide commonly needed behaviour.
+提供通常需要的行为的通用视图。
 """
 from django.core.exceptions import ValidationError
 from django.db.models.query import QuerySet
@@ -12,8 +12,7 @@ from rest_framework.settings import api_settings
 
 def get_object_or_404(queryset, *filter_args, **filter_kwargs):
     """
-    Same as Django's standard shortcut, but make sure to also raise 404
-    if the filter_kwargs don't match the required types.
+    与Django的标准快捷方式相同，但如果filter_kwargs与所需的类型不匹配，请确保也抛出404。
     """
     try:
         return _get_object_or_404(queryset, *filter_args, **filter_kwargs)

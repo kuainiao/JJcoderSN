@@ -1,5 +1,5 @@
 """
-Provides an APIView class that is the base of all views in REST framework.
+提供一个APIView类，该类是REST框架中所有视图的基础。
 """
 from django.conf import settings
 from django.core.exceptions import PermissionDenied
@@ -46,10 +46,8 @@ def get_view_name(view):
 
 def get_view_description(view, html=False):
     """
-    Given a view instance, return a textual description to represent the view.
-    This name is used in the browsable API, and in OPTIONS responses.
-
-    This function is the default for the `VIEW_DESCRIPTION_FUNCTION` setting.
+    给定视图实例，返回文本描述以表示视图。此名称用于可浏览的API和OPTIONS响应中。
+    此功能是VIEW_DESCRIPTION_FUNCTION设置的默认设置。
     """
     # Description may be set by some Views, such as a ViewSet.
     description = getattr(view, 'description', None)
@@ -70,13 +68,8 @@ def set_rollback():
 
 def exception_handler(exc, context):
     """
-    Returns the response that should be used for any given exception.
-
-    By default we handle the REST framework `APIException`, and also
-    Django's built-in `Http404` and `PermissionDenied` exceptions.
-
-    Any unhandled exceptions may return `None`, which will cause a 500 error
-    to be raised.
+    返回应用于任何给定异常的响应。默认情况下，我们处理REST框架APIException，以及Django内置的Http404和PermissionDenied异常。
+    任何未处理的异常都可能返回“ None”，这将引发500错误。
     """
     if isinstance(exc, Http404):
         exc = exceptions.NotFound()
@@ -102,7 +95,6 @@ def exception_handler(exc, context):
 
 
 class APIView(View):
-
     # The following policies may be set at either globally, or per-view.
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
     parser_classes = api_settings.DEFAULT_PARSER_CLASSES
@@ -113,7 +105,7 @@ class APIView(View):
     metadata_class = api_settings.DEFAULT_METADATA_CLASS
     versioning_class = api_settings.DEFAULT_VERSIONING_CLASS
 
-    # Allow dependency injection of other settings to make testing easier.
+    # 允许其他设置的依赖项注入使测试更加容易。
     settings = api_settings
 
     schema = DefaultSchema()
@@ -121,10 +113,7 @@ class APIView(View):
     @classmethod
     def as_view(cls, **initkwargs):
         """
-        Store the original class on the view function.
-
-        This allows us to discover information about the view when we do URL
-        reverse lookups.  Used for breadcrumb generation.
+        将原始类存储在视图函数中。这使我们能够在进行URL反向查找时发现有关视图的信息。用于生成面包屑。
         """
         if isinstance(getattr(cls, 'queryset', None), models.query.QuerySet):
             def force_evaluation():
@@ -133,20 +122,20 @@ class APIView(View):
                     'as the result will be cached and reused between requests. '
                     'Use `.all()` or call `.get_queryset()` instead.'
                 )
+
             cls.queryset._fetch_all = force_evaluation
 
         view = super().as_view(**initkwargs)
         view.cls = cls
         view.initkwargs = initkwargs
 
-        # Note: session based authentication is explicitly CSRF validated,
-        # all other authentication is CSRF exempt.
+        # 注意：基于会话的身份验证已通过CSRF明​​确验证，所有其他身份验证均不受CSRF的限制。
         return csrf_exempt(view)
 
     @property
     def allowed_methods(self):
         """
-        Wrap Django's private `_allowed_methods` interface in a public property.
+        将Django的私有_allowed_methods接口包装在公共属性中。
         """
         return self._allowed_methods()
 
@@ -161,14 +150,13 @@ class APIView(View):
 
     def http_method_not_allowed(self, request, *args, **kwargs):
         """
-        If `request.method` does not correspond to a handler method,
-        determine what kind of exception to raise.
+       如果`request.method`与处理程序方法不对应，请确定引发哪种异常。
         """
         raise exceptions.MethodNotAllowed(request.method)
 
     def permission_denied(self, request, message=None):
         """
-        If request is not permitted, determine what kind of exception to raise.
+        如果不允许请求，请确定要提出哪种异常。
         """
         if request.authenticators and not request.successful_authenticator:
             raise exceptions.NotAuthenticated()
@@ -176,14 +164,13 @@ class APIView(View):
 
     def throttled(self, request, wait):
         """
-        If request is throttled, determine what kind of exception to raise.
+       如果请求受到限制，请确定引发哪种异常。
         """
         raise exceptions.Throttled(wait)
 
     def get_authenticate_header(self, request):
         """
-        If a request is unauthenticated, determine the WWW-Authenticate
-        header to use for 401 responses, if any.
+        如果请求未经身份验证，请确定用于401响应的WWW-Authenticate标头（如果有）。
         """
         authenticators = self.get_authenticators()
         if authenticators:
@@ -293,7 +280,7 @@ class APIView(View):
 
     def get_exception_handler(self):
         """
-        Returns the exception handler that this view uses.
+        返回此视图使用的异常处理程序。
         """
         return self.settings.EXCEPTION_HANDLER
 
@@ -417,9 +404,9 @@ class APIView(View):
         """
         # Make the error obvious if a proper response is not returned
         assert isinstance(response, HttpResponseBase), (
-            'Expected a `Response`, `HttpResponse` or `HttpStreamingResponse` '
-            'to be returned from the view, but received a `%s`'
-            % type(response)
+                'Expected a `Response`, `HttpResponse` or `HttpStreamingResponse` '
+                'to be returned from the view, but received a `%s`'
+                % type(response)
         )
 
         if isinstance(response, Response):

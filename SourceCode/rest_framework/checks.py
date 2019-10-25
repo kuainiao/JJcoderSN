@@ -4,7 +4,7 @@ from django.core.checks import Tags, Warning, register
 @register(Tags.compatibility)
 def pagination_system_check(app_configs, **kwargs):
     errors = []
-    # Use of default page size setting requires a default Paginator class
+    # 使用默认页面大小设置需要默认的Paginator类
     from rest_framework.settings import api_settings
     if api_settings.PAGE_SIZE and not api_settings.DEFAULT_PAGINATION_CLASS:
         errors.append(

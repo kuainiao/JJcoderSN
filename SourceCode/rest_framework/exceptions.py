@@ -1,8 +1,6 @@
 """
-Handled exceptions raised by REST framework.
-
-In addition Django's built in 403 and 404 exceptions are handled.
-(`django.http.Http404` and `django.core.exceptions.PermissionDenied`)
+REST框架引发的异常处理。此外，还处理了Django的403和404内置异常。
+（django.http.Http404和django.core.exceptions.PermissionDenied）
 """
 import math
 
@@ -17,8 +15,7 @@ from rest_framework.utils.serializer_helpers import ReturnDict, ReturnList
 
 def _get_error_details(data, default_code=None):
     """
-    Descend into a nested data structure, forcing any
-    lazy translation strings or strings into `ErrorDetail`.
+    下降到嵌套的数据结构中，将所有懒惰的转换字符串或字符串强制放入“ ErrorDetail”。
     """
     if isinstance(data, list):
         ret = [

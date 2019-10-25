@@ -1,6 +1,5 @@
 """
-Provides generic filtering backends that can be used to filter the results
-returned by list views.
+提供可用于过滤结果的通用过滤后端由列表视图返回。
 """
 import operator
 from functools import reduce
@@ -19,12 +18,12 @@ from rest_framework.settings import api_settings
 
 class BaseFilterBackend:
     """
-    A base class from which all filter backend classes should inherit.
+    所有过滤器后端类都应从其继承的基类。
     """
 
     def filter_queryset(self, request, queryset, view):
         """
-        Return a filtered queryset.
+        返回过滤的查询集。
         """
         raise NotImplementedError(".filter_queryset() must be overridden.")
 
@@ -38,7 +37,7 @@ class BaseFilterBackend:
 
 
 class SearchFilter(BaseFilterBackend):
-    # The URL query parameter used for the search.
+    # 用于搜索的URL查询参数。
     search_param = api_settings.SEARCH_PARAM
     template = 'rest_framework/filters/search.html'
     lookup_prefixes = {
@@ -52,16 +51,13 @@ class SearchFilter(BaseFilterBackend):
 
     def get_search_fields(self, view, request):
         """
-        Search fields are obtained from the view, but the request is always
-        passed to this method. Sub-classes can override this method to
-        dynamically change the search fields based on request content.
+        搜索字段是从视图获得的，但是请求始终传递给此方法。子类可以重写此方法，以根据请求内容动态更改搜索字段。
         """
         return getattr(view, 'search_fields', None)
 
     def get_search_terms(self, request):
         """
-        Search terms are set by a ?search=... query parameter,
-        and may be comma and/or whitespace delimited.
+        搜索词由？search = ...查询参数设置，并且可以用逗号和/或空格分隔。
         """
         params = request.query_params.get(self.search_param, '')
         params = params.replace('\x00', '')  # strip null characters
@@ -78,20 +74,20 @@ class SearchFilter(BaseFilterBackend):
 
     def must_call_distinct(self, queryset, search_fields):
         """
-        Return True if 'distinct()' should be used to query the given lookups.
+        如果应使用'distinct（）'查询给定的查询，则返回True。
         """
         for search_field in search_fields:
             opts = queryset.model._meta
             if search_field[0] in self.lookup_prefixes:
                 search_field = search_field[1:]
-            # Annotated fields do not need to be distinct
+            # 带注释的字段无需区分
             if isinstance(queryset, models.QuerySet) and search_field in queryset.query.annotations:
                 return False
             parts = search_field.split(LOOKUP_SEP)
             for part in parts:
                 field = opts.get_field(part)
                 if hasattr(field, 'get_path_info'):
-                    # This field is a relation, update opts to follow the relation
+                    # 该字段是一个关系，更新选择遵循该关系
                     path_info = field.get_path_info()
                     opts = path_info[-1].to_opts
                     if any(path.m2m for path in path_info):

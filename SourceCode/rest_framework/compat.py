@@ -1,6 +1,5 @@
 """
-The `compat` module provides support for backwards compatibility with older
-versions of Django/Python, and compatibility wrappers around optional packages.
+`compat`模块支持与旧版本的向后兼容性版本的Django / Python，以及围绕可选软件包的兼容性包装。
 """
 import sys
 
@@ -27,8 +26,8 @@ except ImportError:
 
 def get_original_route(urlpattern):
     """
-    Get the original route/regex that was typed in by the user into the path(), re_path() or url() directive. This
-    is in contrast with get_regex_pattern below, which for RoutePattern returns the raw regex generated from the path().
+    获取用户在path（），re_path（）或url（）指令中输入的原始路由/正则表达式。
+    这与下面的get_regex_pattern相反，后者针对RoutePattern返回从path（）生成的原始正则表达式。
     """
     if hasattr(urlpattern, 'pattern'):
         # Django 2.0
@@ -40,8 +39,7 @@ def get_original_route(urlpattern):
 
 def get_regex_pattern(urlpattern):
     """
-    Get the raw regex out of the urlpattern's RegexPattern or RoutePattern. This is always a regular expression,
-    unlike get_original_route above.
+    从urlpattern的RegexPattern或RoutePattern中获取原始正则表达式。与上面的get_original_route不同，这始终是一个正则表达式。
     """
     if hasattr(urlpattern, 'pattern'):
         # Django 2.0
@@ -73,7 +71,7 @@ def make_url_resolver(regex, urlpatterns):
 
 
 def unicode_http_header(value):
-    # Coerce HTTP header value to unicode.
+    # 将HTTP标头值强制转换为unicode。
     if isinstance(value, bytes):
         return value.decode('iso-8859-1')
     return value
@@ -81,7 +79,7 @@ def unicode_http_header(value):
 
 def distinct(queryset, base):
     if settings.DATABASES[queryset.db]["ENGINE"] == "django.db.backends.oracle":
-        # distinct analogue for Oracle users
+        # 针对Oracle用户的独特模拟
         return base.filter(pk__in=set(queryset.values_list('pk', flat=True)))
     return queryset.distinct()
 
