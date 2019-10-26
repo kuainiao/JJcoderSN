@@ -80,8 +80,7 @@ ALL_FIELDS = '__all__'
 
 class BaseSerializer(Field):
     """
-    The BaseSerializer class provides a minimal class which may be used
-    for writing custom serializer implementations.
+    BaseSerializer类提供了一个最小类，可用于编写自定义序列化程序实现。
 
     Note that we strongly restrict the ordering of operations/properties
     that may be used on the serializer in order to enforce correct usage.

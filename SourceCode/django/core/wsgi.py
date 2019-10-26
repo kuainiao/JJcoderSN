@@ -4,10 +4,9 @@ from django.core.handlers.wsgi import WSGIHandler
 
 def get_wsgi_application():
     """
-    The public interface to Django's WSGI support. Return a WSGI callable.
+    Django WSGI支持的公共接口。返回可调用的WSGI
 
-    Avoids making django.core.handlers.WSGIHandler a public API, in case the
-    internal WSGI implementation changes or moves in the future.
+    避免将django.core.handlers.WSGIHandler设为公共API，以防内部WSGI实现在将来发生更改或移动。
     """
     django.setup(set_prefix=False)
     return WSGIHandler()

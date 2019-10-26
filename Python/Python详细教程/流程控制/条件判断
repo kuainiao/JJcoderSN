@@ -1,0 +1,94 @@
+# 条件判断
+
+阅读: 6815   [评论](http://www.liujiangblog.com/course/python/27#comments)：1
+
+条件判断是通过一条或多条判断语句的执行结果（True或者False）来决定执行的代码块。
+
+在Python语法中，使用if、elif和else三个关键字来进行条件判断。
+
+![image.png-17.5kB](%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD.assets/image.png)
+
+if语句的一般形式如下所示：
+
+```
+if condition_1:
+    statement_block_1
+elif condition_2:
+    statement_block_2
+else:
+    statement_block_3
+```
+
+如果 "condition_1" 为 True 将执行 "statement_block_1" 块语句
+
+如果 "condition_1" 为False，将判断 "condition_2"
+
+如果"condition_2" 为 True 将执行 "statement_block_2" 块语句
+
+如果 "condition_2" 为False，将执行"statement_block_3"块语句
+
+条件判断的使用原则：
+
+- 每个条件后面要使用冒号（:）作为判断行的结尾，表示接下来是满足条件（结果为True）后要执行的语句块。
+- 除了if分支必须有，elif和else分支都可以根据情况省略。
+- 使用缩进来划分语句块，相同缩进数的语句在一起组成一个语句块。
+- 顺序判断每一个分支，任何一个分支首先被命中并执行，则其后面的所有分支被忽略，直接跳过！
+- **在Python中没有switch – case语句**。
+
+我们看一个演示猜数字的简单程序：
+
+```
+# 演示数字猜谜游戏
+number = 20
+guess = -1
+print("数字猜谜游戏!")
+while guess != number:
+    guess = int(input("请输入你猜的数字："))
+
+    if guess == number:
+        print("恭喜，你猜对了！")
+    elif guess < number:
+        print("猜的数字小了...")
+    elif guess > number:
+        print("猜的数字大了...")
+```
+
+if/else语句可以嵌套，也就是把 if...elif...else 结构放在另外一个 if...elif...else 结构中。形如下面的结构：
+
+```
+if 表达式1:
+    语句
+    if 表达式2:
+        语句
+    elif 表达式3:
+        语句
+    else
+        语句
+elif 表达式4:
+    语句
+else:
+    语句
+```
+
+完整的代码例子如下：
+
+```
+# 此程序的功能意义不重要，只是对if嵌套的展示
+var = 100
+if var < 200:
+    print("比200小！")
+    if var == 150:
+        print('这是150')
+    elif var == 100:
+        print('这是100')
+    elif var == 50:
+        print('这是50')
+elif var < 50:
+    print("比50小！")
+else:
+    print("无法判断正确的值！")
+
+print("Good bye!")
+```
+
+PS:在if条件判断中，分支比较多的情况下，很多时候可以对elif和else进行优化，少写几个分支。比如我上面的例子，有些就可以优化。但是，这是有利有弊的。优化了的分支显得更简洁，但不够直观，有时候时间长了，自己再看都不一定能一下转过弯来。因此，个人建议，在保持正确执行逻辑的前提下，尽量按符合我们人类思维和阅读习惯的方式，编排if、elif和else分支

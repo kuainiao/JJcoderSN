@@ -1,4 +1,4 @@
-"""Generic (shallow and deep) copying operations.
+"""通用（浅和深）复制操作。
 
 Interface summary:
 
@@ -7,11 +7,9 @@ Interface summary:
         x = copy.copy(y)        # make a shallow copy of y
         x = copy.deepcopy(y)    # make a deep copy of y
 
-For module specific errors, copy.Error is raised.
+对于模块特定的错误，将引发copy.Error。
 
-The difference between shallow and deep copying is only relevant for
-compound objects (objects that contain other objects, like lists or
-class instances).
+浅复制和深复制之间的区别仅与复合对象（包含其他对象的对象，例如列表或类实例）。
 
 - A shallow copy constructs a new compound object and then (to the
   extent possible) inserts *the same objects* into it that the
@@ -52,9 +50,12 @@ import types
 import weakref
 from copyreg import dispatch_table
 
+
 class Error(Exception):
     pass
-error = Error   # backward compatibility
+
+
+error = Error  # 向后兼容
 
 try:
     from org.python.core import PyStringMap
@@ -63,21 +64,22 @@ except ImportError:
 
 __all__ = ["Error", "copy", "deepcopy"]
 
+
 def copy(x):
-    """Shallow copy operation on arbitrary Python objects.
+    """对任意Python对象的浅表复制操作。
 
     See the module's __doc__ string for more info.
     """
 
-    cls = type(x)
+    cls = type(x)  # 判断x的类型
 
-    copier = _copy_dispatch.get(cls)
+    copier = _copy_dispatch.get(cls)  # _copy_dispatch是一个空的字典
     if copier:
         return copier(x)
 
     try:
         issc = issubclass(cls, type)
-    except TypeError: # cls is not a class
+    except TypeError:  # cls 不是一个类
         issc = False
     if issc:
         # treat it as a regular class:
@@ -108,8 +110,11 @@ def copy(x):
 
 _copy_dispatch = d = {}
 
+
 def _copy_immutable(x):
     return x
+
+
 for t in (type(None), int, float, bool, complex, str, tuple,
           bytes, frozenset, type, range, slice,
           types.BuiltinFunctionType, type(Ellipsis), type(NotImplemented),
@@ -128,6 +133,7 @@ if PyStringMap is not None:
     d[PyStringMap] = PyStringMap.copy
 
 del d, t
+
 
 def deepcopy(x, memo=None, _nil=[]):
     """Deep copy operation on arbitrary Python objects.
@@ -151,7 +157,7 @@ def deepcopy(x, memo=None, _nil=[]):
     else:
         try:
             issc = issubclass(cls, type)
-        except TypeError: # cls is not a class (old Boost; see SF #502085)
+        except TypeError:  # cls is not a class (old Boost; see SF #502085)
             issc = 0
         if issc:
             y = _deepcopy_atomic(x, memo)
@@ -182,13 +188,17 @@ def deepcopy(x, memo=None, _nil=[]):
     # If is its own copy, don't memoize.
     if y is not x:
         memo[d] = y
-        _keep_alive(x, memo) # Make sure x lives at least as long as d
+        _keep_alive(x, memo)  # Make sure x lives at least as long as d
     return y
+
 
 _deepcopy_dispatch = d = {}
 
+
 def _deepcopy_atomic(x, memo):
     return x
+
+
 d[type(None)] = _deepcopy_atomic
 d[type(Ellipsis)] = _deepcopy_atomic
 d[type(NotImplemented)] = _deepcopy_atomic
@@ -207,6 +217,7 @@ d[types.BuiltinFunctionType] = _deepcopy_atomic
 d[types.FunctionType] = _deepcopy_atomic
 d[weakref.ref] = _deepcopy_atomic
 
+
 def _deepcopy_list(x, memo, deepcopy=deepcopy):
     y = []
     memo[id(x)] = y
@@ -214,12 +225,14 @@ def _deepcopy_list(x, memo, deepcopy=deepcopy):
     for a in x:
         append(deepcopy(a, memo))
     return y
+
+
 d[list] = _deepcopy_list
+
 
 def _deepcopy_tuple(x, memo, deepcopy=deepcopy):
     y = [deepcopy(a, memo) for a in x]
-    # We're not going to put the tuple in the memo, but it's still important we
-    # check for it, in case the tuple contains recursive mutable structures.
+    # 我们不会将元组放入备忘录中，但是进行检查仍然很重要，以防元组包含递归可变结构。
     try:
         return memo[id(x)]
     except KeyError:
@@ -231,7 +244,10 @@ def _deepcopy_tuple(x, memo, deepcopy=deepcopy):
     else:
         y = x
     return y
+
+
 d[tuple] = _deepcopy_tuple
+
 
 def _deepcopy_dict(x, memo, deepcopy=deepcopy):
     y = {}
@@ -239,15 +255,21 @@ def _deepcopy_dict(x, memo, deepcopy=deepcopy):
     for key, value in x.items():
         y[deepcopy(key, memo)] = deepcopy(value, memo)
     return y
+
+
 d[dict] = _deepcopy_dict
 if PyStringMap is not None:
     d[PyStringMap] = _deepcopy_dict
 
-def _deepcopy_method(x, memo): # Copy instance methods
+
+def _deepcopy_method(x, memo):  # Copy instance methods
     return type(x)(x.__func__, deepcopy(x.__self__, memo))
+
+
 d[types.MethodType] = _deepcopy_method
 
 del d
+
 
 def _keep_alive(x, memo):
     """Keeps a reference to the object x in the memo.
@@ -263,7 +285,8 @@ def _keep_alive(x, memo):
         memo[id(memo)].append(x)
     except KeyError:
         # aha, this is the first one :-)
-        memo[id(memo)]=[x]
+        memo[id(memo)] = [x]
+
 
 def _reconstruct(x, memo, func, args,
                  state=None, listiter=None, dictiter=None,
@@ -309,5 +332,6 @@ def _reconstruct(x, memo, func, args,
             for key, value in dictiter:
                 y[key] = value
     return y
+
 
 del types, weakref, PyStringMap

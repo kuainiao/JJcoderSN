@@ -1,10 +1,7 @@
 """
-HTTP server that implements the Python WSGI protocol (PEP 333, rev 1.21).
-
-Based on wsgiref.simple_server which is part of the standard library since 2.5.
-
-This is a simple server for use in testing or debugging Django apps. It hasn't
-been reviewed for security issues. DON'T USE IT FOR PRODUCTION USE!
+实现Python WSGI协议（PEP 333，修订版1.21）的HTTP服务器。
+基于wsgiref.simple_server，后者是自2.5起的标准库的一部分。
+这是用于测试或调试Django应用程序的简单服务器。还没进行安全性审查。请勿将其用于生产！
 """
 
 import logging
@@ -25,16 +22,12 @@ logger = logging.getLogger('django.server')
 
 def get_internal_wsgi_application():
     """
-    Load and return the WSGI application as configured by the user in
-    ``settings.WSGI_APPLICATION``. With the default ``startproject`` layout,
-    this will be the ``application`` object in ``projectname/wsgi.py``.
+    加载并返回用户在``settings.WSGI_APPLICATION''中配置的WSGI应用程序。 ``WSGI_APPLICATION = 'JCMDB.wsgi.application'``
+    使用默认的startproject布局，这将是projectname / wsgi.py中的application对象。
 
-    This function, and the ``WSGI_APPLICATION`` setting itself, are only useful
-    for Django's internal server (runserver); external WSGI servers should just
-    be configured to point to the correct application object directly.
+   此函数以及WSGI_APPLICATION设置本身仅对Django的内部服务器（runserver）有用；外部WSGI服务器应仅配置为直接指向正确的应用程序对象。
 
-    If settings.WSGI_APPLICATION is not set (is ``None``), return
-    whatever ``django.core.wsgi.get_wsgi_application`` returns.
+    如果未设置settings.WSGI_APPLICATION（为``None''），则返回django.core.wsgi.get_wsgi_application所返回的内容。
     """
     from django.conf import settings
     app_path = getattr(settings, 'WSGI_APPLICATION')
@@ -56,7 +49,7 @@ def is_broken_pipe_error():
 
 
 class WSGIServer(simple_server.WSGIServer):
-    """BaseHTTPServer that implements the Python WSGI protocol"""
+    """实现Python WSGI协议的BaseHTTPServer"""
 
     request_queue_size = 10
 
@@ -74,7 +67,7 @@ class WSGIServer(simple_server.WSGIServer):
 
 
 class ThreadedWSGIServer(socketserver.ThreadingMixIn, WSGIServer):
-    """A threaded version of the WSGIServer"""
+    """WSGIServer的线程版本"""
     daemon_threads = True
 
 
@@ -83,10 +76,9 @@ class ServerHandler(simple_server.ServerHandler):
 
     def __init__(self, stdin, stdout, stderr, environ, **kwargs):
         """
-        Use a LimitedStream so that unread request data will be ignored at
-        the end of the request. WSGIRequest uses a LimitedStream but it
-        shouldn't discard the data since the upstream servers usually do this.
-        This fix applies only for testserver/runserver.
+       使用LimitedStream，以便在请求结束时将忽略未读的请求数据。
+       WSGIRequest使用LimitedStream，但它不应丢弃数据，因为上游服务器通常会这样做。
+       此修复仅适用于testserver / runserver。
         """
         try:
             content_length = int(environ.get('CONTENT_LENGTH'))
@@ -175,7 +167,8 @@ class WSGIRequestHandler(simple_server.WSGIRequestHandler):
             pass
 
     def handle_one_request(self):
-        """Copy of WSGIRequestHandler.handle() but with different ServerHandler"""
+        """WSGIRequestHandler.handle（）的副本，但具有不同的ServerHandler"""
+
         self.raw_requestline = self.rfile.readline(65537)
         if len(self.raw_requestline) > 65536:
             self.requestline = ''
@@ -190,7 +183,7 @@ class WSGIRequestHandler(simple_server.WSGIRequestHandler):
         handler = ServerHandler(
             self.rfile, self.wfile, self.get_stderr(), self.get_environ()
         )
-        handler.request_handler = self      # backpointer for logging & connection closing
+        handler.request_handler = self  # backpointer for logging & connection closing
         handler.run(self.server.get_app())
 
 
@@ -202,12 +195,8 @@ def run(addr, port, wsgi_handler, ipv6=False, threading=False, server_cls=WSGISe
         httpd_cls = server_cls
     httpd = httpd_cls(server_address, WSGIRequestHandler, ipv6=ipv6)
     if threading:
-        # ThreadingMixIn.daemon_threads indicates how threads will behave on an
-        # abrupt shutdown; like quitting the server by the user or restarting
-        # by the auto-reloader. True means the server will not wait for thread
-        # termination before it quits. This will make auto-reloader faster
-        # and will prevent the need to kill the server manually if a thread
-        # isn't terminating correctly.
+        # ThreadingMixIn.daemon_threads指示线程在突然关闭时的行为；例如由用户退出服务器或由自动重新加载器重新启动。
+        # True表示服务器在退出之前不会等待线程终止。这将使自动重新加载器更快，并且＃如果线程未正确终止，将避免需要手动杀死服务器。
         httpd.daemon_threads = True
     httpd.set_app(wsgi_handler)
     httpd.serve_forever()

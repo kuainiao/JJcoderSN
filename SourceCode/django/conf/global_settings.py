@@ -1,11 +1,9 @@
 """
-Default Django settings. Override these with settings in the module pointed to
-by the DJANGO_SETTINGS_MODULE environment variable.
+默认Django设置。使用指向的模块中的设置覆盖这些设置,由DJANGO_SETTINGS_MODULE环境变量决定。
 """
 
 
-# This is defined here as a do-nothing function because we can't import
-# django.utils.translation -- that module depends on the settings.
+# 这在这里定义为“禁止执行”功能，因为我们无法导入 django.utils.translation-该模块依赖于settings。
 def gettext_noop(s):
     return s
 
@@ -16,13 +14,10 @@ def gettext_noop(s):
 
 DEBUG = False
 
-# Whether the framework should propagate raw exceptions rather than catching
-# them. This is useful under some testing situations and should never be used
-# on a live site.
+# 框架是否应该传播原始异常而不是捕获他们。在某些测试情况下这很有用，永远不要使用在直播网站上
 DEBUG_PROPAGATE_EXCEPTIONS = False
 
-# People who get code error notifications.
-# In the format [('Full Name', 'email@example.com'), ('Full Name', 'anotheremail@example.com')]
+# 收到代码错误通知的人。格式为[（'Full Name'，'email@example.com'），（'Full Name'，'anotheremail@example.com'）]
 ADMINS = []
 
 # List of IP addresses, as strings, that:
@@ -144,8 +139,7 @@ LANGUAGES = [
 # Languages using BiDi (right-to-left) layout
 LANGUAGES_BIDI = ["he", "ar", "fa", "ur"]
 
-# If you set this to False, Django will make some optimizations so as not
-# to load the internationalization machinery.
+# 如果将其设置为False，Django将进行一些优化，以免加载国际化机制。
 USE_I18N = True
 LOCALE_PATHS = []
 
@@ -156,30 +150,26 @@ LANGUAGE_COOKIE_DOMAIN = None
 LANGUAGE_COOKIE_PATH = '/'
 
 
-# If you set this to True, Django will format dates, numbers and calendars
-# according to user current locale.
+# 如果将其设置为True，则Django将格式化日期，数字和日历,根据用户当前的语言环境。
 USE_L10N = False
 
-# Not-necessarily-technical managers of the site. They get broken link
-# notifications and other various emails.
+# 网站的不必要技术管理。他们断开了链接,通知和其他各种电子邮件。
 MANAGERS = ADMINS
 
-# Default content type and charset to use for all HttpResponse objects, if a
-# MIME type isn't manually specified. These are used to construct the
-# Content-Type header.
+# 如果所有HttpResponse对象都使用默认内容类型和字符集,MIME类型不是手动指定的。这些用于构造Content-Type标头。
 DEFAULT_CONTENT_TYPE = 'text/html'
 DEFAULT_CHARSET = 'utf-8'
 
-# Encoding of files read from disk (template and initial SQL files).
+# 从磁盘读取的文件（模板和初始SQL文件）的编码。
 FILE_CHARSET = 'utf-8'
 
-# Email address that error messages come from.
+# 错误消息来自的电子邮件地址。
 SERVER_EMAIL = 'root@localhost'
 
-# Database connection info. If left empty, will default to the dummy backend.
+# 数据库连接信息。如果保留为空，则默认为虚拟后端。
 DATABASES = {}
 
-# Classes used to implement DB routing behavior.
+# 用于实现数据库路由行为的类。
 DATABASE_ROUTERS = []
 
 # The email backend to use. For possible shortcuts see django.core.mail.

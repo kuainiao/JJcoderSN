@@ -33,7 +33,7 @@ class _EnsureCsrfCookie(CsrfViewMiddleware):
 
     def process_view(self, request, callback, callback_args, callback_kwargs):
         retval = super().process_view(request, callback, callback_args, callback_kwargs)
-        # Force process_response to send the cookie
+        # 强制process_response发送cookie
         get_token(request)
         return retval
 
@@ -47,10 +47,11 @@ uses the csrf_token template tag, or the CsrfViewMiddleware is used.
 
 
 def csrf_exempt(view_func):
-    """Mark a view function as being exempt from the CSRF view protection."""
-    # view_func.csrf_exempt = True would also work, but decorators are nicer
-    # if they don't have side effects, so return a new function.
+    """将视图功能标记为不受CSRF视图保护。"""
+
+    # view_func.csrf_exempt = True也可以，但是装饰器如果没有副作用，则效果更好因此返回一个新函数。
     def wrapped_view(*args, **kwargs):
         return view_func(*args, **kwargs)
+
     wrapped_view.csrf_exempt = True
     return wraps(view_func)(wrapped_view)

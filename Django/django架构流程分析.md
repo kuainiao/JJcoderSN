@@ -220,7 +220,7 @@ e.Response返回到浏览器，呈现给用户
 
 ##### Middleware(中间件)
 
-Middleware并不是Django所独有的东西，在其他的Web框架中也有这种概念。在Django中，Middleware可以渗入处理流程的四个阶段：request，view，response和exception，相应的，在每个Middleware类中都有rocess_request，process_view， process_response 和 process_exception这四个方法。你可以定义其中任意一个或多个方法，这取决于你希望该Middleware作用于哪个处理阶段。每个方法都可以直接返回response对象。
+Middleware并不是Django所独有的东西，在其他的Web框架中也有这种概念。在Django中，Middleware可以渗入处理流程的四个阶段：request，view，response和exception，相应的，在每个Middleware类中都有process_request，process_view， process_response 和 process_exception这四个方法。你可以定义其中任意一个或多个方法，这取决于你希望该Middleware作用于哪个处理阶段。每个方法都可以直接返回response对象。
 
 Middleware是在Django BaseHandler的load_middleware方法执行时加载的，加载之后会建立四个列表作为处理器的实例变量：
 _request_middleware：process_request方法的列表

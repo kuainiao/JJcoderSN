@@ -65,7 +65,7 @@ $.ajaxSetup({
 });
 ```
 
-上面代码的作用就是让你的ajax的POST方法带上CSRF需要的令牌，它依赖Jquery库，必须提前加载Jquery。这是Django官方提供的解决方案哦，^-^。
+上面代码的作用就是让你的ajax的POST方法带上CSRF需要的令牌，它依赖Jquery库，必须提前加载Jquery。这是Django官方提供的解决方案。
 
 ## 三、装饰器
 

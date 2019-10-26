@@ -1,8 +1,6 @@
 """
-Cache middleware. If enabled, each Django-powered page will be cached based on
-URL. The canonical way to enable cache middleware is to set
-``UpdateCacheMiddleware`` as your first piece of middleware, and
-``FetchFromCacheMiddleware`` as the last::
+缓存中间件。如果启用，每个基于Django的页面将根据网址。启用缓存中间件的规范方法是设置``UpdateCacheMiddleware''作为您的第一块中间件，
+并且最后是``FetchFromCacheMiddleware''::
 
     MIDDLEWARE = [
         'django.middleware.cache.UpdateCacheMiddleware',
@@ -10,10 +8,8 @@ URL. The canonical way to enable cache middleware is to set
         'django.middleware.cache.FetchFromCacheMiddleware'
     ]
 
-This is counter-intuitive, but correct: ``UpdateCacheMiddleware`` needs to run
-last during the response phase, which processes middleware bottom-up;
-``FetchFromCacheMiddleware`` needs to run last during the request phase, which
-processes middleware top-down.
+这是违反直觉的，但正确的是：“ UpdateCacheMiddleware”需要运行响应阶段中的最后一个，它处理中间件自下而上的处理；
+``FetchFromCacheMiddleware``需要在请求阶段中最后运行自上而下地处理中间件。
 
 The single-class ``CacheMiddleware`` can be used for some simple sites.
 However, if any other piece of middleware needs to affect the cache key, you'll
@@ -54,13 +50,12 @@ from django.utils.deprecation import MiddlewareMixin
 
 class UpdateCacheMiddleware(MiddlewareMixin):
     """
-    Response-phase cache middleware that updates the cache if the response is
-    cacheable.
+    响应阶段缓存中间件，如果响应是可缓存的，则更新缓存。
 
-    Must be used as part of the two-part update/fetch cache middleware.
-    UpdateCacheMiddleware must be the first piece of middleware in MIDDLEWARE
-    so that it'll get called last during the response phase.
+    必须用作由两部分组成的更新/获取缓存中间件的一部分。 UpdateCacheMiddleware必须是MIDDLEWARE中的​​第一个中间件，
+    这样它才能在响应阶段中被最后调用。
     """
+
     def __init__(self, get_response=None):
         self.cache_timeout = settings.CACHE_MIDDLEWARE_SECONDS
         self.key_prefix = settings.CACHE_MIDDLEWARE_KEY_PREFIX
@@ -80,12 +75,11 @@ class UpdateCacheMiddleware(MiddlewareMixin):
         if response.streaming or response.status_code not in (200, 304):
             return response
 
-        # Don't cache responses that set a user-specific (and maybe security
-        # sensitive) cookie in response to a cookie-less request.
+        # 不要缓存响应设置为无Cookie的请求而设置了特定于用户（可能对安全性敏感）的cookie的响应。
         if not request.COOKIES and response.cookies and has_vary_header(response, 'Cookie'):
             return response
 
-        # Don't cache a response with 'Cache-Control: private'
+        # 不要使用'Cache-Control：private'缓存响应
         if 'private' in response.get('Cache-Control', ()):
             return response
 
@@ -118,6 +112,7 @@ class FetchFromCacheMiddleware(MiddlewareMixin):
     FetchFromCacheMiddleware must be the last piece of middleware in MIDDLEWARE
     so that it'll get called last during the request phase.
     """
+
     def __init__(self, get_response=None):
         self.key_prefix = settings.CACHE_MIDDLEWARE_KEY_PREFIX
         self.cache_alias = settings.CACHE_MIDDLEWARE_ALIAS
@@ -155,11 +150,9 @@ class FetchFromCacheMiddleware(MiddlewareMixin):
 
 class CacheMiddleware(UpdateCacheMiddleware, FetchFromCacheMiddleware):
     """
-    Cache middleware that provides basic behavior for many simple sites.
-
-    Also used as the hook point for the cache decorator, which is generated
-    using the decorator-from-middleware utility.
+    缓存中间件，可为许多简单站点提供基本行为。也用作缓存装饰器的挂钩点，该缓存器是使用decorator-from-Middleware实用程序生成的。
     """
+
     def __init__(self, get_response=None, cache_timeout=None, **kwargs):
         self.get_response = get_response
         # We need to differentiate between "provided, but using default value",
