@@ -9,7 +9,7 @@ from django.contrib.messages.storage.cookie import (
 
 class SessionStorage(BaseStorage):
     """
-    Store messages in the session (that is, django.contrib.sessions).
+    将消息存储在会话中（即django.contrib.sessions）。
     """
     session_key = '_messages'
 
@@ -22,15 +22,13 @@ class SessionStorage(BaseStorage):
 
     def _get(self, *args, **kwargs):
         """
-        Retrieve a list of messages from the request's session. This storage
-        always stores everything it is given, so return True for the
-        all_retrieved flag.
+        从请求的会话中检索消息列表。此存储始终存储给出的所有内容，因此对于all_retrieved标志返回True。
         """
         return self.deserialize_messages(self.request.session.get(self.session_key)), True
 
     def _store(self, messages, response, *args, **kwargs):
         """
-        Store a list of messages to the request's session.
+        存储到请求会话的消息列表。
         """
         if messages:
             self.request.session[self.session_key] = self.serialize_messages(messages)

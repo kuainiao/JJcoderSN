@@ -1,7 +1,5 @@
 # 聚合内容 RSS/Atom
 
-阅读: 5768     [评论](http://www.liujiangblog.com/course/django/174#comments)：3
-
 Django提供了一个高层次的聚合内容框架，让我们创建RSS/Atom变得简单，你需要做的只是编写一个简单的Python类。
 
 ## 一、范例

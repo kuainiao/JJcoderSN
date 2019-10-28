@@ -3,7 +3,7 @@ from django.contrib import messages
 
 class SuccessMessageMixin:
     """
-    Add a success message on successful form submission.
+    在成功提交表单时添加成功消息。
     """
     success_message = ''
 

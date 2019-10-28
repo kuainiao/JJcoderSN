@@ -5,7 +5,7 @@ from django.utils.deprecation import MiddlewareMixin
 
 class MessageMiddleware(MiddlewareMixin):
     """
-    Middleware that handles temporary messages.
+    处理临时消息的中间件。
     """
 
     def process_request(self, request):
@@ -13,12 +13,11 @@ class MessageMiddleware(MiddlewareMixin):
 
     def process_response(self, request, response):
         """
-        Update the storage backend (i.e., save the messages).
+        更新存储后端（即，保存消息）。
 
-        Raise ValueError if not all messages could be stored and DEBUG is True.
+        如果不是所有消息都可以存储并且DEBUG为True，则引发ValueError。
         """
-        # A higher middleware layer may return a request which does not contain
-        # messages storage, so make no assumption that it will be there.
+        # 较高的中间件层可能会返回不包含条消息存储的请求，因此请不要假设该请求将存在。
         if hasattr(request, '_messages'):
             unstored_messages = request._messages.update(response)
             if unstored_messages and settings.DEBUG:

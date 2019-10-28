@@ -18,7 +18,7 @@ class BaseUserManager(models.Manager):
     @classmethod
     def normalize_email(cls, email):
         """
-        Normalize the email address by lowercasing the domain part of it.
+        通过小写其域部分来规范化电子邮件地址。
         """
         email = email or ''
         try:
@@ -34,9 +34,7 @@ class BaseUserManager(models.Manager):
                                            'ABCDEFGHJKLMNPQRSTUVWXYZ'
                                            '23456789'):
         """
-        Generate a random password with the given length and given
-        allowed_chars. The default value of allowed_chars does not have "I" or
-        "O" or letters and digits that look similar -- just to avoid confusion.
+        生成具有给定长度和给定allowed_chars的随机密码。默认的allowed_chars值没有“ I”或“ O”或看起来相似的字母和数字，只是为了避免混淆。
         """
         return get_random_string(length, allowed_chars)
 
@@ -50,10 +48,9 @@ class AbstractBaseUser(models.Model):
 
     is_active = True
 
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = []  # 这个列表是用来填写需要验证的字段， REQUIRED_FIELEDS = ['username', 'telephone']
 
-    # Stores the raw password if set_password() is called so that it can
-    # be passed to password_changed() after the model is saved.
+    # 如果调用了set_password（），则存储原始密码，以便可以在保存模型后将其传递给password_changed（）。
     _password = None
 
     class Meta:
@@ -69,7 +66,7 @@ class AbstractBaseUser(models.Model):
             self._password = None
 
     def get_username(self):
-        """Return the username for this User."""
+        """返回该用户的用户名。"""
         return getattr(self, self.USERNAME_FIELD)
 
     def clean(self):
@@ -81,16 +78,14 @@ class AbstractBaseUser(models.Model):
     @property
     def is_anonymous(self):
         """
-        Always return False. This is a way of comparing User objects to
-        anonymous users.
+        始终返回False。这是将用户对象与匿名用户进行比较的一种方式。
         """
         return False
 
     @property
     def is_authenticated(self):
         """
-        Always return True. This is a way to tell if the user has been
-        authenticated in templates.
+        始终返回True。这是一种告诉用户是否已在模板中进行身份验证的方法。
         """
         return True
 
@@ -100,29 +95,30 @@ class AbstractBaseUser(models.Model):
 
     def check_password(self, raw_password):
         """
-        Return a boolean of whether the raw_password was correct. Handles
-        hashing formats behind the scenes.
+       返回有关raw_password是否正确的布尔值。在后台处理哈希格式。
         """
+
         def setter(raw_password):
             self.set_password(raw_password)
-            # Password hash upgrades shouldn't be considered password changes.
+            # 密码哈希升级不应视为密码更改。
             self._password = None
             self.save(update_fields=["password"])
+
         return check_password(raw_password, self.password, setter)
 
     def set_unusable_password(self):
-        # Set a value that will never be a valid hash
+        # 设置一个永远不会是有效哈希的值
         self.password = make_password(None)
 
     def has_usable_password(self):
         """
-        Return False if set_unusable_password() has been called for this user.
+        如果已为此用户调用set_unusable_password（），则返回False。
         """
         return is_password_usable(self.password)
 
     def get_session_auth_hash(self):
         """
-        Return an HMAC of the password field.
+        返回密码字段的HMAC。
         """
         key_salt = "django.contrib.auth.models.AbstractBaseUser.get_session_auth_hash"
         return salted_hmac(key_salt, self.password).hexdigest()

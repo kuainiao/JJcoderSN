@@ -4,8 +4,7 @@ from django.contrib.messages.constants import DEFAULT_LEVELS
 
 def messages(request):
     """
-    Return a lazy 'messages' context variable as well as
-    'DEFAULT_MESSAGE_LEVELS'.
+    返回一个懒惰的“ messages”上下文变量以及“ DEFAULT_MESSAGE_LEVELS”。
     """
     return {
         'messages': get_messages(request),

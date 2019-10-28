@@ -89,20 +89,12 @@ class GroupManager(models.Manager):
 
 class Group(models.Model):
     """
-    Groups are a generic way of categorizing users to apply permissions, or
-    some other label, to those users. A user can belong to any number of
-    groups.
+    组是对用户进行分类以将许可权或其他标签应用于这些用户的一种通用方法。用户可以属于任意数量的组。
 
-    A user in a group automatically has all the permissions granted to that
-    group. For example, if the group 'Site editors' has the permission
-    can_edit_home_page, any user in that group will have that permission.
+    组中的用户自动拥有授予该组的所有权限。例如，如果“站点编辑者”组具有can_edit_home_page权限，则该组中的任何用户都将具有该权限。
 
-    Beyond permissions, groups are a convenient way to categorize users to
-    apply some label, or extended functionality, to them. For example, you
-    could create a group 'Special users', and you could write code that would
-    do special things to those users -- such as giving them access to a
-    members-only portion of your site, or sending them members-only email
-    messages.
+    除权限外，组是对用户进行分类以将某些标签或扩展功能应用于其的便捷方法。例如，您可以创建一个“特殊用户”组，
+    并且可以编写对这些用户有特殊作用的代码-例如，授予他们访问网站的仅成员部分的权限，或向他们发送仅成员的电子邮件消息。
     """
     name = models.CharField(_('name'), max_length=150, unique=True)
     permissions = models.ManyToManyField(
@@ -157,7 +149,7 @@ class UserManager(BaseUserManager):
         return self._create_user(username, email, password, **extra_fields)
 
 
-# A few helper functions for common logic between User and AnonymousUser.
+# 一些辅助函数，用于User和AnonymousUser之间的通用逻辑。
 def _user_get_all_permissions(user, obj):
     permissions = set()
     for backend in auth.get_backends():
@@ -280,10 +272,9 @@ class PermissionsMixin(models.Model):
 
 class AbstractUser(AbstractBaseUser, PermissionsMixin):
     """
-    An abstract base class implementing a fully featured User model with
-    admin-compliant permissions.
+    一个抽象基类，它实现具有管理员兼容权限的全功能用户模型。
 
-    Username and password are required. Other fields are optional.
+    用户名和密码是必需的。其他字段是可选的。
     """
     username_validator = UnicodeUsernameValidator()
 

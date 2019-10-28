@@ -6,9 +6,7 @@ LEVEL_TAGS = utils.get_level_tags()
 
 class Message:
     """
-    Represent an actual message that can be stored in any of the supported
-    storage classes (typically session- or cookie-based) and rendered in a view
-    or template.
+    表示可以存储在任何受支持的存储类（通常基于会话或基于Cookie）中并在视图或模板中呈现的实际消息。
     """
 
     def __init__(self, level, message, extra_tags=None):
@@ -18,8 +16,7 @@ class Message:
 
     def _prepare(self):
         """
-        Prepare the message for serialization by forcing the ``message``
-        and ``extra_tags`` to str in case they are lazy translations.
+        如果它们是懒惰的翻译，则通过强制message和extra_tags强制为str来准备要序列化的消息。
         """
         self.message = str(self.message)
         self.extra_tags = str(self.extra_tags) if self.extra_tags is not None else None
@@ -42,10 +39,9 @@ class Message:
 
 class BaseStorage:
     """
-    This is the base backend for temporary message storage.
+    这是临时消息存储的基本后端。
 
-    This is not a complete class; to be a usable storage backend, it must be
-    subclassed and the two methods ``_get`` and ``_store`` overridden.
+    这不是一门完整的课；要成为可用的存储后端，必须对其进行子类化，并覆盖_get和_store这两个方法。
     """
 
     def __init__(self, request, *args, **kwargs):
@@ -71,8 +67,7 @@ class BaseStorage:
     @property
     def _loaded_messages(self):
         """
-        Return a list of loaded messages, retrieving them first if they have
-        not been loaded yet.
+        返回已加载消息的列表，如果尚未加载，则首先检索它们。
         """
         if not hasattr(self, '_loaded_data'):
             messages, all_retrieved = self._get()
@@ -81,16 +76,11 @@ class BaseStorage:
 
     def _get(self, *args, **kwargs):
         """
-        Retrieve a list of stored messages. Return a tuple of the messages
-        and a flag indicating whether or not all the messages originally
-        intended to be stored in this storage were, in fact, stored and
-        retrieved; e.g., ``(messages, all_retrieved)``.
+       检索已存储消息的列表。返回消息的元组和标志，指示实际上是否已存储和检索了最初打算存储在此存储器中的所有消息；例如``（messages，all_retrieved）``。
 
         **This method must be implemented by a subclass.**
 
-        If it is possible to tell if the backend was not used (as opposed to
-        just containing no messages) then ``None`` should be returned in
-        place of ``messages``.
+        如果可以判断是否未使用后端（而不是不包含任何消息），则应返回“ None”代替“ messages”。
         """
         raise NotImplementedError('subclasses of BaseStorage must provide a _get() method')
 

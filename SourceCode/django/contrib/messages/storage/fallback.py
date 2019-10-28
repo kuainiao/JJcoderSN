@@ -5,8 +5,7 @@ from django.contrib.messages.storage.session import SessionStorage
 
 class FallbackStorage(BaseStorage):
     """
-    Try to store all messages in the first backend. Store any unstored
-    messages in each subsequent backend.
+    尝试将所有消息存储在第一个后端中。将所有未存储的消息存储在每个后续后端中。
     """
     storage_classes = (CookieStorage, SessionStorage)
 
@@ -18,36 +17,32 @@ class FallbackStorage(BaseStorage):
 
     def _get(self, *args, **kwargs):
         """
-        Get a single list of messages from all storage backends.
+        从所有存储后端获取单个消息列表。
         """
         all_messages = []
         for storage in self.storages:
             messages, all_retrieved = storage._get()
-            # If the backend hasn't been used, no more retrieval is necessary.
+            # 如果尚未使用后​​端，则无需进行其他检索。
             if messages is None:
                 break
             if messages:
                 self._used_storages.add(storage)
             all_messages.extend(messages)
-            # If this storage class contained all the messages, no further
-            # retrieval is necessary
+            # 如果此存储类包含所有消息，则无需进一步的检索
             if all_retrieved:
                 break
         return all_messages, all_retrieved
 
     def _store(self, messages, response, *args, **kwargs):
         """
-        Store the messages and return any unstored messages after trying all
-        backends.
+        尝试所有后端后，存储消息并返回所有未存储的消息。
 
-        For each storage backend, any messages not stored are passed on to the
-        next backend.
+        对于每个存储后端，所有未存储的消息都将传递到下一个后端。
         """
         for storage in self.storages:
             if messages:
                 messages = storage._store(messages, response, remove_oldest=False)
-            # Even if there are no more messages, continue iterating to ensure
-            # storages which contained messages are flushed.
+            # 即使没有更多消息，也要继续进行迭代以确保刷新包含消息的个存储。
             elif storage in self._used_storages:
                 storage._store([], response)
                 self._used_storages.remove(storage)

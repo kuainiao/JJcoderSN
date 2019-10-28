@@ -1,4 +1,4 @@
-"Base Cache class."
+"""Base Cache class."""
 import time
 import warnings
 
@@ -14,28 +14,25 @@ class CacheKeyWarning(RuntimeWarning):
     pass
 
 
-# Stub class to ensure not passing in a `timeout` argument results in
-# the default timeout
+# 存根类以确保不传递`timeout`参数导致默认超时
 DEFAULT_TIMEOUT = object()
 
-# Memcached does not accept keys longer than this.
+# Memcached接受密钥的时间不能超过此时间。
 MEMCACHE_MAX_KEY_LENGTH = 250
 
 
 def default_key_func(key, key_prefix, version):
     """
-    Default function to generate keys.
+    默认功能生成密钥。
 
-    Construct the key used by all other methods. By default, prepend
-    the `key_prefix'. KEY_FUNCTION can be used to specify an alternate
-    function with custom key making behavior.
+    构造所有其他方法使用的密钥。默认情况下，在'key_prefix'之前添加。 KEY_FUNCTION可用于指定具有自定义按键行为的备用功能。
     """
     return '%s:%s:%s' % (key_prefix, version, key)
 
 
 def get_key_func(key_func):
     """
-    Function to decide which key function to use.
+    决定使用哪个关键功能的功能。
 
     Default to ``default_key_func``.
     """
@@ -54,7 +51,7 @@ class BaseCache:
             try:
                 timeout = int(timeout)
             except (ValueError, TypeError):
-                timeout = 300
+                timeout = 300  # 默认超时时间是300秒
         self.default_timeout = timeout
 
         options = params.get('OPTIONS', {})
@@ -76,8 +73,7 @@ class BaseCache:
 
     def get_backend_timeout(self, timeout=DEFAULT_TIMEOUT):
         """
-        Return the timeout value usable by this backend based upon the provided
-        timeout.
+        根据提供的超时值，返回该后端可用的超时值。
         """
         if timeout == DEFAULT_TIMEOUT:
             timeout = self.default_timeout
@@ -88,11 +84,8 @@ class BaseCache:
 
     def make_key(self, key, version=None):
         """
-        Construct the key used by all other methods. By default, use the
-        key_func to generate a key (which, by default, prepends the
-        `key_prefix' and 'version'). A different key function can be provided
-        at the time of cache construction; alternatively, you can subclass the
-        cache backend to provide custom key making behavior.
+        构造所有其他方法使用的密钥。默认情况下，使用key_func生成一个密钥（默认情况下会在密钥前加上“ key_prefix”和“ version”）。
+        在构造高速缓存时，可以提供不同的键功能。或者，您可以子类化缓存后端以提供自定义密钥生成行为。
         """
         if version is None:
             version = self.version
@@ -102,48 +95,41 @@ class BaseCache:
 
     def add(self, key, value, timeout=DEFAULT_TIMEOUT, version=None):
         """
-        Set a value in the cache if the key does not already exist. If
-        timeout is given, use that timeout for the key; otherwise use the
-        default cache timeout.
+        如果密钥尚不存在，请在缓存中设置一个值。如果给出了超时，则使用该超时作为密钥；否则，请使用默认的缓存超时。
 
-        Return True if the value was stored, False otherwise.
+        如果存储了值，则返回True，否则返回False。
         """
         raise NotImplementedError('subclasses of BaseCache must provide an add() method')
 
     def get(self, key, default=None, version=None):
         """
-        Fetch a given key from the cache. If the key does not exist, return
-        default, which itself defaults to None.
+        从缓存中获取给定密钥。如果密钥不存在，则返回默认值，该默认值本身默认为“None”。
         """
         raise NotImplementedError('subclasses of BaseCache must provide a get() method')
 
     def set(self, key, value, timeout=DEFAULT_TIMEOUT, version=None):
         """
-        Set a value in the cache. If timeout is given, use that timeout for the
-        key; otherwise use the default cache timeout.
+        在缓存中设置一个值。如果给出了超时，则使用该超时作为密钥；否则，请使用默认的缓存超时。
         """
         raise NotImplementedError('subclasses of BaseCache must provide a set() method')
 
     def touch(self, key, timeout=DEFAULT_TIMEOUT, version=None):
         """
-        Update the key's expiry time using timeout. Return True if successful
-        or False if the key does not exist.
+       使用超时更新密钥的到期时间。如果成功，则返回True；如果密钥不存在，则返回False。
         """
         raise NotImplementedError('subclasses of BaseCache must provide a touch() method')
 
     def delete(self, key, version=None):
         """
-        Delete a key from the cache, failing silently.
+        从缓存中删除密钥，无提示地失败。
         """
         raise NotImplementedError('subclasses of BaseCache must provide a delete() method')
 
     def get_many(self, keys, version=None):
         """
-        Fetch a bunch of keys from the cache. For certain backends (memcached,
-        pgsql) this can be *much* faster when fetching multiple values.
+        从缓存中获取一堆密钥。对于某些后端（memcached，pgsql），在获取多个值时可以*快得多*。
 
-        Return a dict mapping each key in keys to its value. If the given
-        key is missing, it will be missing from the response dict.
+        返回一个字典，将键中的每个键映射到其值。如果缺少给定密钥，则响应字典将丢失该密钥。
         """
         d = {}
         for k in keys:
@@ -154,12 +140,10 @@ class BaseCache:
 
     def get_or_set(self, key, default, timeout=DEFAULT_TIMEOUT, version=None):
         """
-        Fetch a given key from the cache. If the key does not exist,
-        add the key and set it to the default value. The default value can
-        also be any callable. If timeout is given, use that timeout for the
-        key; otherwise use the default cache timeout.
+        从缓存中获取给定密钥。如果密钥不存在，请添加密钥并将其设置为默认值。默认值也可以是任何可调用的。
+        如果给出了超时，则使用该超时作为密钥；否则，请使用默认的缓存超时。
 
-        Return the value of the key stored or retrieved.
+        返回存储或检索到的密钥的值。
         """
         val = self.get(key, version=version)
         if val is None:
@@ -167,22 +151,19 @@ class BaseCache:
                 default = default()
             if default is not None:
                 self.add(key, default, timeout=timeout, version=version)
-                # Fetch the value again to avoid a race condition if another
-                # caller added a value between the first get() and the add()
-                # above.
+                # 如果另一个调用者在上面的第一个get（）和add（）之间添加了一个值，请再次获取该值以避免出现竞争情况。
                 return self.get(key, default, version=version)
         return val
 
     def has_key(self, key, version=None):
         """
-        Return True if the key is in the cache and has not expired.
+       如果密钥在缓存中并且尚未过期，则返回True。
         """
         return self.get(key, version=version) is not None
 
     def incr(self, key, delta=1, version=None):
         """
-        Add delta to value in the cache. If the key does not exist, raise a
-        ValueError exception.
+       将增量添加到缓存中的值。如果键不存在，则引发ValueError异常。
         """
         value = self.get(key, version=version)
         if value is None:
@@ -193,31 +174,23 @@ class BaseCache:
 
     def decr(self, key, delta=1, version=None):
         """
-        Subtract delta from value in the cache. If the key does not exist, raise
-        a ValueError exception.
+        从缓存中的值中减去增量。如果键不存在，则引发ValueError异常。
         """
         return self.incr(key, -delta, version=version)
 
     def __contains__(self, key):
         """
-        Return True if the key is in the cache and has not expired.
+        如果密钥在缓存中并且尚未过期，则返回True。
         """
-        # This is a separate method, rather than just a copy of has_key(),
-        # so that it always has the same functionality as has_key(), even
-        # if a subclass overrides it.
+        # 这是一个单独的方法，而不仅仅是has_key（）的副本，因此始终具有与has_key（）相同的功能，即使被子类覆盖。
         return self.has_key(key)
 
     def set_many(self, data, timeout=DEFAULT_TIMEOUT, version=None):
         """
-        Set a bunch of values in the cache at once from a dict of key/value
-        pairs.  For certain backends (memcached), this is much more efficient
-        than calling set() multiple times.
+        从键/值对的字典中一次设置一堆值在缓存中。对于某些后端（memcached），这比多次调用set（）更有效。
 
-        If timeout is given, use that timeout for the key; otherwise use the
-        default cache timeout.
-
-        On backends that support it, return a list of keys that failed
-        insertion, or an empty list if all keys were inserted successfully.
+        如果给出了超时，则使用该超时作为密钥；否则，请使用默认的缓存超时。
+        在支持它的后端上，返回插入失败的密钥列表，或者如果成功插入所有密钥，则返回空列表。
         """
         for key, value in data.items():
             self.set(key, value, timeout=timeout, version=version)
@@ -225,9 +198,7 @@ class BaseCache:
 
     def delete_many(self, keys, version=None):
         """
-        Delete a bunch of values in the cache at once. For certain backends
-        (memcached), this is much more efficient than calling delete() multiple
-        times.
+        一次删除缓存中的一堆值。对于某些后端（memcached），这比多次调用delete（）更有效。
         """
         for key in keys:
             self.delete(key, version=version)

@@ -7,22 +7,20 @@ from django.utils.http import base36_to_int, int_to_base36
 
 class PasswordResetTokenGenerator:
     """
-    Strategy object used to generate and check tokens for the password
-    reset mechanism.
+    用于生成和检查密码重置机制令牌的策略对象。
     """
     key_salt = "django.contrib.auth.tokens.PasswordResetTokenGenerator"
     secret = settings.SECRET_KEY
 
     def make_token(self, user):
         """
-        Return a token that can be used once to do a password reset
-        for the given user.
+        返回一个令牌，该令牌可以一次用于为给定用户重置密码。
         """
         return self._make_token_with_timestamp(user, self._num_days(self._today()))
 
     def check_token(self, user, token):
         """
-        Check that a password reset token is correct for a given user.
+        检查给定用户的密码重置令牌是否正确。
         """
         if not (user and token):
             return False
@@ -37,23 +35,19 @@ class PasswordResetTokenGenerator:
         except ValueError:
             return False
 
-        # Check that the timestamp/uid has not been tampered with
+        # 检查时间戳/ uid是否未被篡改
         if not constant_time_compare(self._make_token_with_timestamp(user, ts), token):
             return False
 
-        # Check the timestamp is within limit. Timestamps are rounded to
-        # midnight (server time) providing a resolution of only 1 day. If a
-        # link is generated 5 minutes before midnight and used 6 minutes later,
-        # that counts as 1 day. Therefore, PASSWORD_RESET_TIMEOUT_DAYS = 1 means
-        # "at least 1 day, could be up to 2."
+        # 检查时间戳是否在限制范围内。时间戳四舍五入到午夜（服务器时间），仅提供1​​天的分辨率。
+        # 如果链接在午夜前5分钟生成，并在6分钟后使用，则算作1天。因此，PASSWORD_RESET_TIMEOUT_DAYS = 1表示“至少1天，最多2天。”
         if (self._num_days(self._today()) - ts) > settings.PASSWORD_RESET_TIMEOUT_DAYS:
             return False
 
         return True
 
     def _make_token_with_timestamp(self, user, timestamp):
-        # timestamp is number of days since 2001-1-1.  Converted to
-        # base 36, this gives us a 3 digit string until about 2121
+        # 时间戳记是2001-1-1年以来的天数。转换为base 36，这使我们得到一个3位数的字符串，直到大约2121
         ts_b36 = int_to_base36(timestamp)
         hash_string = salted_hmac(
             self.key_salt,

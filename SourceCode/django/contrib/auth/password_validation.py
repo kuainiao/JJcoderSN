@@ -34,10 +34,8 @@ def get_password_validators(validator_config):
 
 def validate_password(password, user=None, password_validators=None):
     """
-    Validate whether the password meets all validator requirements.
-
-    If the password is valid, return ``None``.
-    If the password is invalid, raise ValidationError with all error messages.
+    验证密码是否满足所有验证器要求。
+    如果密码有效，则返回``None''。如果密码无效，请使用所有错误消息引发ValidationError。
     """
     errors = []
     if password_validators is None:
@@ -53,8 +51,7 @@ def validate_password(password, user=None, password_validators=None):
 
 def password_changed(password, user=None, password_validators=None):
     """
-    Inform all validators that have implemented a password_changed() method
-    that the password has been changed.
+    通知所有已实现password_changed（）方法的验证器密码已更改。
     """
     if password_validators is None:
         password_validators = get_default_password_validators()
@@ -65,7 +62,7 @@ def password_changed(password, user=None, password_validators=None):
 
 def password_validators_help_texts(password_validators=None):
     """
-    Return a list of all help texts of all configured validators.
+    返回所有已配置验证器的所有帮助文本的列表。
     """
     help_texts = []
     if password_validators is None:
@@ -77,8 +74,7 @@ def password_validators_help_texts(password_validators=None):
 
 def _password_validators_help_text_html(password_validators=None):
     """
-    Return an HTML string with all help texts of all configured validators
-    in an <ul>.
+    在<ul>中返回带有所有已配置验证程序的所有帮助文本的HTML字符串。
     """
     help_texts = password_validators_help_texts(password_validators)
     help_items = format_html_join('', '<li>{}</li>', ((help_text,) for help_text in help_texts))
@@ -90,8 +86,9 @@ password_validators_help_text_html = lazy(_password_validators_help_text_html, s
 
 class MinimumLengthValidator:
     """
-    Validate whether the password is of a minimum length.
+    验证密码是否为最小长度。
     """
+
     def __init__(self, min_length=8):
         self.min_length = min_length
 
@@ -117,14 +114,10 @@ class MinimumLengthValidator:
 
 class UserAttributeSimilarityValidator:
     """
-    Validate whether the password is sufficiently different from the user's
-    attributes.
+   验证密码是否与用户属性充分不同。
 
-    If no specific attributes are provided, look at a sensible list of
-    defaults. Attributes that don't exist are ignored. Comparison is made to
-    not only the full attribute value, but also its components, so that, for
-    example, a password is validated against either part of an email address,
-    as well as the full address.
+   如果未提供任何特定属性，请查看明智的默认列表。不存在的属性将被忽略。
+   不仅要对完整的属性值进行比较，还要对其组成部分进行比较，以便例如根据电子邮件地址的任一部分以及完整地址来验证密码。
     """
     DEFAULT_USER_ATTRIBUTES = ('username', 'first_name', 'last_name', 'email')
 
@@ -159,13 +152,9 @@ class UserAttributeSimilarityValidator:
 
 class CommonPasswordValidator:
     """
-    Validate whether the password is a common password.
-
-    The password is rejected if it occurs in a provided list of passwords,
-    which may be gzipped. The list Django ships with contains 20000 common
-    passwords (lowercased and deduplicated), created by Royce Williams:
-    https://gist.github.com/roycewilliams/281ce539915a947a23db17137d91aeb7
-    The password list must be lowercased to match the comparison in validate().
+    验证密码是否为普通密码。
+    如果密码出现在提供的密码列表中，则该密码可能会被压缩。 Django随附的列表包含由Royce Williams创建的20000个常用密码（小写和重复数据删除）：
+    https://gist.github.com/roycewilliams/281ce539915a947a23db17137d91aeb7密码列表必须小写以匹配validate（）中的比较。
     """
     DEFAULT_PASSWORD_LIST_PATH = Path(__file__).resolve().parent / 'common-passwords.txt.gz'
 
@@ -192,8 +181,9 @@ class CommonPasswordValidator:
 
 class NumericPasswordValidator:
     """
-    Validate whether the password is alphanumeric.
+    验证密码是否为字母数字。
     """
+
     def validate(self, password, user=None):
         if password.isdigit():
             raise ValidationError(

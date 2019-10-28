@@ -4,7 +4,7 @@ from django.contrib.messages import constants
 
 def get_level_tags():
     """
-    Return the message level tags.
+    返回消息级别标签。
     """
     return {
         **constants.DEFAULT_TAGS,

@@ -9,7 +9,7 @@ from django.utils.safestring import SafeData, mark_safe
 
 class MessageEncoder(json.JSONEncoder):
     """
-    Compactly serialize instances of the ``Message`` class as JSON.
+    紧凑地将Message类的实例序列化为JSON。
     """
     message_key = '__json_message'
 

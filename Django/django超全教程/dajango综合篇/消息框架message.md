@@ -1,7 +1,5 @@
 # 消息框架 message
 
-阅读: 11355     [评论](http://www.liujiangblog.com/course/django/172#comments)：2
-
 在网页应用中，我们经常需要在处理完表单或其它类型的用户输入后，显示一个通知信息给用户。
 
 对于这个需求，Django提供了基于Cookie或者会话的消息框架messages，无论是匿名用户还是认证的用户。这个消息框架允许你临时将消息存储在请求中，并在接下来的请求（通常就是下一个请求）中提取它们并显示。每个消息都带有一个特定的level标签，表示其优先级（例如info、 warning或error）。
