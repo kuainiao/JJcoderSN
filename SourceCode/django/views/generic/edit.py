@@ -227,9 +227,7 @@ class DeletionMixin:
 
 class BaseDeleteView(DeletionMixin, BaseDetailView):
     """
-    Base view for deleting an object.
-
-    Using this base class requires subclassing to provide a response mixin.
+    用于删除对象的基本视图。使用此基类需要子类提供响应混合。
     """
 
 

@@ -400,9 +400,9 @@ class APIView(View):
 
     def finalize_response(self, request, response, *args, **kwargs):
         """
-        Returns the final response object.
+        返回最终响应对象。
         """
-        # Make the error obvious if a proper response is not returned
+        # 如果未返回正确的响应，则使错误显而易见
         assert isinstance(response, HttpResponseBase), (
                 'Expected a `Response`, `HttpResponse` or `HttpStreamingResponse` '
                 'to be returned from the view, but received a `%s`'
@@ -418,7 +418,7 @@ class APIView(View):
             response.accepted_media_type = request.accepted_media_type
             response.renderer_context = self.get_renderer_context()
 
-        # Add new vary headers to the response instead of overwriting.
+        # 向响应中添加新的variable标头，而不是覆盖。
         vary_headers = self.headers.pop('Vary', None)
         if vary_headers is not None:
             patch_vary_headers(response, cc_delim_re.split(vary_headers))
@@ -430,8 +430,7 @@ class APIView(View):
 
     def handle_exception(self, exc):
         """
-        Handle any exception that occurs, by returning an appropriate response,
-        or re-raising the error.
+        通过返回适当的响应或重新引发错误来处理发生的任何异常。
         """
         if isinstance(exc, (exceptions.NotAuthenticated,
                             exceptions.AuthenticationFailed)):
@@ -462,13 +461,10 @@ class APIView(View):
             request.force_plaintext_errors(use_plaintext_traceback)
         raise exc
 
-    # Note: Views are made CSRF exempt from within `as_view` as to prevent
-    # accidental removal of this exemption in cases where `dispatch` needs to
-    # be overridden.
+    # 注意：在`as_view`中将视图设为CSRF免除项，以防止Dispatch`需要被覆盖时意外删除此免除项。
     def dispatch(self, request, *args, **kwargs):
         """
-        `.dispatch()` is pretty much the same as Django's regular dispatch,
-        but with extra hooks for startup, finalize, and exception handling.
+        `.dispatch（）`与Django的常规调度几乎相同，但具有用于启动，完成和异常处理的额外钩子。
         """
         self.args = args
         self.kwargs = kwargs
@@ -479,7 +475,7 @@ class APIView(View):
         try:
             self.initial(request, *args, **kwargs)
 
-            # Get the appropriate handler method
+            # 获取适当的处理程序方法
             if request.method.lower() in self.http_method_names:
                 handler = getattr(self, request.method.lower(),
                                   self.http_method_not_allowed)
@@ -496,7 +492,7 @@ class APIView(View):
 
     def options(self, request, *args, **kwargs):
         """
-        Handler method for HTTP 'OPTIONS' request.
+       HTTP“ OPTIONS”请求的处理程序方法。
         """
         if self.metadata_class is None:
             return self.http_method_not_allowed(request, *args, **kwargs)

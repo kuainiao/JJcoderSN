@@ -15,8 +15,7 @@ logger = logging.getLogger('django.request')
 
 class ContextMixin:
     """
-    A default context mixin that passes the keyword arguments received by
-    get_context_data() as the template context.
+    一个默认的上下文混合，它将get_context_data（）接收到的关键字参数作为模板上下文传递。
     """
     extra_context = None
 
@@ -29,25 +28,22 @@ class ContextMixin:
 
 class View:
     """
-    Intentionally simple parent class for all views. Only implements
-    dispatch-by-method and simple sanity checking.
+    故意为所有视图提供简单的父类。仅实现按方法调度和简单的健全性检查。
     """
 
     http_method_names = ['get', 'post', 'put', 'patch', 'delete', 'head', 'options', 'trace']
 
     def __init__(self, **kwargs):
         """
-        Constructor. Called in the URLconf; can contain helpful extra
-        keyword arguments, and other things.
+        构造函数。在URLconf中调用；可以包含有用的额外关键字参数以及其他内容。
         """
-        # Go through keyword arguments, and either save their values to our
-        # instance, or raise an error.
+        # 遍历关键字参数，然后将其值保存到我们的实例中，或者引发错误。
         for key, value in kwargs.items():
             setattr(self, key, value)
 
     @classonlymethod
     def as_view(cls, **initkwargs):
-        """Main entry point for a request-response process."""
+        """请求-响应过程的主要入口点。"""
         for key in initkwargs:
             if key in cls.http_method_names:
                 raise TypeError("You tried to pass in the %s method name as a "
@@ -69,27 +65,25 @@ class View:
                     "setup() and forget to call super()?" % cls.__name__
                 )
             return self.dispatch(request, *args, **kwargs)
+
         view.view_class = cls
         view.view_initkwargs = initkwargs
 
-        # take name and docstring from class
+        # 从类中获取名称和文档字符串
         update_wrapper(view, cls, updated=())
 
-        # and possible attributes set by decorators
-        # like csrf_exempt from dispatch
+        # 以及由装饰器设置的可能属性，例如csrf_exempt from dispatch
         update_wrapper(view, cls.dispatch, assigned=())
         return view
 
     def setup(self, request, *args, **kwargs):
-        """Initialize attributes shared by all view methods."""
+        """初始化所有视图方法共享的属性。"""
         self.request = request
         self.args = args
         self.kwargs = kwargs
 
     def dispatch(self, request, *args, **kwargs):
-        # Try to dispatch to the right method; if a method doesn't exist,
-        # defer to the error handler. Also defer to the error handler if the
-        # request method isn't on the approved list.
+        # 尝试调度正确的方法；如果不存在方法，则转到错误处理程序。如果request方法不在批准列表中，则也应遵循错误处理程序。
         if request.method.lower() in self.http_method_names:
             handler = getattr(self, request.method.lower(), self.http_method_not_allowed)
         else:
@@ -104,7 +98,7 @@ class View:
         return HttpResponseNotAllowed(self._allowed_methods())
 
     def options(self, request, *args, **kwargs):
-        """Handle responding to requests for the OPTIONS HTTP verb."""
+        """处理对OPTIONS HTTP动词的请求的响应。"""
         response = HttpResponse()
         response['Allow'] = ', '.join(self._allowed_methods())
         response['Content-Length'] = '0'
@@ -115,7 +109,7 @@ class View:
 
 
 class TemplateResponseMixin:
-    """A mixin that can be used to render a template."""
+    """可用于渲染模板的mixin。"""
     template_name = None
     template_engine = None
     response_class = TemplateResponse
@@ -123,10 +117,9 @@ class TemplateResponseMixin:
 
     def render_to_response(self, context, **response_kwargs):
         """
-        Return a response, using the `response_class` for this view, with a
-        template rendered with the given context.
+        使用此视图的`response_class`返回响应，并使用给定上下文渲染模板。
 
-        Pass response_kwargs to the constructor of the response class.
+       将response_kwargs传递给响应类的构造函数。
         """
         response_kwargs.setdefault('content_type', self.content_type)
         return self.response_class(
@@ -139,8 +132,7 @@ class TemplateResponseMixin:
 
     def get_template_names(self):
         """
-        Return a list of template names to be used for the request. Must return
-        a list. May not be called if render_to_response() is overridden.
+        返回用于请求的模板名称列表。必须返回一个列表。如果render_to_response（）被覆盖，则可能不会被调用。
         """
         if self.template_name is None:
             raise ImproperlyConfigured(
@@ -152,15 +144,16 @@ class TemplateResponseMixin:
 
 class TemplateView(TemplateResponseMixin, ContextMixin, View):
     """
-    Render a template. Pass keyword arguments from the URLconf to the context.
+    渲染模板。将关键字参数从URLconf传递到上下文。
     """
+
     def get(self, request, *args, **kwargs):
         context = self.get_context_data(**kwargs)
         return self.render_to_response(context)
 
 
 class RedirectView(View):
-    """Provide a redirect on any GET request."""
+    """提供任何GET请求的重定向。"""
     permanent = False
     url = None
     pattern_name = None
@@ -168,9 +161,7 @@ class RedirectView(View):
 
     def get_redirect_url(self, *args, **kwargs):
         """
-        Return the URL redirect to. Keyword arguments from the URL pattern
-        match generating the redirect request are provided as kwargs to this
-        method.
+       返回URL重定向到。 URL模式匹配中生成重定向请求的关键字参数作为kwargs提供给此方法。
         """
         if self.url:
             url = self.url % kwargs

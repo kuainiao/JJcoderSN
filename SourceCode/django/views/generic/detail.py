@@ -7,7 +7,7 @@ from django.views.generic.base import ContextMixin, TemplateResponseMixin, View
 
 class SingleObjectMixin(ContextMixin):
     """
-    Provide the ability to retrieve a single object for further manipulation.
+    提供检索单个对象以进行进一步操作的能力。
     """
     model = None
     queryset = None
@@ -19,17 +19,13 @@ class SingleObjectMixin(ContextMixin):
 
     def get_object(self, queryset=None):
         """
-        Return the object the view is displaying.
-
-        Require `self.queryset` and a `pk` or `slug` argument in the URLconf.
-        Subclasses can override this to return any object.
+        返回视图显示的对象。在URLconf中需要`self.queryset`和一个`pk`或`slug`参数。子类可以重写此方法以返回任何对象。
         """
-        # Use a custom queryset if provided; this is required for subclasses
-        # like DateDetailView
+        # 如果提供的话，请使用自定义查询集；这对于子类是必需的，例如DateDetailView
         if queryset is None:
             queryset = self.get_queryset()
 
-        # Next, try looking up by primary key.
+        # 接下来，尝试按主键查找。
         pk = self.kwargs.get(self.pk_url_kwarg)
         slug = self.kwargs.get(self.slug_url_kwarg)
         if pk is not None:
@@ -57,10 +53,7 @@ class SingleObjectMixin(ContextMixin):
 
     def get_queryset(self):
         """
-        Return the `QuerySet` that will be used to look up the object.
-
-        This method is called by the default implementation of get_object() and
-        may not be called if get_object() is overridden.
+        返回将用于查找对象的“ QuerySet”。此方法由get_object（）的默认实现调用，并且如果get_object（）被覆盖，则可能不会调用此方法。
         """
         if self.queryset is None:
             if self.model:
@@ -76,11 +69,11 @@ class SingleObjectMixin(ContextMixin):
         return self.queryset.all()
 
     def get_slug_field(self):
-        """Get the name of a slug field to be used to look up by slug."""
+        """获取将由Slug查找的Slug字段的名称。"""
         return self.slug_field
 
     def get_context_object_name(self, obj):
-        """Get the name to use for the object."""
+        """获取用于对象的名称。"""
         if self.context_object_name:
             return self.context_object_name
         elif isinstance(obj, models.Model):
@@ -89,7 +82,7 @@ class SingleObjectMixin(ContextMixin):
             return None
 
     def get_context_data(self, **kwargs):
-        """Insert the single object into the context dict."""
+        """将单个对象插入上下文字典中。"""
         context = {}
         if self.object:
             context['object'] = self.object
@@ -101,7 +94,7 @@ class SingleObjectMixin(ContextMixin):
 
 
 class BaseDetailView(SingleObjectMixin, View):
-    """A base view for displaying a single object."""
+    """用于显示单个对象的基本视图。"""
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
@@ -114,8 +107,7 @@ class SingleObjectTemplateResponseMixin(TemplateResponseMixin):
 
     def get_template_names(self):
         """
-        Return a list of template names to be used for the request. May not be
-        called if render_to_response() is overridden. Return the following list:
+        返回用于请求的模板名称列表。如果render_to_response（）被覆盖，则可能不会被调用。返回以下列表：
 
         * the value of ``template_name`` on the view (if provided)
         * the contents of the ``template_name_field`` field on the
@@ -125,20 +117,16 @@ class SingleObjectTemplateResponseMixin(TemplateResponseMixin):
         try:
             names = super().get_template_names()
         except ImproperlyConfigured:
-            # If template_name isn't specified, it's not a problem --
-            # we just start with an empty list.
+            # 如果未指定template_name，则没有问题-我们从一个空列表开始。
             names = []
 
-            # If self.template_name_field is set, grab the value of the field
-            # of that name from the object; this is the most specific template
-            # name, if given.
+            # 如果设置了self.template_name_field，则从对象中获取该名称的字段的值；如果指定的话，这是最具体的模板名称。
             if self.object and self.template_name_field:
                 name = getattr(self.object, self.template_name_field, None)
                 if name:
                     names.insert(0, name)
 
-            # The least-specific option is the default <app>/<model>_detail.html;
-            # only use this if the object in question is a model.
+            # 最不明确的选项是默认的<app> / <model> _detail.html; 仅在相关对象是模型时才使用此功能。
             if isinstance(self.object, models.Model):
                 object_meta = self.object._meta
                 names.append("%s/%s%s.html" % (
@@ -153,8 +141,7 @@ class SingleObjectTemplateResponseMixin(TemplateResponseMixin):
                     self.template_name_suffix
                 ))
 
-            # If we still haven't managed to find any template names, we should
-            # re-raise the ImproperlyConfigured to alert the user.
+            # 如果仍然无法找到任何模板名称，则应重新引发ImproperlyConfigured来警告用户。
             if not names:
                 raise
 
@@ -163,8 +150,5 @@ class SingleObjectTemplateResponseMixin(TemplateResponseMixin):
 
 class DetailView(SingleObjectTemplateResponseMixin, BaseDetailView):
     """
-    Render a "detail" view of an object.
-
-    By default this is a model instance looked up from `self.queryset`, but the
-    view will support display of *any* object by overriding `self.get_object()`.
+    渲染对象的“详细”视图。默认情况下，这是一个从self.queryset查找的模型实例，但是视图将通过覆盖self.get_object（）来支持* any *对象的显示。
     """

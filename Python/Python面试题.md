@@ -1,8 +1,8 @@
 # Python基础
 
-## [#](http://www.liuwq.com/views/面试题/python_01.html#文件操作)文件操作
+## 文件操作
 
-### [#](http://www.liuwq.com/views/面试题/python_01.html#_1-有一个jsonline格式的文件file-txt大小约为10k)1.有一个jsonline格式的文件file.txt大小约为10K
+### 1.有一个jsonline格式的文件file.txt大小约为10K
 
 ```python
 def get_lines():

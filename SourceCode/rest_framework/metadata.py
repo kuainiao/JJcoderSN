@@ -20,8 +20,7 @@ from rest_framework.utils.field_mapping import ClassLookupDict
 class BaseMetadata:
     def determine_metadata(self, request, view):
         """
-        Return a dictionary of metadata about the view.
-        Used to return responses for OPTIONS requests.
+       返回有关视图的元数据字典。用于返回OPTIONS请求的响应。
         """
         raise NotImplementedError(".determine_metadata() must be overridden.")
 

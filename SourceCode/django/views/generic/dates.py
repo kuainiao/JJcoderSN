@@ -17,19 +17,18 @@ from django.views.generic.list import (
 
 
 class YearMixin:
-    """Mixin for views manipulating year-based data."""
+    """Mixin用于处理基于年份的数据的视图。"""
     year_format = '%Y'
     year = None
 
     def get_year_format(self):
         """
-        Get a year format string in strptime syntax to be used to parse the
-        year from url variables.
+        使用strptime语法获取年份格式字符串，该字符串用于从url变量解析年份。
         """
         return self.year_format
 
     def get_year(self):
-        """Return the year for which this view should display data."""
+        """返回此视图应显示数据的年份。"""
         year = self.year
         if year is None:
             try:
@@ -42,7 +41,7 @@ class YearMixin:
         return year
 
     def get_next_year(self, date):
-        """Get the next valid year."""
+        """获取下一个有效年份。"""
         return _get_next_prev(self, date, is_previous=False, period='year')
 
     def get_previous_year(self, date):
@@ -51,9 +50,8 @@ class YearMixin:
 
     def _get_next_year(self, date):
         """
-        Return the start date of the next interval.
-
-        The interval is defined by start date <= item date < next start date.
+        返回下一个间隔的开始日期。
+        间隔由开始日期<=项目日期<下一个开始日期定义。
         """
         try:
             return date.replace(year=date.year + 1, month=1, day=1)
@@ -61,24 +59,23 @@ class YearMixin:
             raise Http404(_("Date out of range"))
 
     def _get_current_year(self, date):
-        """Return the start date of the current interval."""
+        """返回当前间隔的开始日期。"""
         return date.replace(month=1, day=1)
 
 
 class MonthMixin:
-    """Mixin for views manipulating month-based data."""
+    """Mixin用于处理基于月的数据的视图。"""
     month_format = '%b'
     month = None
 
     def get_month_format(self):
         """
-        Get a month format string in strptime syntax to be used to parse the
-        month from url variables.
+        使用strptime语法获取月份格式的字符串，该字符串用于从url变量解析月份。
         """
         return self.month_format
 
     def get_month(self):
-        """Return the month for which this view should display data."""
+        """返回此视图应显示数据的月份。"""
         month = self.month
         if month is None:
             try:
@@ -91,7 +88,7 @@ class MonthMixin:
         return month
 
     def get_next_month(self, date):
-        """Get the next valid month."""
+        """获取下一个有效月份。"""
         return _get_next_prev(self, date, is_previous=False, period='month')
 
     def get_previous_month(self, date):
@@ -100,9 +97,9 @@ class MonthMixin:
 
     def _get_next_month(self, date):
         """
-        Return the start date of the next interval.
+        返回下一个间隔的开始日期。
 
-        The interval is defined by start date <= item date < next start date.
+        间隔由开始日期<=项目日期<下一个开始日期定义。
         """
         if date.month == 12:
             try:
@@ -113,24 +110,23 @@ class MonthMixin:
             return date.replace(month=date.month + 1, day=1)
 
     def _get_current_month(self, date):
-        """Return the start date of the previous interval."""
+        """返回上一个间隔的开始日期。"""
         return date.replace(day=1)
 
 
 class DayMixin:
-    """Mixin for views manipulating day-based data."""
+    """Mixin用于处理基于一天的数据的视图。"""
     day_format = '%d'
     day = None
 
     def get_day_format(self):
         """
-        Get a day format string in strptime syntax to be used to parse the day
-        from url variables.
+        使用strptime语法获取day格式的字符串，以用于从url变量解析日期。
         """
         return self.day_format
 
     def get_day(self):
-        """Return the day for which this view should display data."""
+        """返回该视图应显示数据的日期。"""
         day = self.day
         if day is None:
             try:
@@ -143,40 +139,37 @@ class DayMixin:
         return day
 
     def get_next_day(self, date):
-        """Get the next valid day."""
+        """获取下一个有效日期。"""
         return _get_next_prev(self, date, is_previous=False, period='day')
 
     def get_previous_day(self, date):
-        """Get the previous valid day."""
+        """获取前一个有效日期。"""
         return _get_next_prev(self, date, is_previous=True, period='day')
 
     def _get_next_day(self, date):
         """
-        Return the start date of the next interval.
-
-        The interval is defined by start date <= item date < next start date.
+        返回下一个间隔的开始日期。间隔由开始日期<=项目日期<下一个开始日期定义。
         """
         return date + datetime.timedelta(days=1)
 
     def _get_current_day(self, date):
-        """Return the start date of the current interval."""
+        """返回当前间隔的开始日期。"""
         return date
 
 
 class WeekMixin:
-    """Mixin for views manipulating week-based data."""
+    """Mixin用于处理基于星期的数据的视图。"""
     week_format = '%U'
     week = None
 
     def get_week_format(self):
         """
-        Get a week format string in strptime syntax to be used to parse the
-        week from url variables.
+        使用strptime语法获取一个星期格式的字符串，该字符串用于从url变量解析星期。
         """
         return self.week_format
 
     def get_week(self):
-        """Return the week for which this view should display data."""
+        """返回此视图应显示数据的星期。"""
         week = self.week
         if week is None:
             try:
@@ -189,18 +182,16 @@ class WeekMixin:
         return week
 
     def get_next_week(self, date):
-        """Get the next valid week."""
+        """获取下一个有效的星期。"""
         return _get_next_prev(self, date, is_previous=False, period='week')
 
     def get_previous_week(self, date):
-        """Get the previous valid week."""
+        """获取上一个有效周。"""
         return _get_next_prev(self, date, is_previous=True, period='week')
 
     def _get_next_week(self, date):
         """
-        Return the start date of the next interval.
-
-        The interval is defined by start date <= item date < next start date.
+       返回下一个间隔的开始日期。间隔由开始日期<=项目日期<下一个开始日期定义。
         """
         try:
             return date + datetime.timedelta(days=7 - self._get_weekday(date))
@@ -208,50 +199,45 @@ class WeekMixin:
             raise Http404(_("Date out of range"))
 
     def _get_current_week(self, date):
-        """Return the start date of the current interval."""
+        """返回当前间隔的开始日期。"""
         return date - datetime.timedelta(self._get_weekday(date))
 
     def _get_weekday(self, date):
         """
-        Return the weekday for a given date.
-
-        The first day according to the week format is 0 and the last day is 6.
+        返回给定日期的工作日。根据星期格式的第一天为0，最后一天为6。
         """
         week_format = self.get_week_format()
-        if week_format == '%W':                 # week starts on Monday
+        if week_format == '%W':  # 周从星期一开始
             return date.weekday()
-        elif week_format == '%U':               # week starts on Sunday
+        elif week_format == '%U':  # 周从星期日开始
             return (date.weekday() + 1) % 7
         else:
             raise ValueError("unknown week format: %s" % week_format)
 
 
 class DateMixin:
-    """Mixin class for views manipulating date-based data."""
+    """Mixin类，用于处理基于日期的数据的视图。"""
     date_field = None
     allow_future = False
 
     def get_date_field(self):
-        """Get the name of the date field to be used to filter by."""
+        """获取用于过滤的日期字段的名称。"""
         if self.date_field is None:
             raise ImproperlyConfigured("%s.date_field is required." % self.__class__.__name__)
         return self.date_field
 
     def get_allow_future(self):
         """
-        Return `True` if the view should be allowed to display objects from
-        the future.
+        如果应该允许视图显示将来的对象，则返回True。
         """
         return self.allow_future
 
-    # Note: the following three methods only work in subclasses that also
-    # inherit SingleObjectMixin or MultipleObjectMixin.
+    # 注意：以下三种方法仅适用于继承SingleObjectMixin或MultipleObjectMixin的子类。
 
     @cached_property
     def uses_datetime_field(self):
         """
-        Return `True` if the date field is a `DateTimeField` and `False`
-        if it's a `DateField`.
+        如果日期字段是`DateTimeField`，则返回`True`，如果是`DateField`，则返回False。
         """
         model = self.get_queryset().model if self.model is None else self.model
         field = model._meta.get_field(self.get_date_field())
@@ -259,10 +245,9 @@ class DateMixin:
 
     def _make_date_lookup_arg(self, value):
         """
-        Convert a date into a datetime when the date field is a DateTimeField.
+        当日期字段为DateTimeField时，将日期转换为日期时间。
 
-        When time zone support is enabled, `date` is assumed to be in the
-        current time zone, so that displayed items are consistent with the URL.
+       启用时区支持后，“日期”被假定为当前时区，因此显示的项目与URL一致。
         """
         if self.uses_datetime_field:
             value = datetime.datetime.combine(value, datetime.time.min)
@@ -272,10 +257,7 @@ class DateMixin:
 
     def _make_single_date_lookup(self, date):
         """
-        Get the lookup kwargs for filtering on a single date.
-
-        If the date field is a DateTimeField, we can't just filter on
-        date_field=date because that doesn't take the time into account.
+        获取用于过滤单个日期的查找参数。如果date字段是DateTimeField，我们不能只过滤date_field = date，因为这没有考虑时间。
         """
         date_field = self.get_date_field()
         if self.uses_datetime_field:
@@ -286,12 +268,12 @@ class DateMixin:
                 '%s__lt' % date_field: until,
             }
         else:
-            # Skip self._make_date_lookup_arg, it's a no-op in this branch.
+            # 跳过self._make_date_lookup_arg，这是该分支中的禁忌操作。
             return {date_field: date}
 
 
 class BaseDateListView(MultipleObjectMixin, DateMixin, View):
-    """Abstract base class for date-based views displaying a list of objects."""
+    """基于日期的视图的抽象基类，显示对象列表。"""
     allow_empty = False
     date_list_period = 'year'
 
@@ -305,7 +287,7 @@ class BaseDateListView(MultipleObjectMixin, DateMixin, View):
         return self.render_to_response(context)
 
     def get_dated_items(self):
-        """Obtain the list of dates and items."""
+        """获取日期和项目列表。"""
         raise NotImplementedError('A DateView must provide an implementation of get_dated_items()')
 
     def get_ordering(self):
@@ -520,6 +502,7 @@ class WeekArchiveView(MultipleObjectTemplateResponseMixin, BaseWeekArchiveView):
 
 class BaseDayArchiveView(YearMixin, MonthMixin, DayMixin, BaseDateListView):
     """List of objects published on a given day."""
+
     def get_dated_items(self):
         """Return (date_list, items, extra_context) for this request."""
         year = self.get_year()
@@ -572,6 +555,7 @@ class BaseDateDetailView(YearMixin, MonthMixin, DayMixin, DateMixin, BaseDetailV
     Detail view of a single object on a single date; this differs from the
     standard DetailView by accepting a year/month/day in the URL.
     """
+
     def get_object(self, queryset=None):
         """Get the object this request displays."""
         year = self.get_year()
@@ -589,9 +573,9 @@ class BaseDateDetailView(YearMixin, MonthMixin, DayMixin, DateMixin, BaseDetailV
                 "Future %(verbose_name_plural)s not available because "
                 "%(class_name)s.allow_future is False."
             ) % {
-                'verbose_name_plural': qs.model._meta.verbose_name_plural,
-                'class_name': self.__class__.__name__,
-            })
+                              'verbose_name_plural': qs.model._meta.verbose_name_plural,
+                              'class_name': self.__class__.__name__,
+                          })
 
         # Filter down a queryset from self.queryset using the date from the
         # URL. This'll get passed as the queryset to DetailView.get_object,
