@@ -1,12 +1,8 @@
 """
-The Request class is used as a wrapper around the standard request object.
-
-The wrapped request then offers a richer API, in particular :
-
-    - content automatically parsed according to `Content-Type` header,
-      and available as `request.data`
-    - full support of PUT method, including support for file uploads
-    - form overloading of HTTP method, content type and content
+Request类用作标准请求对象的包装。然后，包装的请求将提供更丰富的API，尤其是：
+    -根据“ Content-Type”标头自动解析内容，并作为“ request.data”提供
+    -完全支持PUT方法，包括对文件上传的支持
+    -HTTP方法，内容类型和内容的形式重载
 """
 import io
 import sys

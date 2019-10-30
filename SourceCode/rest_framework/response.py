@@ -1,8 +1,6 @@
 """
-The Response class in REST framework is similar to HTTPResponse, except that
-it is initialized with unrendered data, instead of a pre-rendered string.
-
-The appropriate renderer is called during Django's template response rendering.
+REST框架中的Response类与HTTPResponse类似，除了
+它使用未渲染的数据（而不是预先渲染的字符串）初始化。在Django的模板响应渲染期间会调用适当的渲染器。
 """
 from http.client import responses
 
@@ -13,19 +11,15 @@ from rest_framework.serializers import Serializer
 
 class Response(SimpleTemplateResponse):
     """
-    An HttpResponse that allows its data to be rendered into
-    arbitrary media types.
+    HttpResponse，允许其数据呈现​​为任意媒体类型。
     """
 
     def __init__(self, data=None, status=None,
                  template_name=None, headers=None,
                  exception=False, content_type=None):
         """
-        Alters the init arguments slightly.
-        For example, drop 'template_name', and instead use 'data'.
-
-        Setting 'renderer' and 'media_type' will typically be deferred,
-        For example being set automatically by the `APIView`.
+        稍微更改init参数。例如，删除“ template_name”，而使用“ data”。
+        设置“ renderer”和“ media_type”通常会被推迟，例如由“ APIView”自动设置。
         """
         super().__init__(None, status=status)
 
@@ -83,14 +77,13 @@ class Response(SimpleTemplateResponse):
     @property
     def status_text(self):
         """
-        Returns reason text corresponding to our HTTP response status code.
-        Provided for convenience.
+        返回与我们的HTTP响应状态代码相对应的原因文本。提供方便。
         """
         return responses.get(self.status_code, '')
 
     def __getstate__(self):
         """
-        Remove attributes from the response that shouldn't be cached.
+        从响应中删除不应缓存的属性。
         """
         state = super().__getstate__()
         for key in (

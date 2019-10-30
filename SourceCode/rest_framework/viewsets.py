@@ -77,13 +77,10 @@ class ViewSetMixin:
 
         def view(request, *args, **kwargs):
             self = cls(**initkwargs)
-            # We also store the mapping of request methods to actions,
-            # so that we can later set the action attribute.
-            # eg. `self.action = 'list'` on an incoming GET request.
+            # 我们还存储了请求方法到动作的映射，以便以后可以设置动作属性。 例如传入的GET请求上的`self.action ='list'`。
             self.action_map = actions
 
-            # Bind methods to actions
-            # This is the bit that's different to a standard view
+            # 将方法绑定到操作＃这与标准视图不同
             for method, action in actions.items():
                 handler = getattr(self, action)
                 setattr(self, method, handler)
@@ -98,16 +95,13 @@ class ViewSetMixin:
             # And continue as usual
             return self.dispatch(request, *args, **kwargs)
 
-        # take name and docstring from class
+        # 从类中获取名称和文档字符串
         update_wrapper(view, cls, updated=())
 
-        # and possible attributes set by decorators
-        # like csrf_exempt from dispatch
+        # 以及由装饰器＃设置的可能属性，例如csrf_exempt from dispatch
         update_wrapper(view, cls.dispatch, assigned=())
 
-        # We need to set these on the view function, so that breadcrumb
-        # generation can pick out these bits of information from a
-        # resolved URL.
+        # 我们需要在视图函数上进行设置，以便面包屑生成可以从解析的URL中挑选出这些信息。
         view.cls = cls
         view.initkwargs = initkwargs
         view.actions = actions
@@ -115,14 +109,12 @@ class ViewSetMixin:
 
     def initialize_request(self, request, *args, **kwargs):
         """
-        Set the `.action` attribute on the view, depending on the request method.
+        根据请求方法，在视图上设置`.action`属性。
         """
         request = super().initialize_request(request, *args, **kwargs)
         method = request.method.lower()
         if method == 'options':
-            # This is a special case as we always provide handling for the
-            # options method in the base `View` class.
-            # Unlike the other explicitly defined actions, 'metadata' is implicit.
+            # 这是一种特殊情况，因为我们始终在基类View中为options方法提供处理。 与其他显式定义的操作不同，“元数据”是隐式的。
             self.action = 'metadata'
         else:
             self.action = self.action_map.get(method)
@@ -130,7 +122,7 @@ class ViewSetMixin:
 
     def reverse_action(self, url_name, *args, **kwargs):
         """
-        Reverse the action for the given `url_name`.
+        对给定的“ url_name”执行相反的操作。
         """
         url_name = '%s-%s' % (self.basename, url_name)
         kwargs.setdefault('request', self.request)
@@ -140,23 +132,21 @@ class ViewSetMixin:
     @classmethod
     def get_extra_actions(cls):
         """
-        Get the methods that are marked as an extra ViewSet `@action`.
+        获取标记为额外的ViewSet`@ action`的方法。
         """
         return [method for _, method in getmembers(cls, _is_extra_action)]
 
     def get_extra_action_url_map(self):
         """
-        Build a map of {names: urls} for the extra actions.
-
-        This method will noop if `detail` was not provided as a view initkwarg.
+        构建{names：urls}的映射以进行其他操作。如果未提供`detail`作为视图initkwarg，则此方法将不执行任何操作。
         """
         action_urls = OrderedDict()
 
-        # exit early if `detail` has not been provided
+        # 如果未提供“详细信息”，请提早退出
         if self.detail is None:
             return action_urls
 
-        # filter for the relevant extra actions
+        # 过滤相关的额外操作
         actions = [
             action for action in self.get_extra_actions()
             if action.detail == self.detail
@@ -169,23 +159,21 @@ class ViewSetMixin:
                 view = self.__class__(**action.kwargs)
                 action_urls[view.get_view_name()] = url
             except NoReverseMatch:
-                pass  # URL requires additional arguments, ignore
+                pass  # URL需要其他参数，请忽略
 
         return action_urls
 
 
 class ViewSet(ViewSetMixin, views.APIView):
     """
-    The base ViewSet class does not provide any actions by default.
+    默认情况下，基ViewSet类不提供任何操作。
     """
     pass
 
 
 class GenericViewSet(ViewSetMixin, generics.GenericAPIView):
     """
-    The GenericViewSet class does not provide any actions by default,
-    but does include the base set of generic view behavior, such as
-    the `get_object` and `get_queryset` methods.
+    默认情况下，GenericViewSet类不提供任何操作，但包含通用视图行为的基本集合，例如get_object和get_queryset方法。
     """
     pass
 

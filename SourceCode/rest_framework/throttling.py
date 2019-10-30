@@ -1,5 +1,5 @@
 """
-Provides various throttling policies.
+提供各种限制策略。
 """
 import time
 
@@ -11,24 +11,23 @@ from rest_framework.settings import api_settings
 
 class BaseThrottle:
     """
-    Rate throttling of requests.
+    对请求进行节流。
     """
 
     def allow_request(self, request, view):
         """
-        Return `True` if the request should be allowed, `False` otherwise.
+       如果应允许该请求，则返回True，否则返回False。
         """
         raise NotImplementedError('.allow_request() must be overridden')
 
     def get_ident(self, request):
         """
-        Identify the machine making the request by parsing HTTP_X_FORWARDED_FOR
-        if present and number of proxies is > 0. If not use all of
-        HTTP_X_FORWARDED_FOR if it is available, if not use REMOTE_ADDR.
+        通过解析HTTP_X_FORWARDED_FOR（如果存在且代理数> 0）来识别发出请求的计算机。
+        如果不可用，则使用所有HTTP_X_FORWARDED_FOR（如果可用），否则不使用REMOTE_ADDR。
         """
-        xff = request.META.get('HTTP_X_FORWARDED_FOR')
-        remote_addr = request.META.get('REMOTE_ADDR')
-        num_proxies = api_settings.NUM_PROXIES
+        xff = request.META.get('HTTP_X_FORWARDED_FOR')  # 客户端真实ip,不是代理ip
+        remote_addr = request.META.get('REMOTE_ADDR')  # 远程主机ip
+        num_proxies = api_settings.NUM_PROXIES  # API 运行的应用代理的数量
 
         if num_proxies is not None:
             if num_proxies == 0 or xff is None:
@@ -41,23 +40,17 @@ class BaseThrottle:
 
     def wait(self):
         """
-        Optionally, return a recommended number of seconds to wait before
-        the next request.
+        （可选）返回建议的秒数，以等待下一个请求。
         """
         return None
 
 
 class SimpleRateThrottle(BaseThrottle):
     """
-    A simple cache implementation, that only requires `.get_cache_key()`
-    to be overridden.
+    一个简单的缓存实现，只需要覆盖.get_cache_key（）即可。
 
-    The rate (requests / seconds) is set by a `rate` attribute on the View
-    class.  The attribute is a string of the form 'number_of_requests/period'.
-
-    Period should be one of: ('s', 'sec', 'm', 'min', 'h', 'hour', 'd', 'day')
-
-    Previous request information used for throttling is stored in the cache.
+    速率（请求/秒）由View类的“ rate”属性设置。该属性是形式为'number_of_requests / period'的字符串。
+    期间应为以下之一：（“ s”，“ sec”，“ m”，“ min”，“ h”，“ hour”，“ d”，“ day”）,用于节流的先前请求信息存储在缓存中。
     """
     cache = default_cache
     timer = time.time
@@ -72,16 +65,13 @@ class SimpleRateThrottle(BaseThrottle):
 
     def get_cache_key(self, request, view):
         """
-        Should return a unique cache-key which can be used for throttling.
-        Must be overridden.
-
-        May return `None` if the request should not be throttled.
+        应该返回一个唯一的可用于节流的缓存键。必须重写。如果不应该限制请求，则可能会返回“None”。
         """
         raise NotImplementedError('.get_cache_key() must be overridden')
 
     def get_rate(self):
         """
-        Determine the string representation of the allowed request rate.
+        确定允许的请求速率的字符串表示形式。
         """
         if not getattr(self, 'scope', None):
             msg = ("You must set either `.scope` or `.rate` for '%s' throttle" %
@@ -96,22 +86,18 @@ class SimpleRateThrottle(BaseThrottle):
 
     def parse_rate(self, rate):
         """
-        Given the request rate string, return a two tuple of:
-        <allowed number of requests>, <period of time in seconds>
+        给定请求率字符串，返回两个元组：<允许的请求数>，<以秒为单位的时间段>
         """
         if rate is None:
             return (None, None)
         num, period = rate.split('/')
         num_requests = int(num)
         duration = {'s': 1, 'm': 60, 'h': 3600, 'd': 86400}[period[0]]
-        return (num_requests, duration)
+        return (num_requests, duration)  # 返回的是一个二元组
 
     def allow_request(self, request, view):
         """
-        Implement the check to see if the request should be throttled.
-
-        On success calls `throttle_success`.
-        On failure calls `throttle_failure`.
+        实施检查以查看是否应限制请求。成功时调用`throttle_success`。失败时调用`throttle_failure`。
         """
         if self.rate is None:
             return True
@@ -123,8 +109,7 @@ class SimpleRateThrottle(BaseThrottle):
         self.history = self.cache.get(self.key, [])
         self.now = self.timer()
 
-        # Drop any requests from the history which have now passed the
-        # throttle duration
+        # 删除历史记录中已超过节气门持续时间的所有请求
         while self.history and self.history[-1] <= self.now - self.duration:
             self.history.pop()
         if len(self.history) >= self.num_requests:
@@ -133,8 +118,7 @@ class SimpleRateThrottle(BaseThrottle):
 
     def throttle_success(self):
         """
-        Inserts the current request's timestamp along with the key
-        into the cache.
+        将当前请求的时间戳和密钥一起插入高速缓存。
         """
         self.history.insert(0, self.now)
         self.cache.set(self.key, self.history, self.duration)
@@ -142,13 +126,13 @@ class SimpleRateThrottle(BaseThrottle):
 
     def throttle_failure(self):
         """
-        Called when a request to the API has failed due to throttling.
+        当由于限制而对API的请求失败时调用。
         """
         return False
 
     def wait(self):
         """
-        Returns the recommended next request time in seconds.
+        返回建议的下一个请求时间（以秒为单位）。
         """
         if self.history:
             remaining_duration = self.duration - (self.now - self.history[-1])
@@ -164,15 +148,13 @@ class SimpleRateThrottle(BaseThrottle):
 
 class AnonRateThrottle(SimpleRateThrottle):
     """
-    Limits the rate of API calls that may be made by a anonymous users.
-
-    The IP address of the request will be used as the unique cache key.
+    限制匿名用户可能进行的API调用的速率。请求的IP地址将用作唯一的缓存密钥。
     """
     scope = 'anon'
 
     def get_cache_key(self, request, view):
         if request.user.is_authenticated:
-            return None  # Only throttle unauthenticated requests.
+            return None  # 仅限制未经身份验证的请求。
 
         return self.cache_format % {
             'scope': self.scope,
@@ -182,11 +164,7 @@ class AnonRateThrottle(SimpleRateThrottle):
 
 class UserRateThrottle(SimpleRateThrottle):
     """
-    Limits the rate of API calls that may be made by a given user.
-
-    The user id will be used as a unique cache key if the user is
-    authenticated.  For anonymous requests, the IP address of the request will
-    be used.
+    限制给定用户可能进行的API调用的速率。如果用户通过身份验证，则该用户ID将用作唯一的缓存密钥。对于匿名请求，将使用请求的IP地址。
     """
     scope = 'user'
 
@@ -204,40 +182,33 @@ class UserRateThrottle(SimpleRateThrottle):
 
 class ScopedRateThrottle(SimpleRateThrottle):
     """
-    Limits the rate of API calls by different amounts for various parts of
-    the API.  Any view that has the `throttle_scope` property set will be
-    throttled.  The unique cache key will be generated by concatenating the
-    user id of the request, and the scope of the view being accessed.
+    针对API的各个部分，以不同的数量限制API调用的速率。任何设置了“ throttle_scope”属性的视图都会被限制。
+    通过将请求的用户ID和正在访问的视图的范围串联起来，将生成唯一的缓存键。
     """
     scope_attr = 'throttle_scope'
 
     def __init__(self):
-        # Override the usual SimpleRateThrottle, because we can't determine
-        # the rate until called by the view.
+        # 覆盖通常的SimpleRateThrottle，因为在视图调用之前我们无法确定速率。
         pass
 
     def allow_request(self, request, view):
-        # We can only determine the scope once we're called by the view.
+        # 一旦被视图调用，我们就只能确定范围。
         self.scope = getattr(view, self.scope_attr, None)
 
-        # If a view does not have a `throttle_scope` always allow the request
+        # 如果视图没有`throttle_scope`，则始终允许该请求
         if not self.scope:
             return True
 
-        # Determine the allowed request rate as we normally would during
-        # the `__init__` call.
+        # 像通常在__ init__`调用期间那样确定允许的请求速率。
         self.rate = self.get_rate()
         self.num_requests, self.duration = self.parse_rate(self.rate)
 
-        # We can now proceed as normal.
+        # 现在，我们可以正常进行了。
         return super().allow_request(request, view)
 
     def get_cache_key(self, request, view):
         """
-        If `view.throttle_scope` is not set, don't apply this throttle.
-
-        Otherwise generate the unique cache key by concatenating the user id
-        with the '.throttle_scope` property of the view.
+        如果未设置“ view.throttle_scope”，请不要应用此限制。否则，通过将用户ID与视图的'.throttle_scope`属性并置来生成唯一的缓存键。
         """
         if request.user.is_authenticated:
             ident = request.user.pk

@@ -1,10 +1,7 @@
 """
-We perform uniqueness checks explicitly on the serializer class, rather
-the using Django's `.full_clean()`.
+我们在序列化程序类上显式执行唯一性检查，而不是使用Django的`.full_clean（）`。
 
-This gives us better separation of concerns, allows us to use single-step
-object creation, and makes it possible to switch between using the implicit
-`ModelSerializer` class and an equivalent explicit `Serializer` class.
+这使我们可以更好地分离关注点，允许我们使用单步执行对象创建，并可以在使用隐式方法之间进行切换ModelSerializer类和等效的显式Serializer类。
 """
 from django.db import DataError
 from django.utils.translation import gettext_lazy as _
@@ -13,8 +10,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.utils.representation import smart_repr
 
 
-# Robust filter and exist implementations. Ensures that queryset.exists() for
-# an invalid value returns `False`, rather than raising an error.
+# 健壮的过滤器并存在。确保queryset.exists（）用于无效的值返回False，而不是引发错误。
 # Refs https://github.com/encode/django-rest-framework/issues/3381
 def qs_exists(queryset):
     try:
@@ -32,10 +28,12 @@ def qs_filter(queryset, **kwargs):
 
 class UniqueValidator:
     """
-    Validator that corresponds to `unique=True` on a model field.
-
-    Should be applied to an individual field on the serializer.
+   在模型字段上对应于“ unique = True”的验证器。应该应用于序列化器上的单个字段。
+   queryset 必须 - 这是验证唯一性的查询集。
+   message - 验证失败时使用的错误消息。
+   lookup - 用于查找已验证值的现有实例。默认为 `'exact'`。
     """
+
     message = _('This field must be unique.')
 
     def __init__(self, queryset, message=None, lookup='exact'):
@@ -46,26 +44,23 @@ class UniqueValidator:
 
     def set_context(self, serializer_field):
         """
-        This hook is called by the serializer instance,
-        prior to the validation call being made.
+        在进行验证调用之前，该挂钩由序列化程序实例调用。
         """
-        # Determine the underlying model field name. This may not be the
-        # same as the serializer field name if `source=<>` is set.
+        # 确定基础模型字段名称。如果设置了“ source = <>”，则此名称可能与序列化器字段名称不同。
         self.field_name = serializer_field.source_attrs[-1]
-        # Determine the existing instance, if this is an update operation.
+        # 如果这是更新操作，请确定现有实例。
         self.instance = getattr(serializer_field.parent, 'instance', None)
 
     def filter_queryset(self, value, queryset):
         """
-        Filter the queryset to all instances matching the given attribute.
+        将查询集过滤到与给定属性匹配的所有实例。
         """
         filter_kwargs = {'%s__%s' % (self.field_name, self.lookup): value}
         return qs_filter(queryset, **filter_kwargs)
 
     def exclude_current_instance(self, queryset):
         """
-        If an instance is being updated, then do not include
-        that instance itself as a uniqueness conflict.
+        如果实例正在更新，则不要将该实例本身包括为唯一性冲突。
         """
         if self.instance is not None:
             return queryset.exclude(pk=self.instance.pk)
@@ -87,9 +82,10 @@ class UniqueValidator:
 
 class UniqueTogetherValidator:
     """
-    Validator that corresponds to `unique_together = (...)` on a model class.
-
-    Should be applied to the serializer class, not to an individual field.
+    验证器，它对应于模型类上的`unique_together =（...）`。应该应用于序列化程序类，而不是单个字段。
+    * `queryset` *必须* - 这是验证唯一性的查询集。
+    * `fields` *必须* - 一个存放字段名称的列表或者元组，这个集合必须是唯一的（意思是集合中的字段代表的一组值不能同时出现在两条数据中）。这些字段必须都是序列化类中的字段。
+    * `message` - 验证失败时使用的错误消息。
     """
     message = _('The fields {field_names} must make a unique set.')
     missing_message = _('This field is required.')
@@ -102,16 +98,14 @@ class UniqueTogetherValidator:
 
     def set_context(self, serializer):
         """
-        This hook is called by the serializer instance,
-        prior to the validation call being made.
+        在进行验证调用之前，该挂钩由序列化程序实例调用。
         """
-        # Determine the existing instance, if this is an update operation.
+        # 如果这是更新操作，请确定现有实例。
         self.instance = getattr(serializer, 'instance', None)
 
     def enforce_required_fields(self, attrs):
         """
-        The `UniqueTogetherValidator` always forces an implied 'required'
-        state on the fields it applies to.
+        “ UniqueTogetherValidator”始终在其适用的字段上强制使用隐含的“required”状态。
         """
         if self.instance is not None:
             return
@@ -126,16 +120,15 @@ class UniqueTogetherValidator:
 
     def filter_queryset(self, attrs, queryset):
         """
-        Filter the queryset to all instances matching the given attributes.
+        将查询集过滤到与给定属性匹配的所有实例。
         """
-        # If this is an update, then any unprovided field should
-        # have it's value set based on the existing instance attribute.
+        # 如果这是更新，则任何未提供的字段都应根据现有的instance属性设置其值。
         if self.instance is not None:
             for field_name in self.fields:
                 if field_name not in attrs:
                     attrs[field_name] = getattr(self.instance, field_name)
 
-        # Determine the filter keyword arguments and filter the queryset.
+        # 确定过滤器关键字参数并过滤查询集。
         filter_kwargs = {
             field_name: attrs[field_name]
             for field_name in self.fields
@@ -144,8 +137,7 @@ class UniqueTogetherValidator:
 
     def exclude_current_instance(self, attrs, queryset):
         """
-        If an instance is being updated, then do not include
-        that instance itself as a uniqueness conflict.
+        如果实例正在更新，则不要将该实例本身包括为唯一性冲突。
         """
         if self.instance is not None:
             return queryset.exclude(pk=self.instance.pk)
@@ -157,7 +149,7 @@ class UniqueTogetherValidator:
         queryset = self.filter_queryset(attrs, queryset)
         queryset = self.exclude_current_instance(attrs, queryset)
 
-        # Ignore validation if any field is None
+        # 如果任何字段为None，则忽略验证
         checked_values = [
             value for field, value in attrs.items() if field in self.fields
         ]
@@ -186,11 +178,9 @@ class BaseUniqueForValidator:
 
     def set_context(self, serializer):
         """
-        This hook is called by the serializer instance,
-        prior to the validation call being made.
+        在进行验证调用之前，该挂钩由序列化程序实例调用。
         """
-        # Determine the underlying model field names. These may not be the
-        # same as the serializer field names if `source=<>` is set.
+        # 确定基础模型字段名称。如果设置了`source = <>`，则这些名称可能与序列化器字段名称不同。
         self.field_name = serializer.fields[self.field].source_attrs[-1]
         self.date_field_name = serializer.fields[self.date_field].source_attrs[-1]
         # Determine the existing instance, if this is an update operation.
@@ -198,8 +188,7 @@ class BaseUniqueForValidator:
 
     def enforce_required_fields(self, attrs):
         """
-        The `UniqueFor<Range>Validator` classes always force an implied
-        'required' state on the fields they are applied to.
+        “ UniqueFor <Range> Validator”类始终在它们应用于的字段上强制隐含“required”状态。
         """
         missing_items = {
             field_name: self.missing_message
@@ -214,8 +203,7 @@ class BaseUniqueForValidator:
 
     def exclude_current_instance(self, attrs, queryset):
         """
-        If an instance is being updated, then do not include
-        that instance itself as a uniqueness conflict.
+        如果实例正在更新，则不要将该实例本身包括为唯一性冲突。
         """
         if self.instance is not None:
             return queryset.exclude(pk=self.instance.pk)
@@ -239,6 +227,15 @@ class BaseUniqueForValidator:
             smart_repr(self.field),
             smart_repr(self.date_field)
         )
+
+
+"""
+下面三个关于时间的Validator
+* `queryset` *必须* - 这是验证唯一性的查询集。
+* `field` *必须* - 在给定日期范围内需要被验证唯一性的字段的名称。该字段必须是序列化类中的字段。
+* `date_field` *必须* - 将用于确定唯一性约束的日期范围的字段名称。该字段必须是序列化类中的字段。
+* `message` - 验证失败时使用的错误消息。
+"""
 
 
 class UniqueForDateValidator(BaseUniqueForValidator):

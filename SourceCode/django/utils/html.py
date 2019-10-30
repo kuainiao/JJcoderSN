@@ -371,8 +371,7 @@ def avoid_wrapping(value):
 
 def html_safe(klass):
     """
-    A decorator that defines the __html__ method. This helps non-Django
-    templates to detect classes whose __str__ methods return SafeText.
+    一个装饰器，它定义__html__方法。这有助于非Django模板检测其__str__方法返回SafeText的类
     """
     if '__html__' in klass.__dict__:
         raise ValueError(

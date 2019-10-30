@@ -41,12 +41,11 @@ from rest_framework.validators import (
     UniqueTogetherValidator
 )
 
-# Note: We do the following so that users of the framework can use this style:
+# Note: 我们执行以下操作，以便框架的用户可以使用此样式：
 #
 #     example_field = serializers.CharField(...)
 #
-# This helps keep the separation between model fields, form fields, and
-# serializer fields more explicit.
+# 这有助于保持模型字段，表单字段和序列化器字段更明确。
 from rest_framework.fields import (  # NOQA # isort:skip
     BooleanField, CharField, ChoiceField, DateField, DateTimeField, DecimalField,
     DictField, DurationField, EmailField, Field, FileField, FilePathField, FloatField,
@@ -82,24 +81,23 @@ class BaseSerializer(Field):
     """
     BaseSerializer类提供了一个最小类，可用于编写自定义序列化程序实现。
 
-    Note that we strongly restrict the ordering of operations/properties
-    that may be used on the serializer in order to enforce correct usage.
+    请注意，我们严格限制了可在序列化程序上使用的操作/属性的顺序，以强制正确使用。
 
-    In particular, if a `data=` argument is passed then:
+    特别是，如果传递了一个data =参数，则：
 
-    .is_valid() - Available.
-    .initial_data - Available.
-    .validated_data - Only available after calling `is_valid()`
-    .errors - Only available after calling `is_valid()`
-    .data - Only available after calling `is_valid()`
+    .is_valid() - 可用的。
+    .initial_data - 可用的。
+    .validated_data - 仅在调用is_valid（）之后可用
+    .errors - 仅在调用is_valid（）之后可用
+    .data - 仅在调用is_valid（）之后可用
 
-    If a `data=` argument is not passed then:
+    如果未传递`data =`参数，则：
 
-    .is_valid() - Not available.
-    .initial_data - Not available.
-    .validated_data - Not available.
-    .errors - Not available.
-    .data - Available.
+    .is_valid() - 无法使用。
+    .initial_data - 无法使用。
+    .validated_data - 无法使用。
+    .errors - 无法使用。
+    .data - 可用的
     """
 
     def __init__(self, instance=None, data=empty, **kwargs):
@@ -120,14 +118,10 @@ class BaseSerializer(Field):
     @classmethod
     def many_init(cls, *args, **kwargs):
         """
-        This method implements the creation of a `ListSerializer` parent
-        class when `many=True` is used. You can customize it if you need to
-        control which keyword arguments are passed to the parent, and
-        which are passed to the child.
+        当使用“ many = True”时，此方法实现“ ListSerializer”父类的创建。
+        如果需要控制哪些关键字参数传递给父级，哪些关键字参数传递给子级，则可以自定义它。
 
-        Note that we're over-cautious in passing most arguments to both parent
-        and child classes in order to try to cover the general case. If you're
-        overriding this method you'll probably want something much simpler, eg:
+       请注意，我们过分谨慎地将大多数参数传递给父类和子类，以尝试涵盖一般情况。如果您要重写此方法，则可能需要更简单的方法，例如：
 
         @classmethod
         def many_init(cls, *args, **kwargs):
@@ -177,7 +171,7 @@ class BaseSerializer(Field):
             'You cannot call `.save()` on a serializer with invalid data.'
         )
 
-        # Guard against incorrect use of `serializer.save(commit=False)`
+        # 防止错误使用`serializer.save（commit = False）`
         assert 'commit' not in kwargs, (
             "'commit' is not a valid keyword argument to the 'save()' method. "
             "If you need to access data before committing to the database then "
@@ -279,11 +273,8 @@ class BaseSerializer(Field):
 
 class SerializerMetaclass(type):
     """
-    This metaclass sets a dictionary named `_declared_fields` on the class.
-
-    Any instances of `Field` included as attributes on either the class
-    or on any of its superclasses will be include in the
-    `_declared_fields` dictionary.
+    这个元类在类上设置了一个名为`_declared_fields`的字典。
+    在类或其任何超类中作为属性包括的任何Field实例都将包含在_declared_fields字典中。
     """
 
     @classmethod
@@ -293,9 +284,7 @@ class SerializerMetaclass(type):
                   if isinstance(obj, Field)]
         fields.sort(key=lambda x: x[1]._creation_counter)
 
-        # If this class is subclassing another Serializer, add that Serializer's
-        # fields.  Note that we loop over the bases in *reverse*. This is necessary
-        # in order to maintain the correct order of fields.
+        # 如果此类是另一个序列化器的子类，请添加该序列化器的字段。请注意，我们在* reverse *中遍历了碱基。 是必要的，以便维护字段的正确顺序。
         for base in reversed(bases):
             if hasattr(base, '_declared_fields'):
                 fields = [
@@ -320,18 +309,17 @@ def as_serializer_error(exc):
         detail = exc.detail
 
     if isinstance(detail, Mapping):
-        # If errors may be a dict we use the standard {key: list of values}.
-        # Here we ensure that all the values are *lists* of errors.
+        # 如果错误可能是决定因素，我们将使用标准的{key：值列表}。 在这里，我们确保所有值都是错误列表。
         return {
             key: value if isinstance(value, (list, Mapping)) else [value]
             for key, value in detail.items()
         }
     elif isinstance(detail, list):
-        # Errors raised as a list are non-field errors.
+        # 列出的错误是非字段错误。
         return {
             api_settings.NON_FIELD_ERRORS_KEY: detail
         }
-    # Errors raised as a string are non-field errors.
+    # 作为字符串引发的错误是非字段错误。
     return {
         api_settings.NON_FIELD_ERRORS_KEY: [detail]
     }
@@ -345,11 +333,9 @@ class Serializer(BaseSerializer, metaclass=SerializerMetaclass):
     @cached_property
     def fields(self):
         """
-        A dictionary of {field_name: field_instance}.
+        {field_name：field_instance}的字典。
         """
-        # `fields` is evaluated lazily. We do this to ensure that we don't
-        # have issues importing modules that use ModelSerializers as fields,
-        # even if Django's app-loading stage has not yet run.
+        # 字段被懒惰地评估。我们这样做是为了确保在Django应用加载阶段尚未运行的情况下，导入将ModelSerializers用作字段的模块时不会出现问题。
         fields = BindingDict(self)
         for key, value in self.get_fields().items():
             fields[key] = value
@@ -369,25 +355,23 @@ class Serializer(BaseSerializer, metaclass=SerializerMetaclass):
 
     def get_fields(self):
         """
-        Returns a dictionary of {field_name: field_instance}.
+        返回{field_name：field_instance}的字典。
         """
-        # Every new serializer is created with a clone of the field instances.
-        # This allows users to dynamically modify the fields on a serializer
-        # instance without affecting every other serializer instance.
+        # 每个新的序列化程序都是使用字段实例的克隆创建的。 这允许用户动态修改序列化程序实例上的字段，而不会影响其他所有序列化程序实例。
         return copy.deepcopy(self._declared_fields)
 
     def get_validators(self):
         """
-        Returns a list of validator callables.
+        返回验证器可调用项的列表。
         """
-        # Used by the lazily-evaluated `validators` property.
+        # 由惰性评估的“验证器”属性使用。
         meta = getattr(self, 'Meta', None)
         validators = getattr(meta, 'validators', None)
         return list(validators) if validators else []
 
     def get_initial(self):
         if hasattr(self, 'initial_data'):
-            # initial_data may not be a valid type
+            # initial_data可能不是有效的类型
             if not isinstance(self.initial_data, Mapping):
                 return OrderedDict()
 
@@ -831,19 +815,15 @@ def raise_errors_on_nested_writes(method_name, serializer, validated_data):
 
 class ModelSerializer(Serializer):
     """
-    A `ModelSerializer` is just a regular `Serializer`, except that:
+    `ModelSerializer`只是普通的`Serializer`，除了：
 
-    * A set of default fields are automatically populated.
-    * A set of default validators are automatically populated.
-    * Default `.create()` and `.update()` implementations are provided.
+    *将自动填充一组默认字段。 
+    *将自动填充一组默认验证器。 
+    *提供了默认的.create（）和.update（）实现。
 
-    The process of automatically determining a set of serializer fields
-    based on the model fields is reasonably complex, but you almost certainly
-    don't need to dig into the implementation.
+    根据模型字段自动确定一组序列化程序字段的过程相当复杂，但是几乎可以肯定，您无需深入研究实现。
 
-    If the `ModelSerializer` class *doesn't* generate the set of fields that
-    you need you should either declare the extra/differing fields explicitly on
-    the serializer class, or simply use a `Serializer` class.
+    如果ModelSerializer类没有生成所需的字段集，则应该在序列化器类上显式声明多余/不同的字段，或者只使用Serializer类。
     """
     serializer_field_mapping = {
         models.AutoField: IntegerField,
@@ -878,13 +858,8 @@ class ModelSerializer(Serializer):
     serializer_url_field = HyperlinkedIdentityField
     serializer_choice_field = ChoiceField
 
-    # The field name for hyperlinked identity fields. Defaults to 'url'.
-    # You can modify this using the API setting.
-    #
-    # Note that if you instead need modify this on a per-serializer basis,
-    # you'll also need to ensure you update the `create` method on any generic
-    # views, to correctly handle the 'Location' response header for
-    # "HTTP 201 Created" responses.
+    # 超链接标识字段的字段名称。默认为“ url”。 您可以使用API​​设置对此进行修改。
+    # 请注意，如果您需要逐个序列化程序进行修改，则您还需要确保在任何通用＃视图上更新`create`方法，以正确处理“ HTTP 201已创建”响应。
     url_field_name = None
 
     # Default `create` and `update` behavior...
@@ -913,9 +888,7 @@ class ModelSerializer(Serializer):
 
         ModelClass = self.Meta.model
 
-        # Remove many-to-many relationships from validated_data.
-        # They are not valid arguments to the default `.create()` method,
-        # as they require that the instance has already been saved.
+        # 从validated_data中删除多对多关系。 它们不是默认`.create（）`方法的有效参数，因为它们要求实例已经保存。
         info = model_meta.get_field_info(ModelClass)
         many_to_many = {}
         for field_name, relation_info in info.relations.items():
@@ -1510,8 +1483,7 @@ class ModelSerializer(Serializer):
             if (field.read_only) and (field.default != empty) and (field.source != '*') and ('.' not in field.source)
         }
 
-        # Note that we make sure to check `unique_together` both on the
-        # base model class, but also on any parent classes.
+        # 注意，我们确保在基本模型类上以及所有父类上都检查了“ unique_together”。
         validators = []
         for parent_class in model_class_inheritance_tree:
             for unique_together in parent_class._meta.unique_together:
@@ -1525,7 +1497,7 @@ class ModelSerializer(Serializer):
 
     def get_unique_for_date_validators(self):
         """
-        Determine a default set of validators for the following constraints:
+       为以下约束确定一组默认的验证器：
 
         * unique_for_date
         * unique_for_month
@@ -1568,7 +1540,7 @@ class ModelSerializer(Serializer):
 if hasattr(models, 'UUIDField'):
     ModelSerializer.serializer_field_mapping[models.UUIDField] = UUIDField
 
-# IPAddressField is deprecated in Django
+# IPAddressField在Django中已弃用
 if hasattr(models, 'IPAddressField'):
     ModelSerializer.serializer_field_mapping[models.IPAddressField] = IPAddressField
 
@@ -1580,18 +1552,15 @@ if postgres_fields:
 
 class HyperlinkedModelSerializer(ModelSerializer):
     """
-    A type of `ModelSerializer` that uses hyperlinked relationships instead
-    of primary key relationships. Specifically:
+    一种ModelSerializer，它使用超链接关系而不是主键关系。特别：
 
-    * A 'url' field is included instead of the 'id' field.
-    * Relationships to other instances are hyperlinks, instead of primary keys.
+    *包括“ URL”字段而不是“ id”字段。 *与其他实例的关系是超链接，而不是主键。
     """
     serializer_related_field = HyperlinkedRelatedField
 
     def get_default_field_names(self, declared_fields, model_info):
         """
-        Return the default list of field names that will be used if the
-        `Meta.fields` option is not specified.
+        返回默认的字段名列表，如果未指定`Meta.fields`选项，则将使用该字段名。
         """
         return (
                 [self.url_field_name] +
@@ -1602,7 +1571,7 @@ class HyperlinkedModelSerializer(ModelSerializer):
 
     def build_nested_field(self, field_name, relation_info, nested_depth):
         """
-        Create nested fields for forward and reverse relationships.
+        为正向和反向关系创建嵌套字段。
         """
 
         class NestedSerializer(HyperlinkedModelSerializer):

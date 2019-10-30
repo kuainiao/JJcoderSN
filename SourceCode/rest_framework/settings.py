@@ -1,6 +1,6 @@
 """
-Settings for REST framework are all namespaced in the REST_FRAMEWORK setting.
-For example your project's `settings.py` file might look like this:
+REST框架的设置都在REST_FRAMEWORK设置中命名空间。
+例如，您项目的“ settings.py”文件可能如下所示：
 
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
@@ -14,9 +14,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-This module provides the `api_setting` object, that is used to access
-REST framework settings, checking for user settings first, then falling
-back to the defaults.
+该模块提供了api_setting对象，该对象用于访问REST框架设置，先检查用户设置，然后检查返回默认值。
 """
 from django.conf import settings
 from django.test.signals import setting_changed
@@ -25,7 +23,7 @@ from django.utils.module_loading import import_string
 from rest_framework import ISO_8601
 
 DEFAULTS = {
-    # Base API policies
+    # 基本API政策
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
@@ -47,7 +45,7 @@ DEFAULTS = {
     'DEFAULT_METADATA_CLASS': 'rest_framework.metadata.SimpleMetadata',
     'DEFAULT_VERSIONING_CLASS': None,
 
-    # Generic view behavior
+    # 通用视图行为
     'DEFAULT_PAGINATION_CLASS': None,
     'DEFAULT_FILTER_BACKENDS': [],
 
@@ -126,8 +124,7 @@ DEFAULTS = {
     },
 }
 
-
-# List of settings that may be in string import notation.
+# 可能以字符串导入符号表示的设置列表。
 IMPORT_STRINGS = [
     'DEFAULT_RENDERER_CLASSES',
     'DEFAULT_PARSER_CLASSES',
@@ -148,8 +145,7 @@ IMPORT_STRINGS = [
     'VIEW_DESCRIPTION_FUNCTION'
 ]
 
-
-# List of settings that have been removed
+# 已删除的设置列表
 REMOVED_SETTINGS = [
     'PAGINATE_BY', 'PAGINATE_BY_PARAM', 'MAX_PAGINATE_BY',
 ]
@@ -157,8 +153,7 @@ REMOVED_SETTINGS = [
 
 def perform_import(val, setting_name):
     """
-    If the given setting is a string import notation,
-    then perform the necessary import or imports.
+    如果给定的设置是字符串导入符号，则执行必要的导入。
     """
     if val is None:
         return None
@@ -171,7 +166,7 @@ def perform_import(val, setting_name):
 
 def import_from_string(val, setting_name):
     """
-    Attempt to import a class from a string representation.
+    尝试从字符串表示形式导入类。
     """
     try:
         return import_string(val)
@@ -182,15 +177,14 @@ def import_from_string(val, setting_name):
 
 class APISettings:
     """
-    A settings object, that allows API settings to be accessed as properties.
+    设置对象，允许将API设置作为属性访问。
     For example:
 
         from rest_framework.settings import api_settings
         print(api_settings.DEFAULT_RENDERER_CLASSES)
-
-    Any setting with string import paths will be automatically resolved
-    and return the class, rather than the string literal.
+   具有字符串导入路径的任何设置都将自动解析并返回类，而不是字符串文字。
     """
+
     def __init__(self, user_settings=None, defaults=None, import_strings=None):
         if user_settings:
             self._user_settings = self.__check_user_settings(user_settings)
@@ -209,17 +203,17 @@ class APISettings:
             raise AttributeError("Invalid API setting: '%s'" % attr)
 
         try:
-            # Check if present in user settings
+            # 检查用户设置中是否存在
             val = self.user_settings[attr]
         except KeyError:
-            # Fall back to defaults
+            # 退回默认值
             val = self.defaults[attr]
 
-        # Coerce import strings into classes
+        # 强制将字符串导入类
         if attr in self.import_strings:
             val = perform_import(val, attr)
 
-        # Cache the result
+        # 缓存结果
         self._cached_attrs.add(attr)
         setattr(self, attr, val)
         return val
@@ -228,7 +222,8 @@ class APISettings:
         SETTINGS_DOC = "https://www.django-rest-framework.org/api-guide/settings/"
         for setting in REMOVED_SETTINGS:
             if setting in user_settings:
-                raise RuntimeError("The '%s' setting has been removed. Please refer to '%s' for available settings." % (setting, SETTINGS_DOC))
+                raise RuntimeError("The '%s' setting has been removed. Please refer to '%s' for available settings." % (
+                setting, SETTINGS_DOC))
         return user_settings
 
     def reload(self):

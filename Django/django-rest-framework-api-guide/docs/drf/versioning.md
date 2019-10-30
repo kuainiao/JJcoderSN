@@ -1,7 +1,3 @@
-> [官方原文链接](http://www.django-rest-framework.org/api-guide/versioning/)  
-
-
-
 
 # 版本控制
 

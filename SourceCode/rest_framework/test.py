@@ -1,5 +1,4 @@
-# Note that we import as `DjangoRequestFactory` and `DjangoClient` in order
-# to make it harder for the user to import the wrong thing without realizing.
+# 请注意，我们依次导入为DjangoRequestFactory和DjangoClient。使用户更难以导入错误的东西而没有意识到。
 import io
 from importlib import import_module
 
@@ -27,6 +26,7 @@ if requests is not None:
         def get_all(self, key, default):
             return self.getheaders(key)
 
+
     class MockOriginalResponse:
         def __init__(self, headers):
             self.msg = HeaderDict(headers)
@@ -38,11 +38,13 @@ if requests is not None:
         def close(self):
             self.closed = True
 
+
     class DjangoTestAdapter(requests.adapters.HTTPAdapter):
         """
         A transport adapter for `requests`, that makes requests via the
         Django WSGI app, rather than making actual HTTP requests over the network.
         """
+
         def __init__(self):
             self.app = WSGIHandler()
             self.factory = DjangoRequestFactory()
@@ -102,6 +104,7 @@ if requests is not None:
         def close(self):
             pass
 
+
     class RequestsClient(requests.Session):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
@@ -111,13 +114,13 @@ if requests is not None:
 
         def request(self, method, url, *args, **kwargs):
             if not url.startswith('http'):
-                raise ValueError('Missing "http:" or "https:". Use a fully qualified URL, eg "http://testserver%s"' % url)
+                raise ValueError(
+                    'Missing "http:" or "https:". Use a fully qualified URL, eg "http://testserver%s"' % url)
             return super().request(method, url, *args, **kwargs)
 
 else:
     def RequestsClient(*args, **kwargs):
         raise ImproperlyConfigured('requests must be installed in order to use RequestsClient.')
-
 
 if coreapi is not None:
     class CoreAPIClient(coreapi.Client):
@@ -371,6 +374,7 @@ class URLPatternsTestCase(testcases.SimpleTestCase):
         def test_something_else(self):
             ...
     """
+
     @classmethod
     def setUpClass(cls):
         # Get the module of the TestCase subclass

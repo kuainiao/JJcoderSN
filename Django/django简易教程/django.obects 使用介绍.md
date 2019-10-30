@@ -24,7 +24,7 @@ ret=UserInfo.objects.filter()
 
 **filter和get类似，但支持更强大的查询功能.**
 
-## [#](http://www.liuwq.com/views/Django/django.objects.html#补充：)补充：
+## 补充：
 
 > 条件选取querySet的时候，filter表示=，exclude表示!=。
 

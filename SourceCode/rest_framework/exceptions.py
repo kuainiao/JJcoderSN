@@ -59,7 +59,7 @@ def _get_full_details(detail):
 
 class ErrorDetail(str):
     """
-    A string-like object that can additionally have a code.
+    类似字符串的对象，可以另外具有代码。
     """
     code = None
 
@@ -90,8 +90,7 @@ class ErrorDetail(str):
 
 class APIException(Exception):
     """
-    Base class for REST framework exceptions.
-    Subclasses should provide `.status_code` and `.default_detail` properties.
+    REST框架异常的基类。子类应提供`.status_code`和`.default_detail`属性。
     """
     status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
     default_detail = _('A server error occurred.')
@@ -110,7 +109,7 @@ class APIException(Exception):
 
     def get_codes(self):
         """
-        Return only the code part of the error details.
+        仅返回错误详细信息的代码部分。
 
         Eg. {"name": ["required"]}
         """
@@ -118,7 +117,7 @@ class APIException(Exception):
 
     def get_full_details(self):
         """
-        Return both the message & code parts of the error details.
+        返回错误详细信息的消息和代码部分。
 
         Eg. {"name": [{"message": "This field is required.", "code": "required"}]}
         """

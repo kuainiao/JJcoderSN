@@ -1,5 +1,5 @@
 """
-Provide urlresolver functions that return fully qualified URLs or view names
+提供urlresolver函数，这些函数返回完全限定的URL或视图名称
 """
 from django.urls import NoReverseMatch
 from django.urls import reverse as django_reverse
@@ -11,8 +11,7 @@ from rest_framework.utils.urls import replace_query_param
 
 def preserve_builtin_query_params(url, request=None):
     """
-    Given an incoming request, and an outgoing URL representation,
-    append the value of any built-in query parameters.
+    给定传入请求和传出URL表示形式，请附加任何内置查询参数的值。
     """
     if request is None:
         return url
@@ -31,17 +30,14 @@ def preserve_builtin_query_params(url, request=None):
 
 def reverse(viewname, args=None, kwargs=None, request=None, format=None, **extra):
     """
-    If versioning is being used then we pass any `reverse` calls through
-    to the versioning scheme instance, so that the resulting URL
-    can be modified if needed.
+    如果正在使用版本控制，那么我们会将所有“反向”调用传递给版本控制方案实例，以便可以根据需要修改生成的URL。
     """
     scheme = getattr(request, 'versioning_scheme', None)
     if scheme is not None:
         try:
             url = scheme.reverse(viewname, args, kwargs, request, format, **extra)
         except NoReverseMatch:
-            # In case the versioning scheme reversal fails, fallback to the
-            # default implementation
+            # 如果版本控制方案失败，请回退到默认的实现
             url = _reverse(viewname, args, kwargs, request, format, **extra)
     else:
         url = _reverse(viewname, args, kwargs, request, format, **extra)
@@ -51,8 +47,7 @@ def reverse(viewname, args=None, kwargs=None, request=None, format=None, **extra
 
 def _reverse(viewname, args=None, kwargs=None, request=None, format=None, **extra):
     """
-    Same as `django.urls.reverse`, but optionally takes a request
-    and returns a fully qualified URL, using the request to get the base URL.
+    与django.urls.reverse相同，但可以选择接受一个请求并返回完全限定的URL，并使用该请求获取基本URL。
     """
     if format is not None:
         kwargs = kwargs or {}

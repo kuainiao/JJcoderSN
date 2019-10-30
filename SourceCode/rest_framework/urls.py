@@ -1,15 +1,14 @@
 """
-Login and logout views for the browsable API.
+可浏览API的登录和注销视图。
 
-Add these to your root URLconf if you're using the browsable API and
-your API requires authentication:
+如果您使用的是可浏览的API，请将这些添加到您的根URLconf中，您的API需要身份验证：
 
     urlpatterns = [
         ...
         url(r'^auth/', include('rest_framework.urls'))
     ]
 
-You should make sure your authentication settings include `SessionAuthentication`.
+您应确保身份验证设置包括“ SessionAuthentication”。
 """
 from django.conf.urls import url
 from django.contrib.auth import views

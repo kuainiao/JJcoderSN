@@ -1,5 +1,5 @@
 """
-Descriptive HTTP status codes, for code readability.
+描述性的HTTP状态代码，以提高代码的可读性。
 
 See RFC 2616 - https://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
 And RFC 6585 - https://tools.ietf.org/html/rfc6585
@@ -7,23 +7,23 @@ And RFC 4918 - https://tools.ietf.org/html/rfc4918
 """
 
 
-def is_informational(code):
+def is_informational(code):  # 临时响应
     return 100 <= code <= 199
 
 
-def is_success(code):
+def is_success(code):  # 客户端请求被成功接收
     return 200 <= code <= 299
 
 
-def is_redirect(code):
+def is_redirect(code):  # 用户代理需要采取进一步行动来完成请求。
     return 300 <= code <= 399
 
 
-def is_client_error(code):
+def is_client_error(code):  # 客户端错误
     return 400 <= code <= 499
 
 
-def is_server_error(code):
+def is_server_error(code):  # 服务器错误
     return 500 <= code <= 599
 
 

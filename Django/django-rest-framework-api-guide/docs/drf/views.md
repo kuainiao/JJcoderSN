@@ -118,8 +118,6 @@ class ListUsers(APIView):
 
 通常不需要重写此方法。
 
-
-
 ## 基于方法的视图
 
 REST framework 也允许使用基于函数的视图。它提供了一套简单的装饰器来包装你的函数视图，以确保它们接收 `Request`（而不是 Django `HttpRequest`）实例并允许它们返回 `Response`（而不是 Django `HttpResponse`），并允许你配置该请求的处理方式。

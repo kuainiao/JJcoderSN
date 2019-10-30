@@ -39,7 +39,7 @@ class View:
         """
         # 遍历关键字参数，然后将其值保存到我们的实例中，或者引发错误。
         for key, value in kwargs.items():
-            setattr(self, key, value)
+            setattr(self, key, value)  # 将键和值保存到self中
 
     @classonlymethod
     def as_view(cls, **initkwargs):
@@ -52,7 +52,7 @@ class View:
             if not hasattr(cls, key):
                 raise TypeError("%s() received an invalid keyword %r. as_view "
                                 "only accepts arguments that are already "
-                                "attributes of the class." % (cls.__name__, key))
+                                "attributes of the class." % (cls.__name__, key))  # 上面这两个报错还不太懂
 
         def view(request, *args, **kwargs):
             self = cls(**initkwargs)
@@ -64,7 +64,7 @@ class View:
                     "%s instance has no 'request' attribute. Did you override "
                     "setup() and forget to call super()?" % cls.__name__
                 )
-            return self.dispatch(request, *args, **kwargs)
+            return self.dispatch(request, *args, **kwargs)  # 这里调用了dispatch方法
 
         view.view_class = cls
         view.view_initkwargs = initkwargs
@@ -74,7 +74,7 @@ class View:
 
         # 以及由装饰器设置的可能属性，例如csrf_exempt from dispatch
         update_wrapper(view, cls.dispatch, assigned=())
-        return view
+        return view  # 返回一个view
 
     def setup(self, request, *args, **kwargs):
         """初始化所有视图方法共享的属性。"""
@@ -86,6 +86,7 @@ class View:
         # 尝试调度正确的方法；如果不存在方法，则转到错误处理程序。如果request方法不在批准列表中，则也应遵循错误处理程序。
         if request.method.lower() in self.http_method_names:
             handler = getattr(self, request.method.lower(), self.http_method_not_allowed)
+        # 看self中是否有http_method_names中的属性，如果有则handler=request.method.lower(),否则调用self.http_method_not_allowed
         else:
             handler = self.http_method_not_allowed
         return handler(request, *args, **kwargs)
@@ -94,7 +95,7 @@ class View:
         logger.warning(
             'Method Not Allowed (%s): %s', request.method, request.path,
             extra={'status_code': 405, 'request': request}
-        )
+        )  # 打印日志报错信息，级别是warning，status_code是405：方法禁用 禁用请求中指定的方法。
         return HttpResponseNotAllowed(self._allowed_methods())
 
     def options(self, request, *args, **kwargs):
@@ -139,7 +140,7 @@ class TemplateResponseMixin:
                 "TemplateResponseMixin requires either a definition of "
                 "'template_name' or an implementation of 'get_template_names()'")
         else:
-            return [self.template_name]
+            return [self.template_name]  # 必须返回一个列表
 
 
 class TemplateView(TemplateResponseMixin, ContextMixin, View):

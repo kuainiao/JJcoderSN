@@ -47,8 +47,7 @@ class AcceptHeaderVersioning(BaseVersioning):
             raise exceptions.NotAcceptable(self.invalid_version_message)
         return version
 
-    # We don't need to implement `reverse`, as the versioning is based
-    # on the `Accept` header, not on the request URL.
+    # 我们不需要实现`reverse`，因为版本控制基于Accept标头，而不是基于请求URL。
 
 
 class URLPathVersioning(BaseVersioning):
@@ -88,11 +87,9 @@ class URLPathVersioning(BaseVersioning):
 
 class NamespaceVersioning(BaseVersioning):
     """
-    To the client this is the same style as `URLPathVersioning`.
-    The difference is in the backend - this implementation uses
-    Django's URL namespaces to determine the version.
+    对客户端来说，这与“ URLPathVersioning”的样式相同。区别在于后端-此实现使用Django的URL名称空间确定版本。
 
-    An example URL conf that is namespaced into two separate versions
+   URL conf示例，它被命名为两个单独的版本
 
     # users/urls.py
     urlpatterns = [
@@ -117,7 +114,7 @@ class NamespaceVersioning(BaseVersioning):
         if resolver_match is None or not resolver_match.namespace:
             return self.default_version
 
-        # Allow for possibly nested namespaces.
+        # 允许可能的嵌套名称空间。
         possible_versions = resolver_match.namespace.split(':')
         for version in possible_versions:
             if self.is_allowed_version(version):
@@ -154,8 +151,7 @@ class HostNameVersioning(BaseVersioning):
             raise exceptions.NotFound(self.invalid_version_message)
         return version
 
-    # We don't need to implement `reverse`, as the hostname will already be
-    # preserved as part of the REST framework `reverse` implementation.
+    # 我们不需要实现`reverse`，因为主机名已经被保存为REST框架`reverse`实现的一部分。
 
 
 class QueryParameterVersioning(BaseVersioning):

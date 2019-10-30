@@ -1,5 +1,3 @@
-# [vue开发看这篇文章就够了](https://segmentfault.com/a/1190000012692321)
-
 # Vue -渐进式JavaScript框架
 
 ## 介绍
@@ -75,7 +73,7 @@
 
 - 安装：`npm i -S vue`
 
-```
+```vue
 <!-- 指定vue管理内容区域，需要通过vue展示的内容都要放到找个元素中  通常我们也把它叫做边界 数据只在边界内部解析-->
 <div id="app">{{ msg }}</div>
 
@@ -100,7 +98,7 @@
 - 注意 1：**先在data中声明数据，再使用数据**
 - 注意 2：可以通过 `vm.$data` 访问到data中的所有属性，或者 `vm.msg`
 
-```
+```vue
 var vm = new Vue({
   data: {
     msg: '大家好，...'
@@ -118,7 +116,7 @@ vm.$data.msg === vm.msg // true
 - 说明：`{{}}`中只能出现JavaScript表达式 而不能解析js语句
 - 注意：**Mustache 语法不能作用在 HTML 元素的属性上**
 
-```
+```vue
 <h1>Hello, {{ msg }}.</h1>
 <p>{{ 1 + 2 }}</p>
 <p>{{ isOk ? 'yes': 'no' }}</p>
@@ -132,13 +130,142 @@ vm.$data.msg === vm.msg // true
 - 双向数据绑定：将DOM与Vue实例的data数据绑定到一起，彼此之间相互影响
     - 数据的改变会引起DOM的改变
     - DOM的改变也会引起数据的变化
+    
 - 原理：`Object.defineProperty`中的`get`和`set`方法
     - `getter`和`setter`：访问器
     - 作用：指定`读取或设置`对象属性值的时候，执行的操作
-- [Vue - 深入响应式原理](https://cn.vuejs.org/v2/guide/reactivity.html)
+    
+    # 深入响应式原理
+    
+    现在是时候深入一下了！Vue 最独特的特性之一，是其`非侵入性`的`响应式`系统。数据模型仅仅是普通的 JavaScript 对象。而当你修改它们时，视图会进行更新。这使得状态管理非常简单直接，不过理解其工作原理同样重要，这样你可以避开一些常见的问题。在这个章节，我们将研究一下 Vue 响应式系统的底层的细节。
+    
+    ## 如何追踪变化
+    
+    当你把一个普通的 JavaScript 对象传入 Vue 实例作为 `data` 选项，Vue 将遍历此对象所有的属性，并使用 [`Object.defineProperty`](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty) 把这些属性全部转为 [getter/setter](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Working_with_Objects#定义_getters_与_setters)。`Object.defineProperty` 是 ES5 中一个无法 shim 的特性，这也就是 Vue 不支持 IE8 以及更低版本浏览器的原因。
+    
+    这些 getter/setter 对用户来说是不可见的，但是在内部它们让 Vue 能够追踪依赖，在属性被访问和修改时通知变更。这里需要注意的是不同浏览器在控制台打印数据对象时对 getter/setter 的格式化并不同，所以建议安装 [vue-devtools](https://github.com/vuejs/vue-devtools) 来获取对检查数据更加友好的用户界面。
+    
+    每个组件实例都对应一个 **watcher** 实例，它会在组件渲染的过程中把“接触”过的数据属性记录为依赖。之后当依赖项的 setter 触发时，会通知 watcher，从而使它关联的组件重新渲染。
+    
+    ![data](Vue%E7%9C%8B%E8%BF%99%E7%AF%87%E5%B0%B1%E5%A4%9F%E4%BA%86.assets/data.png)
+    
+    ## 检测变化的注意事项
+    
+    受现代 JavaScript 的限制 (而且 `Object.observe` 也已经被废弃)，Vue **无法检测到对象属性的添加或删除**。由于 Vue 会在初始化实例时对属性执行 getter/setter 转化，所以属性必须在 `data` 对象上存在才能让 Vue 将它转换为响应式的。例如：
+    
+    ```vue
+    var vm = new Vue({
+      data:{
+        a:1
+      }
+    })
+    
+    // `vm.a` 是响应式的
+    
+    vm.b = 2
+    // `vm.b` 是非响应式的
+    ```
+    
+    对于已经创建的实例，Vue 不允许动态添加根级别的响应式属性。但是，可以使用 `Vue.set(object, propertyName, value)` 方法向嵌套对象添加响应式属性。例如，对于：
+    
+    ```
+    Vue.set(vm.someObject, 'b', 2)
+    ```
+    
+    您还可以使用 `vm.$set` 实例方法，这也是全局 `Vue.set` 方法的别名：
+    
+    ```
+    this.$set(this.someObject,'b',2)
+    ```
+    
+    有时你可能需要为已有对象赋值多个新属性，比如使用 `Object.assign()` 或 `_.extend()`。但是，这样添加到对象上的新属性不会触发更新。在这种情况下，你应该用原对象与要混合进去的对象的属性一起创建一个新的对象。
+    
+    ```
+    // 代替 `Object.assign(this.someObject, { a: 1, b: 2 })`
+    this.someObject = Object.assign({}, this.someObject, { a: 1, b: 2 })
+    ```
+    
+    也有一些数组相关的注意事项，之前已经在[列表渲染](https://cn.vuejs.org/v2/guide/list.html#注意事项)中讲过。
+    
+    ## [声明响应式属性](https://cn.vuejs.org/v2/guide/reactivity.html#声明响应式属性)
+    
+    由于 Vue 不允许动态添加根级响应式属性，所以你必须在初始化实例前声明所有根级响应式属性，哪怕只是一个空值：
+    
+    ```
+    var vm = new Vue({
+      data: {
+        // 声明 message 为一个空值字符串
+        message: ''
+      },
+      template: '<div>{{ message }}</div>'
+    })
+    // 之后设置 `message`
+    vm.message = 'Hello!'
+    ```
+    
+    如果你未在 `data` 选项中声明 `message`，Vue 将警告你渲染函数正在试图访问不存在的属性。
+    
+    这样的限制在背后是有其技术原因的，它消除了在依赖项跟踪系统中的一类边界情况，也使 Vue 实例能更好地配合类型检查系统工作。但与此同时在代码可维护性方面也有一点重要的考虑：`data` 对象就像组件状态的结构 (schema)。提前声明所有的响应式属性，可以让组件代码在未来修改或给其他开发人员阅读时更易于理解。
+    
+    ## [异步更新队列](https://cn.vuejs.org/v2/guide/reactivity.html#异步更新队列)
+    
+    可能你还没有注意到，Vue 在更新 DOM 时是**异步**执行的。只要侦听到数据变化，Vue 将开启一个队列，并缓冲在同一事件循环中发生的所有数据变更。如果同一个 watcher 被多次触发，只会被推入到队列中一次。这种在缓冲时去除重复数据对于避免不必要的计算和 DOM 操作是非常重要的。然后，在下一个的事件循环“tick”中，Vue 刷新队列并执行实际 (已去重的) 工作。Vue 在内部对异步队列尝试使用原生的 `Promise.then`、`MutationObserver` 和 `setImmediate`，如果执行环境不支持，则会采用 `setTimeout(fn, 0)` 代替。
+    
+    例如，当你设置 `vm.someData = 'new value'`，该组件不会立即重新渲染。当刷新队列时，组件会在下一个事件循环“tick”中更新。多数情况我们不需要关心这个过程，但是如果你想基于更新后的 DOM 状态来做点什么，这就可能会有些棘手。虽然 Vue.js 通常鼓励开发人员使用“数据驱动”的方式思考，避免直接接触 DOM，但是有时我们必须要这么做。为了在数据变化之后等待 Vue 完成更新 DOM，可以在数据变化之后立即使用 `Vue.nextTick(callback)`。这样回调函数将在 DOM 更新完成后被调用。例如：
+    
+    ```
+    <div id="example">{{message}}</div>
+    var vm = new Vue({
+      el: '#example',
+      data: {
+        message: '123'
+      }
+    })
+    vm.message = 'new message' // 更改数据
+    vm.$el.textContent === 'new message' // false
+    Vue.nextTick(function () {
+      vm.$el.textContent === 'new message' // true
+    })
+    ```
+    
+    在组件内使用 `vm.$nextTick()` 实例方法特别方便，因为它不需要全局 `Vue`，并且回调函数中的 `this` 将自动绑定到当前的 Vue 实例上：
+    
+    ```
+    Vue.component('example', {
+      template: '<span>{{ message }}</span>',
+      data: function () {
+        return {
+          message: '未更新'
+        }
+      },
+      methods: {
+        updateMessage: function () {
+          this.message = '已更新'
+          console.log(this.$el.textContent) // => '未更新'
+          this.$nextTick(function () {
+            console.log(this.$el.textContent) // => '已更新'
+          })
+        }
+      }
+    })
+    ```
+    
+    因为 `$nextTick()` 返回一个 `Promise` 对象，所以你可以使用新的 [ES2017 async/await](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Statements/async_function) 语法完成相同的事情：
+    
+    ```
+    methods: {
+      updateMessage: async function () {
+        this.message = '已更新'
+        console.log(this.$el.textContent) // => '未更新'
+        await this.$nextTick()
+        console.log(this.$el.textContent) // => '已更新'
+      }
+    }
+    ```
+    
 - [MDN - Object.defineProperty()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
 
-```
+```vue
 /*  defineProperty语法 介绍 */
 var obj = {}
 Object.defineProperty(obj, 'msg', {
@@ -153,7 +280,7 @@ Object.defineProperty(obj, 'msg', {
 
 - [剖析Vue原理&实现双向绑定MVVM](https://segmentfault.com/a/1190000006599500)
 
-```
+```html
 <!-- 示例 -->
 <input type="text" id="txt" />
 <span id="sp"></span>
@@ -179,6 +306,407 @@ txt.addEventListener('keyup', function (event) {
 })
 </script>
 ```
+
+# 剖析Vue原理&实现双向绑定MVVM
+
+> 本文能帮你做什么？
+> 1、了解vue的双向数据绑定原理以及核心代码模块
+> 2、缓解好奇心的同时了解如何实现双向绑定
+> 为了便于说明原理与实现，本文相关代码主要摘自[vue源码](https://github.com/vuejs/vue), 并进行了简化改造，相对较简陋，并未考虑到数组的处理、数据的循环依赖等，也难免存在一些问题，欢迎大家指正。不过这些并不会影响大家的阅读和理解，相信看完本文后对大家在阅读vue源码的时候会更有帮助<
+> 本文所有相关代码均在github上面可找到 https://github.com/DMQ/mvvm
+
+**相信大家对mvvm双向绑定应该都不陌生了，一言不合上代码，下面先看一个本文最终实现的效果吧，和vue一样的语法，如果还不了解双向绑定，猛戳[Google](https://www.google.com.hk/search?q=双向绑定)**
+
+```
+<div id="mvvm-app">
+    <input type="text" v-model="word">
+    <p>{{word}}</p>
+    <button v-on:click="sayHi">change model</button>
+</div>
+
+<script src="./js/observer.js"></script>
+<script src="./js/watcher.js"></script>
+<script src="./js/compile.js"></script>
+<script src="./js/mvvm.js"></script>
+<script>
+    var vm = new MVVM({
+        el: '#mvvm-app',
+        data: {
+            word: 'Hello World!'
+        },
+        methods: {
+            sayHi: function() {
+                this.word = 'Hi, everybody!';
+            }
+        }
+    });
+</script>
+```
+
+效果：
+![图片描述](Vue%E7%9C%8B%E8%BF%99%E7%AF%87%E5%B0%B1%E5%A4%9F%E4%BA%86.assets/18548400-57b310ab653d7_articlex.gif)
+
+### 几种实现双向绑定的做法
+
+目前几种主流的mvc(vm)框架都实现了单向数据绑定，而我所理解的双向数据绑定无非就是在单向绑定的基础上给可输入元素（input、textare等）添加了change(input)事件，来动态修改model和 view，并没有多高深。所以无需太过介怀是实现的单向或双向绑定。
+
+实现数据绑定的做法有大致如下几种：
+
+> 发布者-订阅者模式（backbone.js）
+>
+> 脏值检查（angular.js）
+>
+> 数据劫持（vue.js）
+
+**发布者-订阅者模式:** 一般通过sub, pub的方式实现数据和视图的绑定监听，更新数据方式通常做法是 `vm.set('property', value)`，这里有篇文章讲的比较详细，有兴趣可点[这里](http://www.html-js.com/article/Study-of-twoway-data-binding-JavaScript-talk-about-JavaScript-every-day)
+
+这种方式现在毕竟太low了，我们更希望通过 `vm.property = value `这种方式更新数据，同时自动更新视图，于是有了下面两种方式
+
+**脏值检查:** angular.js 是通过脏值检测的方式比对数据是否有变更，来决定是否更新视图，最简单的方式就是通过 `setInterval()` 定时轮询检测数据变动，当然Google不会这么low，angular只有在指定的事件触发时进入脏值检测，大致如下：
+
+- DOM事件，譬如用户输入文本，点击按钮等。( ng-click )
+- XHR响应事件 ( $http )
+- 浏览器Location变更事件 ( $location )
+- Timer事件( $timeout , $interval )
+- 执行 $digest() 或 $apply()
+
+**数据劫持:** vue.js 则是采用数据劫持结合发布者-订阅者模式的方式，通过`Object.defineProperty()`来劫持各个属性的`setter`，`getter`，在数据变动时发布消息给订阅者，触发相应的监听回调。
+
+### 思路整理
+
+已经了解到vue是通过数据劫持的方式来做数据绑定的，其中最核心的方法便是通过`Object.defineProperty()`来实现对属性的劫持，达到监听数据变动的目的，无疑这个方法是本文中最重要、最基础的内容之一，如果不熟悉defineProperty，猛戳[这里](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/defineProperty)
+整理了一下，要实现mvvm的双向绑定，就必须要实现以下几点：
+1、实现一个数据监听器Observer，能够对数据对象的所有属性进行监听，如有变动可拿到最新值并通知订阅者
+2、实现一个指令解析器Compile，对每个元素节点的指令进行扫描和解析，根据指令模板替换数据，以及绑定相应的更新函数
+3、实现一个Watcher，作为连接Observer和Compile的桥梁，能够订阅并收到每个属性变动的通知，执行指令绑定的相应回调函数，从而更新视图
+4、mvvm入口函数，整合以上三者
+
+上述流程如图所示：
+![图片描述](Vue%E7%9C%8B%E8%BF%99%E7%AF%87%E5%B0%B1%E5%A4%9F%E4%BA%86.assets/132184689-57b310ea1804f_articlex.png)
+
+### 1、实现Observer
+
+ok, 思路已经整理完毕，也已经比较明确相关逻辑和模块功能了，let's do it
+我们知道可以利用`Obeject.defineProperty()`来监听属性变动
+那么将需要observe的数据对象进行递归遍历，包括子属性对象的属性，都加上 `setter`和`getter`
+这样的话，给这个对象的某个值赋值，就会触发`setter`，那么就能监听到了数据变化。。相关代码可以是这样：
+
+```
+var data = {name: 'kindeng'};
+observe(data);
+data.name = 'dmq'; // 哈哈哈，监听到值变化了 kindeng --> dmq
+
+function observe(data) {
+    if (!data || typeof data !== 'object') {
+        return;
+    }
+    // 取出所有属性遍历
+    Object.keys(data).forEach(function(key) {
+        defineReactive(data, key, data[key]);
+    });
+};
+
+function defineReactive(data, key, val) {
+    observe(val); // 监听子属性
+    Object.defineProperty(data, key, {
+        enumerable: true, // 可枚举
+        configurable: false, // 不能再define
+        get: function() {
+            return val;
+        },
+        set: function(newVal) {
+            console.log('哈哈哈，监听到值变化了 ', val, ' --> ', newVal);
+            val = newVal;
+        }
+    });
+}
+```
+
+这样我们已经可以监听每个数据的变化了，那么监听到变化之后就是怎么通知订阅者了，所以接下来我们需要实现一个消息订阅器，很简单，维护一个数组，用来收集订阅者，数据变动触发notify，再调用订阅者的update方法，代码改善之后是这样：
+
+```
+// ... 省略
+function defineReactive(data, key, val) {
+    var dep = new Dep();
+    observe(val); // 监听子属性
+
+    Object.defineProperty(data, key, {
+        // ... 省略
+        set: function(newVal) {
+            if (val === newVal) return;
+            console.log('哈哈哈，监听到值变化了 ', val, ' --> ', newVal);
+            val = newVal;
+            dep.notify(); // 通知所有订阅者
+        }
+    });
+}
+
+function Dep() {
+    this.subs = [];
+}
+Dep.prototype = {
+    addSub: function(sub) {
+        this.subs.push(sub);
+    },
+    notify: function() {
+        this.subs.forEach(function(sub) {
+            sub.update();
+        });
+    }
+};
+```
+
+那么问题来了，谁是订阅者？怎么往订阅器添加订阅者？
+没错，上面的思路整理中我们已经明确订阅者应该是Watcher, 而且`var dep = new Dep();`是在 `defineReactive`方法内部定义的，所以想通过`dep`添加订阅者，就必须要在闭包内操作，所以我们可以在 `getter`里面动手脚：
+
+```
+// Observer.js
+// ...省略
+Object.defineProperty(data, key, {
+    get: function() {
+        // 由于需要在闭包内添加watcher，所以通过Dep定义一个全局target属性，暂存watcher, 添加完移除
+        Dep.target && dep.addSub(Dep.target);
+        return val;
+    }
+    // ... 省略
+});
+
+// Watcher.js
+Watcher.prototype = {
+    get: function(key) {
+        Dep.target = this;
+        this.value = data[key];    // 这里会触发属性的getter，从而添加订阅者
+        Dep.target = null;
+    }
+}
+```
+
+这里已经实现了一个Observer了，已经具备了监听数据和数据变化通知订阅者的功能，[完整代码](https://github.com/DMQ/mvvm/blob/master/js/observer.js)。那么接下来就是实现Compile了
+
+### 2、实现Compile
+
+compile主要做的事情是解析模板指令，将模板中的变量替换成数据，然后初始化渲染页面视图，并将每个指令对应的节点绑定更新函数，添加监听数据的订阅者，一旦数据有变动，收到通知，更新视图，如图所示：
+![图片描述](Vue%E7%9C%8B%E8%BF%99%E7%AF%87%E5%B0%B1%E5%A4%9F%E4%BA%86.assets/1117380429-57b3110440af0_articlex.png)
+
+因为遍历解析的过程有多次操作dom节点，为提高性能和效率，会先将跟节点`el`转换成文档碎片`fragment`进行解析编译操作，解析完成，再将`fragment`添加回原来的真实dom节点中
+
+```
+function Compile(el) {
+    this.$el = this.isElementNode(el) ? el : document.querySelector(el);
+    if (this.$el) {
+        this.$fragment = this.node2Fragment(this.$el);
+        this.init();
+        this.$el.appendChild(this.$fragment);
+    }
+}
+Compile.prototype = {
+    init: function() { this.compileElement(this.$fragment); },
+    node2Fragment: function(el) {
+        var fragment = document.createDocumentFragment(), child;
+        // 将原生节点拷贝到fragment
+        while (child = el.firstChild) {
+            fragment.appendChild(child);
+        }
+        return fragment;
+    }
+};
+```
+
+compileElement方法将遍历所有节点及其子节点，进行扫描解析编译，调用对应的指令渲染函数进行数据渲染，并调用对应的指令更新函数进行绑定，详看代码及注释说明：
+
+```
+Compile.prototype = {
+    // ... 省略
+    compileElement: function(el) {
+        var childNodes = el.childNodes, me = this;
+        [].slice.call(childNodes).forEach(function(node) {
+            var text = node.textContent;
+            var reg = /\{\{(.*)\}\}/;    // 表达式文本
+            // 按元素节点方式编译
+            if (me.isElementNode(node)) {
+                me.compile(node);
+            } else if (me.isTextNode(node) && reg.test(text)) {
+                me.compileText(node, RegExp.$1);
+            }
+            // 遍历编译子节点
+            if (node.childNodes && node.childNodes.length) {
+                me.compileElement(node);
+            }
+        });
+    },
+
+    compile: function(node) {
+        var nodeAttrs = node.attributes, me = this;
+        [].slice.call(nodeAttrs).forEach(function(attr) {
+            // 规定：指令以 v-xxx 命名
+            // 如 <span v-text="content"></span> 中指令为 v-text
+            var attrName = attr.name;    // v-text
+            if (me.isDirective(attrName)) {
+                var exp = attr.value; // content
+                var dir = attrName.substring(2);    // text
+                if (me.isEventDirective(dir)) {
+                    // 事件指令, 如 v-on:click
+                    compileUtil.eventHandler(node, me.$vm, exp, dir);
+                } else {
+                    // 普通指令
+                    compileUtil[dir] && compileUtil[dir](node, me.$vm, exp);
+                }
+            }
+        });
+    }
+};
+
+// 指令处理集合
+var compileUtil = {
+    text: function(node, vm, exp) {
+        this.bind(node, vm, exp, 'text');
+    },
+    // ...省略
+    bind: function(node, vm, exp, dir) {
+        var updaterFn = updater[dir + 'Updater'];
+        // 第一次初始化视图
+        updaterFn && updaterFn(node, vm[exp]);
+        // 实例化订阅者，此操作会在对应的属性消息订阅器中添加了该订阅者watcher
+        new Watcher(vm, exp, function(value, oldValue) {
+            // 一旦属性值有变化，会收到通知执行此更新函数，更新视图
+            updaterFn && updaterFn(node, value, oldValue);
+        });
+    }
+};
+
+// 更新函数
+var updater = {
+    textUpdater: function(node, value) {
+        node.textContent = typeof value == 'undefined' ? '' : value;
+    }
+    // ...省略
+};
+```
+
+这里通过递归遍历保证了每个节点及子节点都会解析编译到，包括了{{}}表达式声明的文本节点。指令的声明规定是通过特定前缀的节点属性来标记，如`中`v-text`便是指令，而`other-attr`不是指令，只是普通的属性。
+监听数据、绑定更新函数的处理是在`compileUtil.bind()`这个方法中，通过`new Watcher()`添加回调来接收数据变化的通知
+
+至此，一个简单的Compile就完成了，[完整代码](https://github.com/DMQ/mvvm/blob/master/js/compile.js)。接下来要看看Watcher这个订阅者的具体实现了
+
+### 3、实现Watcher
+
+Watcher订阅者作为Observer和Compile之间通信的桥梁，主要做的事情是:
+1、在自身实例化时往属性订阅器(dep)里面添加自己
+2、自身必须有一个update()方法
+3、待属性变动dep.notice()通知时，能调用自身的update()方法，并触发Compile中绑定的回调，则功成身退。
+如果有点乱，可以回顾下前面的思路整理
+
+```
+function Watcher(vm, exp, cb) {
+    this.cb = cb;
+    this.vm = vm;
+    this.exp = exp;
+    // 此处为了触发属性的getter，从而在dep添加自己，结合Observer更易理解
+    this.value = this.get(); 
+}
+Watcher.prototype = {
+    update: function() {
+        this.run();    // 属性值变化收到通知
+    },
+    run: function() {
+        var value = this.get(); // 取到最新值
+        var oldVal = this.value;
+        if (value !== oldVal) {
+            this.value = value;
+            this.cb.call(this.vm, value, oldVal); // 执行Compile中绑定的回调，更新视图
+        }
+    },
+    get: function() {
+        Dep.target = this;    // 将当前订阅者指向自己
+        var value = this.vm[exp];    // 触发getter，添加自己到属性订阅器中
+        Dep.target = null;    // 添加完毕，重置
+        return value;
+    }
+};
+// 这里再次列出Observer和Dep，方便理解
+Object.defineProperty(data, key, {
+    get: function() {
+        // 由于需要在闭包内添加watcher，所以可以在Dep定义一个全局target属性，暂存watcher, 添加完移除
+        Dep.target && dep.addDep(Dep.target);
+        return val;
+    }
+    // ... 省略
+});
+Dep.prototype = {
+    notify: function() {
+        this.subs.forEach(function(sub) {
+            sub.update(); // 调用订阅者的update方法，通知变化
+        });
+    }
+};
+```
+
+实例化`Watcher`的时候，调用`get()`方法，通过`Dep.target = watcherInstance`标记订阅者是当前watcher实例，强行触发属性定义的`getter`方法，`getter`方法执行的时候，就会在属性的订阅器`dep`添加当前watcher实例，从而在属性值有变化的时候，watcherInstance就能收到更新通知。
+
+ok, Watcher也已经实现了，[完整代码](https://github.com/DMQ/mvvm/blob/master/js/watcher.js)。
+基本上vue中数据绑定相关比较核心的几个模块也是这几个，猛戳[这里](https://github.com/vuejs/vue) , 在`src` 目录可找到vue源码。
+
+最后来讲讲MVVM入口文件的相关逻辑和实现吧，相对就比较简单了~
+
+### 4、实现MVVM
+
+MVVM作为数据绑定的入口，整合Observer、Compile和Watcher三者，通过Observer来监听自己的model数据变化，通过Compile来解析编译模板指令，最终利用Watcher搭起Observer和Compile之间的通信桥梁，达到数据变化 -> 视图更新；视图交互变化(input) -> 数据model变更的双向绑定效果。
+
+一个简单的MVVM构造器是这样子：
+
+```
+function MVVM(options) {
+    this.$options = options;
+    var data = this._data = this.$options.data;
+    observe(data, this);
+    this.$compile = new Compile(options.el || document.body, this)
+}
+```
+
+但是这里有个问题，从代码中可看出监听的数据对象是options.data，每次需要更新视图，则必须通过`var vm = new MVVM({data:{name: 'kindeng'}}); vm._data.name = 'dmq'; `这样的方式来改变数据。
+
+显然不符合我们一开始的期望，我们所期望的调用方式应该是这样的：
+`var vm = new MVVM({data: {name: 'kindeng'}}); vm.name = 'dmq';`
+
+所以这里需要给MVVM实例添加一个属性代理的方法，使访问vm的属性代理为访问vm._data的属性，改造后的代码如下：
+
+```
+function MVVM(options) {
+    this.$options = options;
+    var data = this._data = this.$options.data, me = this;
+    // 属性代理，实现 vm.xxx -> vm._data.xxx
+    Object.keys(data).forEach(function(key) {
+        me._proxy(key);
+    });
+    observe(data, this);
+    this.$compile = new Compile(options.el || document.body, this)
+}
+
+MVVM.prototype = {
+    _proxy: function(key) {
+        var me = this;
+        Object.defineProperty(me, key, {
+            configurable: false,
+            enumerable: true,
+            get: function proxyGetter() {
+                return me._data[key];
+            },
+            set: function proxySetter(newVal) {
+                me._data[key] = newVal;
+            }
+        });
+    }
+};
+```
+
+这里主要还是利用了`Object.defineProperty()`这个方法来劫持了vm实例对象的属性的读写权，使读写vm实例的属性转成读写了`vm._data`的属性值，达到鱼目混珠的效果，哈哈
+
+至此，全部模块和功能已经完成了，如本文开头所承诺的两点。一个简单的MVVM模块已经实现，其思想和原理大部分来自经过简化改造的vue[源码](https://github.com/vuejs/vue)，猛戳[这里](https://github.com/DMQ/mvvm)可以看到本文的所有相关代码。
+由于本文内容偏实践，所以代码量较多，且不宜列出大篇幅代码，所以建议想深入了解的童鞋可以再次结合本文源代码来进行阅读，这样会更加容易理解和掌握。
+
+### 总结
+
+本文主要围绕“几种实现双向绑定的做法”、“实现Observer”、“实现Compile”、“实现Watcher”、“实现MVVM”这几个模块来阐述了双向绑定的原理和实现。并根据思路流程渐进梳理讲解了一些细节思路和比较关键的内容点，以及通过展示部分关键代码讲述了怎样一步步实现一个双向绑定MVVM。文中肯定会有一些不够严谨的思考和错误，欢迎大家指正，有兴趣欢迎一起探讨和改进~
 
 ### 动态添加数据的注意点
 

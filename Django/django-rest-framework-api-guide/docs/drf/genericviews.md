@@ -1,5 +1,3 @@
-> [官方原文链接](http://www.django-rest-framework.org/api-guide/generic-views/)
-
 ## 通用视图
 
 基于类的视图的一个主要优点是它们允许你编写可重复使用的行为。 REST framework 通过提供大量预构建视图来提供常用模式，从而充分利用了这一点。

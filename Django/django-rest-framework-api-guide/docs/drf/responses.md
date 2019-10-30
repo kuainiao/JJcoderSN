@@ -1,5 +1,3 @@
-> [官方原文链接](http://www.django-rest-framework.org/api-guide/responses/)
-
 ## Responses
 
 > 与基本的 HttpResponse 对象不同，TemplateResponse 对象保留了视图提供的用于计算响应的上下文的详细信息。直到需要时才会计算最终的响应输出，也就是在后面的响应过程中进行计算。

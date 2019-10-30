@@ -1,5 +1,3 @@
-> [官方原文链接](http://www.django-rest-framework.org/api-guide/status-codes/)  
-
 
 # 状态码
 

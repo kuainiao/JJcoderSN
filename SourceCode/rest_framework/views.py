@@ -21,12 +21,9 @@ from rest_framework.utils import formatting
 
 def get_view_name(view):
     """
-    Given a view instance, return a textual name to represent the view.
-    This name is used in the browsable API, and in OPTIONS responses.
-
-    This function is the default for the `VIEW_NAME_FUNCTION` setting.
+    给定一个视图实例，返回一个文本名称来表示该视图。此名称用于可浏览的API和OPTIONS响应中。此功能是VIEW_NAME_FUNCTION设置的默认设置。
     """
-    # Name may be set by some Views, such as a ViewSet.
+    # 名称可能由某些视图（例如ViewSet）设置。
     name = getattr(view, 'name', None)
     if name is not None:
         return name
@@ -36,7 +33,7 @@ def get_view_name(view):
     name = formatting.remove_trailing_string(name, 'ViewSet')
     name = formatting.camelcase_to_spaces(name)
 
-    # Suffix may be set by some Views, such as a ViewSet.
+    # 后缀可以由某些视图设置，例如ViewSet。
     suffix = getattr(view, 'suffix', None)
     if suffix:
         name += ' ' + suffix
@@ -49,7 +46,7 @@ def get_view_description(view, html=False):
     给定视图实例，返回文本描述以表示视图。此名称用于可浏览的API和OPTIONS响应中。
     此功能是VIEW_DESCRIPTION_FUNCTION设置的默认设置。
     """
-    # Description may be set by some Views, such as a ViewSet.
+    # 描述可能由某些视图（例如ViewSet）设置。
     description = getattr(view, 'description', None)
     if description is None:
         description = view.__class__.__doc__ or ''
@@ -88,14 +85,14 @@ def exception_handler(exc, context):
         else:
             data = {'detail': exc.detail}
 
-        set_rollback()
+        set_rollback() # 调用上面的rollback
         return Response(data, status=exc.status_code, headers=headers)
 
     return None
 
 
 class APIView(View):
-    # The following policies may be set at either globally, or per-view.
+    # T可以在全局或按观看次数设置以下策略。
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
     parser_classes = api_settings.DEFAULT_PARSER_CLASSES
     authentication_classes = api_settings.DEFAULT_AUTHENTICATION_CLASSES
@@ -125,7 +122,7 @@ class APIView(View):
 
             cls.queryset._fetch_all = force_evaluation
 
-        view = super().as_view(**initkwargs)
+        view = super().as_view(**initkwargs) # 调用父类的as_view
         view.cls = cls
         view.initkwargs = initkwargs
 
@@ -140,7 +137,7 @@ class APIView(View):
         return self._allowed_methods()
 
     @property
-    def default_response_headers(self):
+    def default_response_headers(self): # 获取响应头的信息
         headers = {
             'Allow': ', '.join(self.allowed_methods),
         }
@@ -178,11 +175,9 @@ class APIView(View):
 
     def get_parser_context(self, http_request):
         """
-        Returns a dict that is passed through to Parser.parse(),
-        as the `parser_context` keyword argument.
+        返回传递给Parser.parse（）的字典，作为parser_context关键字参数。
         """
-        # Note: Additionally `request` and `encoding` will also be added
-        #       to the context by the Request object.
+        # 注意：另外，request对象还将把`request`和`encoding`添加到上下文中。
         return {
             'view': self,
             'args': getattr(self, 'args', ()),
@@ -191,11 +186,9 @@ class APIView(View):
 
     def get_renderer_context(self):
         """
-        Returns a dict that is passed through to Renderer.render(),
-        as the `renderer_context` keyword argument.
+        返回传递给Renderer.render（）的字典，作为`renderer_context`关键字参数。
         """
-        # Note: Additionally 'response' will also be added to the context,
-        #       by the Response object.
+        # 注意：另外，“响应”也将通过“响应”对象添加到上下文中。
         return {
             'view': self,
             'args': getattr(self, 'args', ()),
@@ -205,8 +198,7 @@ class APIView(View):
 
     def get_exception_handler_context(self):
         """
-        Returns a dict that is passed through to EXCEPTION_HANDLER,
-        as the `context` argument.
+        返回传递给EXCEPTION_HANDLER的字典，作为context参数。
         """
         return {
             'view': self,
@@ -217,62 +209,59 @@ class APIView(View):
 
     def get_view_name(self):
         """
-        Return the view name, as used in OPTIONS responses and in the
-        browsable API.
+        返回在OPTIONS响应和可浏览API中使用的视图名称。
         """
         func = self.settings.VIEW_NAME_FUNCTION
         return func(self)
 
     def get_view_description(self, html=False):
         """
-        Return some descriptive text for the view, as used in OPTIONS responses
-        and in the browsable API.
+        返回视图的一些描述性文本，如OPTIONS响应和可浏览API中所使用。
         """
         func = self.settings.VIEW_DESCRIPTION_FUNCTION
         return func(self, html)
 
-    # API policy instantiation methods
-
+    # API策略实例化方法
     def get_format_suffix(self, **kwargs):
         """
-        Determine if the request includes a '.json' style format suffix
+        确定请求是否包含'.json'样式格式后缀
         """
         if self.settings.FORMAT_SUFFIX_KWARG:
             return kwargs.get(self.settings.FORMAT_SUFFIX_KWARG)
 
     def get_renderers(self):
         """
-        Instantiates and returns the list of renderers that this view can use.
+        实例化并返回此视图可以使用的渲染器列表。
         """
         return [renderer() for renderer in self.renderer_classes]
 
     def get_parsers(self):
         """
-        Instantiates and returns the list of parsers that this view can use.
+        实例化并返回此视图可以使用的解析器列表。
         """
         return [parser() for parser in self.parser_classes]
 
     def get_authenticators(self):
         """
-        Instantiates and returns the list of authenticators that this view can use.
+        实例化并返回此视图可以使用的身份验证器列表。
         """
         return [auth() for auth in self.authentication_classes]
 
     def get_permissions(self):
         """
-        Instantiates and returns the list of permissions that this view requires.
+        实例化并返回此视图所需的权限列表。
         """
         return [permission() for permission in self.permission_classes]
 
     def get_throttles(self):
         """
-        Instantiates and returns the list of throttles that this view uses.
+        实例化并返回此视图使用的油门列表。
         """
         return [throttle() for throttle in self.throttle_classes]
 
     def get_content_negotiator(self):
         """
-        Instantiate and return the content negotiation class to use.
+        实例化并返回要使用的内容协商类。
         """
         if not getattr(self, '_negotiator', None):
             self._negotiator = self.content_negotiation_class()
@@ -284,11 +273,11 @@ class APIView(View):
         """
         return self.settings.EXCEPTION_HANDLER
 
-    # API policy implementation methods
+    # API政策实施方法
 
     def perform_content_negotiation(self, request, force=False):
         """
-        Determine which renderer and media type to use render the response.
+        确定要使用哪种渲染器和媒体类型来渲染响应。
         """
         renderers = self.get_renderers()
         conneg = self.get_content_negotiator()
@@ -302,18 +291,15 @@ class APIView(View):
 
     def perform_authentication(self, request):
         """
-        Perform authentication on the incoming request.
+       对传入的请求执行身份验证。
 
-        Note that if you override this and simply 'pass', then authentication
-        will instead be performed lazily, the first time either
-        `request.user` or `request.auth` is accessed.
+       请注意，如果您覆盖此设置并只是简单地“通过”，则将在第一次访问`request.user`或`request.auth`时懒惰地执行身份验证。
         """
         request.user
 
     def check_permissions(self, request):
         """
-        Check if the request should be permitted.
-        Raises an appropriate exception if the request is not permitted.
+        检查是否应允许该请求。如果不允许该请求，则引发适当的异常。
         """
         for permission in self.get_permissions():
             if not permission.has_permission(request, self):
@@ -323,8 +309,7 @@ class APIView(View):
 
     def check_object_permissions(self, request, obj):
         """
-        Check if the request should be permitted for a given object.
-        Raises an appropriate exception if the request is not permitted.
+        检查是否应允许给定对象的请求。如果不允许该请求，则引发适当的异常。
         """
         for permission in self.get_permissions():
             if not permission.has_object_permission(request, self, obj):
@@ -334,8 +319,7 @@ class APIView(View):
 
     def check_throttles(self, request):
         """
-        Check if request should be throttled.
-        Raises an appropriate exception if the request is throttled.
+        检查是否应限制请求。如果请求被限制，则引发适当的异常。
         """
         throttle_durations = []
         for throttle in self.get_throttles():
@@ -343,8 +327,7 @@ class APIView(View):
                 throttle_durations.append(throttle.wait())
 
         if throttle_durations:
-            # Filter out `None` values which may happen in case of config / rate
-            # changes, see #1438
+            # 滤除“None”值，这些值可能在配置/速率更改的情况下发生，请参阅＃1438
             durations = [
                 duration for duration in throttle_durations
                 if duration is not None
@@ -355,8 +338,7 @@ class APIView(View):
 
     def determine_version(self, request, *args, **kwargs):
         """
-        If versioning is being used, then determine any API version for the
-        incoming request. Returns a two-tuple of (version, versioning_scheme)
+        如果使用版本控制，则为传入请求确定任何API版本。返回（version，versioning_scheme）的二元组
         """
         if self.versioning_class is None:
             return (None, None)
@@ -367,7 +349,7 @@ class APIView(View):
 
     def initialize_request(self, request, *args, **kwargs):
         """
-        Returns the initial request object.
+        返回初始请求对象。
         """
         parser_context = self.get_parser_context(request)
 
@@ -381,19 +363,19 @@ class APIView(View):
 
     def initial(self, request, *args, **kwargs):
         """
-        Runs anything that needs to occur prior to calling the method handler.
+        运行在调用方法处理程序之前需要发生的任何事情。
         """
         self.format_kwarg = self.get_format_suffix(**kwargs)
 
-        # Perform content negotiation and store the accepted info on the request
+        # 执行内容协商并在请求上存储接受的信息
         neg = self.perform_content_negotiation(request)
         request.accepted_renderer, request.accepted_media_type = neg
 
-        # Determine the API version, if versioning is in use.
+        # 确定API版本（如果正在使用版本控制）。
         version, scheme = self.determine_version(request, *args, **kwargs)
         request.version, request.versioning_scheme = version, scheme
 
-        # Ensure that the incoming request is permitted
+        # 确保允许传入请求
         self.perform_authentication(request)
         self.check_permissions(request)
         self.check_throttles(request)
@@ -434,7 +416,7 @@ class APIView(View):
         """
         if isinstance(exc, (exceptions.NotAuthenticated,
                             exceptions.AuthenticationFailed)):
-            # WWW-Authenticate header for 401 responses, else coerce to 403
+            # 用于401响应的WWW-Authenticate标头，否则强制为403
             auth_header = self.get_authenticate_header(self.request)
 
             if auth_header:

@@ -49,7 +49,7 @@ class JSONParser(BaseParser):
 
     def parse(self, stream, media_type=None, parser_context=None):
         """
-        Parses the incoming bytestream as JSON and returns the resulting data.
+        将传入的字节流解析为JSON并返回结果数据。
         """
         parser_context = parser_context or {}
         encoding = parser_context.get('encoding', settings.DEFAULT_CHARSET)
@@ -64,14 +64,13 @@ class JSONParser(BaseParser):
 
 class FormParser(BaseParser):
     """
-    Parser for form data.
+    表单数据解析器。
     """
     media_type = 'application/x-www-form-urlencoded'
 
     def parse(self, stream, media_type=None, parser_context=None):
         """
-        Parses the incoming bytestream as a URL encoded form,
-        and returns the resulting QueryDict.
+        将传入的字节流解析为URL编码形式，并返回结果QueryDict。
         """
         parser_context = parser_context or {}
         encoding = parser_context.get('encoding', settings.DEFAULT_CHARSET)
@@ -80,17 +79,16 @@ class FormParser(BaseParser):
 
 class MultiPartParser(BaseParser):
     """
-    Parser for multipart form data, which may include file data.
+    多部分表单数据的解析器，其中可能包括文件数据。
     """
     media_type = 'multipart/form-data'
 
     def parse(self, stream, media_type=None, parser_context=None):
         """
-        Parses the incoming bytestream as a multipart encoded form,
-        and returns a DataAndFiles object.
+        将传入的字节流解析为多部分编码形式，并返回DataAndFiles对象
 
-        `.data` will be a `QueryDict` containing all the form parameters.
-        `.files` will be a `QueryDict` containing all the form files.
+        .data将是包含所有表单参数的QueryDict。
+        .files将是一个包含所有表单文件的QueryDict。
         """
         parser_context = parser_context or {}
         request = parser_context['request']
@@ -109,7 +107,7 @@ class MultiPartParser(BaseParser):
 
 class FileUploadParser(BaseParser):
     """
-    Parser for file upload data.
+    用于文件上传数据的解析器。
     """
     media_type = '*/*'
     errors = {
@@ -119,11 +117,10 @@ class FileUploadParser(BaseParser):
 
     def parse(self, stream, media_type=None, parser_context=None):
         """
-        Treats the incoming bytestream as a raw file upload and returns
-        a `DataAndFiles` object.
+        将传入的字节流视为原始文件上传，并返回`DataAndFiles`对象。
 
-        `.data` will be None (we expect request body to be a file content).
-        `.files` will be a `QueryDict` containing one 'file' element.
+        .data将为None（我们希望请求正文为文件内容）。
+        .files将是一个包含一个file元素的QueryDict。
         """
         parser_context = parser_context or {}
         request = parser_context['request']
@@ -135,8 +132,7 @@ class FileUploadParser(BaseParser):
         if not filename:
             raise ParseError(self.errors['no_filename'])
 
-        # Note that this code is extracted from Django's handling of
-        # file uploads in MultiPartParser.
+        # 请注意，此代码是从Django在MultiPartParser中对＃文件上传的处理中提取的。
         content_type = meta.get('HTTP_CONTENT_TYPE',
                                 meta.get('CONTENT_TYPE', ''))
         try:

@@ -27,22 +27,18 @@ class BadHeaderError(ValueError):
 
 class HttpResponseBase:
     """
-    An HTTP response base class with dictionary-accessed headers.
+    具有字典访问标头的HTTP响应基类。
 
-    This class doesn't handle content. It should not be used directly.
-    Use the HttpResponse and StreamingHttpResponse subclasses instead.
+    此类不处理内容。不应直接使用。请改用HttpResponse和StreamingHttpResponse子类。
     """
 
     status_code = 200
 
     def __init__(self, content_type=None, status=None, reason=None, charset=None):
-        # _headers is a mapping of the lowercase name to the original case of
-        # the header (required for working with legacy systems) and the header
-        # value. Both the name of the header and its value are ASCII strings.
+        # _headers是小写字母名称到标题（用于旧系统的情况下）和标题值的原始大小写的映射。标头名称及其值均为ASCII字符串。
         self._headers = {}
         self._closable_objects = []
-        # This parameter is set by the handler. It's necessary to preserve the
-        # historical behavior of request_finished.
+        # 此参数由处理程序设置。必须保留request_finished的历史行为。
         self._handler_class = None
         self.cookies = SimpleCookie()
         self.closed = False
@@ -65,8 +61,7 @@ class HttpResponseBase:
     def reason_phrase(self):
         if self._reason_phrase is not None:
             return self._reason_phrase
-        # Leave self._reason_phrase unset in order to use the default
-        # reason phrase for status code.
+        # 保留self._reason_phrase不变，以便使用默认的原因短语作为状态代码。
         return responses.get(self.status_code, 'Unknown Status Code')
 
     @reason_phrase.setter
@@ -80,7 +75,7 @@ class HttpResponseBase:
         content_type = self.get('Content-Type', '')
         matched = _charset_from_content_type_re.search(content_type)
         if matched:
-            # Extract the charset and strip its double quotes
+            # 提取字符集并去除其双引号
             return matched.group('charset').replace('"', '')
         return settings.DEFAULT_CHARSET
 
@@ -89,7 +84,8 @@ class HttpResponseBase:
         self._charset = value
 
     def serialize_headers(self):
-        """HTTP headers as a bytestring."""
+        """HTTP标头作为字节串。"""
+
         def to_bytes(val, encoding):
             return val if isinstance(val, bytes) else val.encode(encoding)
 
@@ -107,10 +103,9 @@ class HttpResponseBase:
 
     def _convert_to_charset(self, value, charset, mime_encode=False):
         """
-        Convert headers key/value to ascii/latin-1 native strings.
+        将标头键/值转换为ascii / latin-1本机字符串。
 
-        `charset` must be 'ascii' or 'latin-1'. If `mime_encode` is True and
-        `value` can't be represented in the given charset, apply MIME-encoding.
+        “字符集”必须为“ ascii”或“ latin-1”。如果`mime_encode`为True，并且'value'不能在给定的字符集中表示，则应用MIME编码。
         """
         if not isinstance(value, (bytes, str)):
             value = str(value)
@@ -119,10 +114,10 @@ class HttpResponseBase:
             raise BadHeaderError("Header values can't contain newlines (got %r)" % value)
         try:
             if isinstance(value, str):
-                # Ensure string is valid in given charset
+                # 确保字符串在给定的字符集中有效
                 value.encode(charset)
             else:
-                # Convert bytestring using given charset
+                # 使用给定的字符集转换字节串
                 value = value.decode(charset)
         except UnicodeError as e:
             if mime_encode:
@@ -144,7 +139,7 @@ class HttpResponseBase:
         return self._headers[header.lower()][1]
 
     def has_header(self, header):
-        """Case-insensitive check for a header."""
+        """标题不区分大小写。"""
         return header.lower() in self._headers
 
     __contains__ = has_header
@@ -172,9 +167,7 @@ class HttpResponseBase:
                 if timezone.is_aware(expires):
                     expires = timezone.make_naive(expires, timezone.utc)
                 delta = expires - expires.utcnow()
-                # Add one second so the date matches exactly (a fraction of
-                # time gets lost between converting to a timedelta and
-                # then the date string).
+                # 加一秒，以便日期完全匹配（在转换为timedelta和然后再加上日期字符串之间，丢失了的时间的一部分）。
                 delta = delta + datetime.timedelta(seconds=1)
                 # Just set max_age - the max_age logic will set expires.
                 expires = None
@@ -202,7 +195,7 @@ class HttpResponseBase:
             self.cookies[key]['samesite'] = samesite
 
     def setdefault(self, key, value):
-        """Set a header unless it has already been set."""
+        """除非已设置头，否则设置头。"""
         if key not in self:
             self[key] = value
 
@@ -211,8 +204,7 @@ class HttpResponseBase:
         return self.set_cookie(key, value, **kwargs)
 
     def delete_cookie(self, key, path='/', domain=None):
-        # Most browsers ignore the Set-Cookie header if the cookie name starts
-        # with __Host- or __Secure- and the cookie doesn't use the secure flag.
+        # 如果cookie名称以__Host-或__Secure-开头，并且cookie不使用安全标志，则大多数浏览器都会忽略Set-Cookie标头。
         secure = key.startswith(('__Secure-', '__Host-'))
         self.set_cookie(
             key, max_age=0, path=path, domain=domain, secure=secure,
@@ -222,7 +214,7 @@ class HttpResponseBase:
     # Common methods used by subclasses
 
     def make_bytes(self, value):
-        """Turn a value into a bytestring encoded in the output charset."""
+        """将值转换为在输出字符集中编码的字节串。"""
         # Per PEP 3333, this response body must be bytes. To avoid returning
         # an instance of a subclass, this function returns `bytes(value)`.
         # This doesn't make a copy when `value` already contains bytes.
@@ -278,16 +270,16 @@ class HttpResponseBase:
 
 class HttpResponse(HttpResponseBase):
     """
-    An HTTP response class with a string as content.
+    一个以字符串为内容的HTTP响应类。
 
-    This content that can be read, appended to, or replaced.
+    可以读取，附加或替换的内容。
     """
 
     streaming = False
 
     def __init__(self, content=b'', *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Content is a bytestring. See the `content` property methods.
+        # 内容是一个字节串。请参阅`content`属性方法。
         self.content = content
 
     def __repr__(self):
@@ -533,16 +525,12 @@ class Http404(Exception):
 
 class JsonResponse(HttpResponse):
     """
-    An HTTP response class that consumes data to be serialized to JSON.
+    使用数据序列化为JSON的HTTP响应类。
 
-    :param data: Data to be dumped into json. By default only ``dict`` objects
-      are allowed to be passed due to a security flaw before EcmaScript 5. See
-      the ``safe`` parameter for more information.
-    :param encoder: Should be a json encoder class. Defaults to
-      ``django.core.serializers.json.DjangoJSONEncoder``.
-    :param safe: Controls if only ``dict`` objects may be serialized. Defaults
-      to ``True``.
-    :param json_dumps_params: A dictionary of kwargs passed to json.dumps().
+    :param data：要转储到json中的数据。默认情况下，由于EcmaScript 5之前的安全漏洞，仅允许传递“ dict”对象。有关更多信息，请参阅“ safe”参数。
+    :param encoder：应该是json编码器类。默认为``django.core.serializers.json.DjangoJSONEncoder''。
+    :param safe：控制是否只能对“ dict”对象进行序列化。默认为``True''。
+    :param json_dumps_params：传递给json.dumps（）的kwargs字典。
     """
 
     def __init__(self, data, encoder=DjangoJSONEncoder, safe=True,

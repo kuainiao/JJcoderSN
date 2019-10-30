@@ -1,5 +1,5 @@
 """
-Utility functions to return a formatted name and description for a given view.
+实用程序函数返回给定视图的格式化名称和描述。
 """
 import re
 

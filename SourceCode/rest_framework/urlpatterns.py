@@ -36,18 +36,18 @@ def apply_suffix_patterns(urlpatterns, suffix_pattern, suffix_required, suffix_r
     ret = []
     for urlpattern in urlpatterns:
         if isinstance(urlpattern, URLResolver):
-            # Set of included URL patterns
+            # 一组包含的网址格式
             regex = get_regex_pattern(urlpattern)
             namespace = urlpattern.namespace
             app_name = urlpattern.app_name
             kwargs = urlpattern.default_kwargs
-            # Add in the included patterns, after applying the suffixes
+            # 应用后缀后，添加包含的模式
             patterns = apply_suffix_patterns(urlpattern.url_patterns,
                                              suffix_pattern,
                                              suffix_required,
                                              suffix_route)
 
-            # if the original pattern was a RoutePattern we need to preserve it
+            # 如果原始模式是RoutePattern，我们需要保留它
             if is_route_pattern(urlpattern):
                 assert path is not None
                 route = str(urlpattern.pattern)
@@ -57,16 +57,16 @@ def apply_suffix_patterns(urlpatterns, suffix_pattern, suffix_required, suffix_r
 
             ret.append(new_pattern)
         else:
-            # Regular URL pattern
+            # 常规网址格式
             regex = get_regex_pattern(urlpattern).rstrip('$').rstrip('/') + suffix_pattern
             view = urlpattern.callback
             kwargs = urlpattern.default_args
             name = urlpattern.name
-            # Add in both the existing and the new urlpattern
+            # 添加现有和新的urlpattern
             if not suffix_required:
                 ret.append(urlpattern)
 
-            # if the original pattern was a RoutePattern we need to preserve it
+            # 如果原始模式是RoutePattern，我们需要保留它
             if is_route_pattern(urlpattern):
                 assert path is not None
                 assert suffix_route is not None
@@ -82,19 +82,11 @@ def apply_suffix_patterns(urlpatterns, suffix_pattern, suffix_required, suffix_r
 
 def format_suffix_patterns(urlpatterns, suffix_required=False, allowed=None):
     """
-    Supplement existing urlpatterns with corresponding patterns that also
-    include a '.format' suffix.  Retains urlpattern ordering.
+    用相应的模式补充现有的urlpattern，这些模式还包括一个'.format'后缀。保留urlpattern的顺序。
 
-    urlpatterns:
-        A list of URL patterns.
-
-    suffix_required:
-        If `True`, only suffixed URLs will be generated, and non-suffixed
-        URLs will not be used.  Defaults to `False`.
-
-    allowed:
-        An optional tuple/list of allowed suffixes.  eg ['json', 'api']
-        Defaults to `None`, which allows any suffix.
+    urlpatterns：URL模式列表。
+    suffix_required：如果为True，则只会生成带后缀的URL，而不会使用非带后缀的URL。默认为False。
+    allowed：可选的元组/允许的后缀列表。例如['json'，'api']默认为`None`，允许任何后缀。
     """
     suffix_kwarg = api_settings.FORMAT_SUFFIX_KWARG
     if allowed:
