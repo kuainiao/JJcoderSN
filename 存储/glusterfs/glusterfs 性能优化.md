@@ -1,14 +1,10 @@
-# glusterfs 性能优化
+# glusterfs 性能配置优化
 
-------
-
-# [#](http://www.liuwq.com/views/存储/glusterfs性能优化篇.html#glusterfs-性能配置优化)glusterfs 性能配置优化
-
-## [#](http://www.liuwq.com/views/存储/glusterfs性能优化篇.html#修改配置)修改配置
+## 修改配置
 
 > arch-img 为存储名称
 
-## [#](http://www.liuwq.com/views/存储/glusterfs性能优化篇.html#命令合集)命令合集
+## 命令合集
 
 
 

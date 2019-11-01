@@ -12,8 +12,6 @@
 
 和其他组建一样，我们在utils里面建立version.py,添加版本类
 
-[![复制代码](API.assets/copycode.gif)](javascript:void(0);)
-
 ```
 #!/usr/bin/env python3
 #_*_ coding:utf-8 _*_
@@ -26,11 +24,7 @@ class Myversion(BaseVersioning):
         return myversion
 ```
 
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
-
 在订单视图中应用版本,(当然直接可以使用request.get获取)
-
-[![复制代码](https://common.cnblogs.com/images/copycode.gif)](javascript:void(0);)
 
 ```
 class OrderView(APIView):

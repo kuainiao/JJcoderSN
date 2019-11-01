@@ -33,8 +33,7 @@ class TokenViewBase(generics.GenericAPIView):
 
 class TokenObtainPairView(TokenViewBase):
     """
-    Takes a set of user credentials and returns an access and refresh JSON web
-    token pair to prove the authentication of those credentials.
+    获取一组用户凭据，并返回访问和刷新JSON Web令牌对，以证明这些凭据的身份验证。
     """
     serializer_class = serializers.TokenObtainPairSerializer
 
@@ -44,8 +43,7 @@ token_obtain_pair = TokenObtainPairView.as_view()
 
 class TokenRefreshView(TokenViewBase):
     """
-    Takes a refresh type JSON web token and returns an access type JSON web
-    token if the refresh token is valid.
+    获取刷新类型JSON Web令牌，如果刷新令牌有效，则返回访问类型JSON Web令牌。
     """
     serializer_class = serializers.TokenRefreshSerializer
 
@@ -55,8 +53,7 @@ token_refresh = TokenRefreshView.as_view()
 
 class TokenObtainSlidingView(TokenViewBase):
     """
-    Takes a set of user credentials and returns a sliding JSON web token to
-    prove the authentication of those credentials.
+    获取一组用户凭证，并返回一个滑动JSON Web令牌以证明这些凭证的身份验证。
     """
     serializer_class = serializers.TokenObtainSlidingSerializer
 
@@ -66,8 +63,7 @@ token_obtain_sliding = TokenObtainSlidingView.as_view()
 
 class TokenRefreshSlidingView(TokenViewBase):
     """
-    Takes a sliding JSON web token and returns a new, refreshed version if the
-    token's refresh period has not expired.
+    获取滑动的JSON Web令牌，如果令牌的刷新期限尚未到期，则返回新的刷新版本。
     """
     serializer_class = serializers.TokenRefreshSlidingSerializer
 
@@ -77,8 +73,7 @@ token_refresh_sliding = TokenRefreshSlidingView.as_view()
 
 class TokenVerifyView(TokenViewBase):
     """
-    Takes a token and indicates if it is valid.  This view provides no
-    information about a token's fitness for a particular use.
+    获取令牌并指示其是否有效。该视图未提供有关令牌对特定用途的适用性的信息。
     """
     serializer_class = serializers.TokenVerifySerializer
 
