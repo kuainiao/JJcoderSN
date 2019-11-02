@@ -1,6 +1,4 @@
-# 查看linux中的TCP连接数
 
-------
 
 # 查看linux中的TCP连接数
 

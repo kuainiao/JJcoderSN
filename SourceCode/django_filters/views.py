@@ -19,7 +19,7 @@ class FilterMixinRenames(RenameAttributesBase):
 
 class FilterMixin(metaclass=FilterMixinRenames):
     """
-    A mixin that provides a way to show and handle a FilterSet in a request.
+    一个mixin，提供一种显示和处理请求中的FilterSet的方法。
     """
     filterset_class = None
     filterset_fields = ALL_FIELDS
@@ -27,7 +27,7 @@ class FilterMixin(metaclass=FilterMixinRenames):
 
     def get_filterset_class(self):
         """
-        Returns the filterset class to use in this view
+        返回要在此视图中使用的filterset类
         """
         if self.filterset_class:
             return self.filterset_class
@@ -39,14 +39,14 @@ class FilterMixin(metaclass=FilterMixinRenames):
 
     def get_filterset(self, filterset_class):
         """
-        Returns an instance of the filterset to be used in this view.
+        返回要在此视图中使用的过滤器集的实例。
         """
         kwargs = self.get_filterset_kwargs(filterset_class)
         return filterset_class(**kwargs)
 
     def get_filterset_kwargs(self, filterset_class):
         """
-        Returns the keyword arguments for instanciating the filterset.
+        返回用于实例化过滤器集的关键字参数。
         """
         kwargs = {
             'data': self.request.GET or None,
@@ -57,8 +57,7 @@ class FilterMixin(metaclass=FilterMixinRenames):
                 'queryset': self.get_queryset(),
             })
         except ImproperlyConfigured:
-            # ignore the error here if the filterset has a model defined
-            # to acquire a queryset from
+            # 如果过滤器集具有定义的模型以从中获取查询集，请忽略此处的错误
             if filterset_class._meta.model is None:
                 msg = ("'%s' does not define a 'model' and the view '%s' does "
                        "not return a valid queryset from 'get_queryset'.  You "
@@ -89,9 +88,8 @@ class BaseFilterView(FilterMixin, MultipleObjectMixin, View):
 
 class FilterView(MultipleObjectTemplateResponseMixin, BaseFilterView):
     """
-    Render some list of objects with filter, set by `self.model` or
-    `self.queryset`.
-    `self.queryset` can actually be any iterable of items, not just a queryset.
+    渲染一些带有过滤器的对象列表，由“ self.model”或“ self.queryset”设置。
+    实际上，`self.queryset`可以是任何可迭代的项目，而不仅仅是查询集。
     """
     template_name_suffix = '_filter'
 
@@ -100,7 +98,7 @@ def object_filter(request, model=None, queryset=None, template_name=None,
                   extra_context=None, context_processors=None,
                   filter_class=None):
     class ECFilterView(FilterView):
-        """Handle the extra_context from the functional object_filter view"""
+        """从功能object_filter视图处理extra_context"""
         def get_context_data(self, **kwargs):
             context = super().get_context_data(**kwargs)
             extra_context = self.kwargs.get('extra_context') or {}

@@ -23,7 +23,7 @@ $ service iptables stop
 
 ### **1、安装依赖包**
 
-[root@centos7-1 opt]# yum -y install wget sqlite-devel xz gcc automake zlib-devel openssl-devel epel-release git
+​	[root@centos7-1 opt]# yum -y install wget sqlite-devel xz gcc automake zlib-devel openssl-devel epel-release git
 
 ### **2、编译安装**
 

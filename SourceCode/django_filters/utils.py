@@ -124,7 +124,7 @@ def get_all_model_fields(model):
     return [
         f.name for f in sorted(opts.fields + opts.many_to_many)
         if not isinstance(f, models.AutoField) and
-        not (getattr(f.remote_field, 'parent_link', False))
+           not (getattr(f.remote_field, 'parent_link', False))
     ]
 
 

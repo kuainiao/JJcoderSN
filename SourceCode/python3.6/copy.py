@@ -11,34 +11,15 @@ Interface summary:
 
 浅复制和深复制之间的区别仅与复合对象（包含其他对象的对象，例如列表或类实例）。
 
-- A shallow copy constructs a new compound object and then (to the
-  extent possible) inserts *the same objects* into it that the
-  original contains.
-
-- A deep copy constructs a new compound object and then, recursively,
-  inserts *copies* into it of the objects found in the original.
-
-Two problems often exist with deep copy operations that don't exist
-with shallow copy operations:
-
- a) recursive objects (compound objects that, directly or indirectly,
-    contain a reference to themselves) may cause a recursive loop
-
- b) because deep copy copies *everything* it may copy too much, e.g.
-    administrative data structures that should be shared even between
-    copies
-
-Python's deep copy operation avoids these problems by:
-
- a) keeping a table of objects already copied during the current
-    copying pass
-
- b) letting user-defined classes override the copying operation or the
-    set of components copied
-
-This version does not copy types like module, class, function, method,
-nor stack trace, stack frame, nor file, socket, window, nor array, nor
-any similar types.
+-浅表副本会构造一个新的复合对象，然后（在可能的范围内）将*原来包含的相同对象*插入其中。
+-深层副本构造一个新的复合对象，然后递归地将原始对象中发现的对象的“副本”插入其中。深度复制操作通常存在两个不存在的问题
+使用浅层复制操作：
+a）递归对象（直接或间接包含对自身的引用的复合对象）可能会导致递归循环
+b）因为深层复制*所有内容*可能会复制太多，例如即使在副本之间也应共享的管理数据结构
+Python的深度复制操作通过以下方式避免了这些问题：
+a）保持在当前复制过程中已复制的对象表
+b）让用户定义的类覆盖复制操作或复制的组件集这个版本不会复制模组，类别，函式，方法，
+也不是堆栈跟踪，堆栈框架，文件，套接字，窗口，数组也不是任何类似的类型。
 
 Classes can use the same interfaces to control copying that they use
 to control pickling: they can define methods called __getinitargs__(),

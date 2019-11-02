@@ -6,7 +6,7 @@
 
 **使用openssl制作证书**
 
-## [#](http://www.liuwq.com/views/网站架构/SSL数据传输nginx.html#_1、服务器单向验证)1、服务器单向验证
+## 1、服务器单向验证
 
 创建并进入sslkey存放目录
 
@@ -18,13 +18,13 @@ cd /opt/nginx/sslkey
 1
 2
 
-### [#](http://www.liuwq.com/views/网站架构/SSL数据传输nginx.html#生成rsa密钥)生成RSA密钥
+### [生成RSA密钥
 
 ```
 openssl genrsa -out key.pem 2048
 ```
 
-### [#](http://www.liuwq.com/views/网站架构/SSL数据传输nginx.html#生成一个证书请求)生成一个证书请求
+### 生成一个证书请求
 
 ```shell
 openssl req -new -key key.pem -out cert.csr`
@@ -39,7 +39,7 @@ CA会给你一个新的文件cacert.pem，那才是你的数字证书。
 openssl req -new -x509 -nodes -out server.crt -keyout server.key
 ```
 
-### [#](http://www.liuwq.com/views/网站架构/SSL数据传输nginx.html#修改-nginx-配置)修改 nginx 配置
+### 修改 nginx 配置
 
 ```yml
 # HTTPS server  
@@ -72,7 +72,7 @@ server {
 
 配置好后，重启nginx，采用 `https`打开网站，浏览器会提示证书错误，点击继续浏览即可。
 
-## [#](http://www.liuwq.com/views/网站架构/SSL数据传输nginx.html#_2、服务器-客户端双向验证)2、服务器-客户端双向验证
+## 2、服务器-客户端双向验证
 
 在nginx 目录下建立ca文件夹，进入ca。
 
@@ -84,7 +84,7 @@ server {
 
 用的配置文件，server存放服务器证书文件。
 
-### [#](http://www.liuwq.com/views/网站架构/SSL数据传输nginx.html#在conf目录创建文件openssl-conf配置文件，内容如下：)在conf目录创建文件openssl.conf配置文件，内容如下：
+### 在conf目录创建文件openssl.conf配置文件，内容如下：
 
 ```yml
 [ ca ]  
@@ -119,11 +119,11 @@ emailAddress            = optional
 
 
 
-### [#](http://www.liuwq.com/views/网站架构/SSL数据传输nginx.html#使用脚本创建证书)使用脚本创建证书
+### 使用脚本创建证书
 
 下面的几个脚本都放在`/nginx/ca/`目录下。
 
-#### [#](http://www.liuwq.com/views/网站架构/SSL数据传输nginx.html#创建一个新的ca根证书)创建一个新的CA根证书
+#### 创建一个新的CA根证书
 
 ```
 vim new_ca.sh
@@ -149,7 +149,7 @@ openssl ca -gencrl -out /opt/nginx/ca/private/ca.crl -crldays 7 -config "/opt/ng
 
 执行 `sh new_ca.sh`生成新的CA证书。
 
-#### [#](http://www.liuwq.com/views/网站架构/SSL数据传输nginx.html#生成服务器证书的脚本)生成服务器证书的脚本
+#### 生成服务器证书的脚本
 
 ```
 new_server.sh
@@ -165,7 +165,7 @@ openssl ca -in server/server.csr -cert private/ca.crt -keyfile private/ca.key -o
 
 执行 `sh new_server.sh`生成新服务器的证书
 
-#### [#](http://www.liuwq.com/views/网站架构/SSL数据传输nginx.html#配置-nginx的ssl支持)配置 nginx的ssl支持
+#### 配置 nginx的ssl支持
 
 ```yml
 #user  www-nginx;  
@@ -221,7 +221,7 @@ http {
 
 启动`nginx`,等待客户连接，如果此时连接服务器，将提示`400 Bad request certification`的错误，故还需要生成客户端证书。
 
-#### [#](http://www.liuwq.com/views/网站架构/SSL数据传输nginx.html#生成客户端证书)生成客户端证书
+#### 生成客户端证书
 
 ```
 vim new_user.sh

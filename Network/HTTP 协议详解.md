@@ -2,8 +2,6 @@
 
 ------
 
-
-
 ## HTTP 的特性
 
 - HTTP 协议构建于 TCP/IP 协议之上，是一个应用层协议，默认端口号是 80
@@ -98,7 +96,7 @@ PNG ... content of chrome.png ...
 
 随着越来越多的 Web 站点，尤其是 WebApp，全部使用 Ajax 进行数据交互之后，我们完全可以定义新的数据提交方式，例如 `application/json`，`text/xml`，乃至 `application/x-protobuf` 这种二进制格式，只要服务器可以根据 `Content-Type` 和 `Content-Encoding` 正确地解析出请求，都是没有问题的。
 
-### [#](http://www.liuwq.com/views/linux基础/http协议.html#响应报文)响应报文
+### 响应报文
 
 HTTP 响应与 HTTP 请求相似，HTTP响应也由3个部分构成，分别是：
 
@@ -133,7 +131,7 @@ Content-Length:112
 <html>...
 ```
 
-### [#](http://www.liuwq.com/views/linux基础/http协议.html#条件-get)条件 GET
+### 条件 GET
 
 HTTP 条件 GET 是 HTTP 协议为了减少不必要的带宽浪费，提出的一种方案。详见 [RFC2616](http://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html) 。
 
@@ -171,7 +169,7 @@ HTTP 条件 GET 是 HTTP 协议为了减少不必要的带宽浪费，提出的�
 
     如果服务器端资源已经更新的话，就返回正常的响应。
 
-## [#](http://www.liuwq.com/views/linux基础/http协议.html#持久连接)持久连接
+## 持久连接
 
 我们知道 HTTP 协议采用“请求-应答”模式，当使用普通模式，即非 Keep-Alive 模式时，每个请求/应答客户和服务器都要新建一个连接，完成之后立即断开连接（HTTP 协议为无连接的协议）；当使用 Keep-Alive 模式（又称持久连接、连接重用）时，Keep-Alive 功能使客户端到服务器端的连接持续有效，当出现对服务器的后继请求时，Keep-Alive 功能避免了建立或者重新建立连接。
 
@@ -188,7 +186,7 @@ HTTP 条件 GET 是 HTTP 协议为了减少不必要的带宽浪费，提出的�
 - HTTP 是一个无状态协议，这意味着每个请求都是独立的，Keep-Alive 没能改变这个结果。另外，Keep-Alive也不能保证客户端和服务器之间的连接一定是活跃的，在 HTTP1.1 版本中也如此。唯一能保证的就是当连接被关闭时你能得到一个通知，所以不应该让程序依赖于 Keep-Alive 的保持连接特性，否则会有意想不到的后果。
 - 使用长连接之后，客户端、服务端怎么知道本次传输结束呢？两部分：1. 判断传输数据是否达到了Content-Length 指示的大小；2. 动态生成的文件没有 Content-Length ，它是分块传输（chunked），这时候就要根据 chunked 编码来判断，chunked 编码的数据在最后有一个空 chunked 块，表明本次传输数据结束，详见[这里](http://www.cnblogs.com/skynet/archive/2010/12/11/1903347.html)。什么是 chunked 分块传输呢？下面我们就来介绍一下。
 
-### [#](http://www.liuwq.com/views/linux基础/http协议.html#transfer-encoding)Transfer-Encoding
+### Transfer-Encoding
 
 Transfer-Encoding 是一个用来标示 HTTP 报文传输格式的头部值。尽管这个取值理论上可以有很多，但是当前的 HTTP 规范里实际上只定义了一种传输取值——chunked。
 
@@ -219,7 +217,7 @@ and this is the second one
 - chunked 传输不能事先知道内容的长度，只能靠最后的空 chunk 块来判断，因此对于下载请求来说，是没有办法实现进度的。在浏览器和下载工具中，偶尔我们也会看到有些文件是看不到下载进度的，即采用 chunked 方式进行下载。
 - chunked 的优势在于，服务器端可以边生成内容边发送，无需事先生成全部的内容。HTTP/2 不支持 Transfer-Encoding: chunked，因为 HTTP/2 有自己的 streaming 传输方式（Source：[MDN - Transfer-Encoding](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Transfer-Encoding)）。
 
-### [#](http://www.liuwq.com/views/linux基础/http协议.html#http-pipelining（http-管线化）)HTTP Pipelining（HTTP 管线化）
+### HTTP Pipelining（HTTP 管线化）
 
 默认情况下 HTTP 协议中每个传输层连接只能承载一个 HTTP 请求和响应，浏览器会在收到上一个请求的响应之后，再发送下一个请求。在使用持久连接的情况下，某个连接上消息的传递类似于`请求1 -> 响应1 -> 请求2 -> 响应2 -> 请求3 -> 响应3`。
 
@@ -236,7 +234,7 @@ HTTP Pipelining（管线化）是将多个 HTTP 请求整批提交的技术，�
 
 更多关于 HTTP Pipelining 的知识可以参考[这里](https://developer.mozilla.org/en-US/docs/Web/HTTP/Pipelining_FAQ)。
 
-## [#](http://www.liuwq.com/views/linux基础/http协议.html#会话跟踪)会话跟踪
+## 会话跟踪
 
 1. 什么是会话？
 
@@ -276,7 +274,7 @@ HTTP Pipelining（管线化）是将多个 HTTP 请求整批提交的技术，�
 
         Session 的实现依赖于 Cookie，如果 Cookie 被禁用，那么 session 也将失效。
 
-## [#](http://www.liuwq.com/views/linux基础/http协议.html#跨站攻击)跨站攻击
+## 跨站攻击
 
 - CSRF（Cross-site request forgery，跨站请求伪造）
 
@@ -366,7 +364,7 @@ HTTP Pipelining（管线化）是将多个 HTTP 请求整批提交的技术，�
 
     当我们需要用户输入 HTML 的时候，需要对用户输入的内容做更加小心细致的处理。仅仅粗暴地去掉 script 标签是没有用的，任何一个合法 HTML 标签都可以添加 onclick 一类的事件属性来执行 JavaScript。更好的方法可能是，将用户的输入使用 HTML 解析库进行解析，获取其中的数据。然后根据用户原有的标签属性，重新构建 HTML 元素树。构建的过程中，所有的标签、属性都只从**白名单**中拿取。
 
-### [#](http://www.liuwq.com/views/linux基础/http协议.html#参考资料)参考资料
+### 参考资料
 
 - [浅谈HTTP中Get与Post的区别](http://www.cnblogs.com/hyddd/archive/2009/03/31/1426026.html)
 - [http请求与http响应详细解析](http://www.cnblogs.com/loveyakamoz/archive/2011/07/22/2113614.html)

@@ -4,7 +4,7 @@
 
 
 
-## [#](http://www.liuwq.com/views/linux基础/https协议.html#https-基本过程)HTTPS 基本过程
+## HTTPS 基本过程
 
 HTTPS 即 HTTP over TLS，是一种在加密信道进行 HTTP 内容传输的协议。
 
@@ -24,7 +24,7 @@ TLS 的基本过程如下（取自 [what-happens-when-zh_CN](https://github.com/
 
 我们以 Github 网站使用的 TLS 为例，使用浏览器可以看到它使用的加密为 `TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256`。其中密钥交互算法是 `ECDHE_RSA`，对称加密算法是 `AES_128_GCM`，消息认证（MAC）算法为 `SHA256`。
 
-## [#](http://www.liuwq.com/views/linux基础/https协议.html#tls-证书机制)TLS 证书机制
+## TLS 证书机制
 
 HTTPS 过程中很重要的一个步骤，是服务器需要有 CA 颁发的证书，客户端根据自己的信任 CA 列表验证服务器的身份。现代浏览器中，证书验证的过程依赖于证书信任链。
 
@@ -48,19 +48,19 @@ DigiCert High Assurance EV Root CA` -> `DigiCert SHA2 Extended Validation Server
 
 > 有权威的信任，最终都要落到一个单点信任，不管是 Root CA，还是微软，苹果，谷歌等操作系统厂商。
 
-## [#](http://www.liuwq.com/views/linux基础/https协议.html#中间人攻击)中间人攻击
+## 中间人攻击
 
 HTTPS 的过程并不是密不透风的，HTTPS 有若干漏洞，给中间人攻击（Man In The Middle Attack，简称 MITM）提供了可能。
 
 所谓中间人攻击，指攻击者与通讯的两端分别建立独立的联系，并交换其所收到的数据，使通讯的两端认为他们正在通过一个私密的连接与对方直接对话，但事实上整个会话都被攻击者完全控制。在中间人攻击中，攻击者可以拦截通讯双方的通话并插入新的内容。
 
-### [#](http://www.liuwq.com/views/linux基础/https协议.html#ssl-剥离)SSL 剥离
+### SSL 剥离
 
 SSL 剥离即阻止用户使用 HTTPS 访问网站。由于并不是所有网站都只支持 HTTPS，大部分网站会同时支持 HTTP 和 HTTPS 两种协议。用户在访问网站时，也可能会在地址栏中输入 `http://` 的地址，第一次的访问完全是明文的，这就给了攻击者可乘之机。通过攻击 DNS 响应，攻击者可以将自己变成中间人。
 
 > DNS 作为基于 UDP 的协议是相当不安全的，为了保证 DNS 的安全可以使用 DNS over TCP 等机制，这里不赘述了。
 
-### [#](http://www.liuwq.com/views/linux基础/https协议.html#hsts)HSTS
+### HSTS
 
 为了防止上面说的这种情况，一种叫做 HSTS 的技术被引入了。HSTS（HTTP Strict Transport Security）是用于强制浏览器使用 HTTPS 访问网站的一种机制。它的基本机制是在服务器返回的响应中，加上一个特殊的头部，指示浏览器对于此网站，强制使用 HTTPS 进行访问：
 
@@ -68,13 +68,11 @@ SSL 剥离即阻止用户使用 HTTPS 访问网站。由于并不是所有网站
 Strict-Transport-Security: max-age=31536000; includeSubdomains; preload
 ```
 
-1
-
 可以看到如果这个过期时间非常长，就是导致在很长一段时间内，浏览器都会强制使用 HTTPS 访问该网站。
 
 HSTS 有一个很明显的缺点，是需要等待第一个服务器的影响中的头部才能生效，但如果第一次访问该网站就被攻击呢？为了解决这个问题，浏览器中会带上一些网站的域名，被称为 HSTS preload list。对于在这个 list 的网站来说，直接强制使用 HTTPS。
 
-### [#](http://www.liuwq.com/views/linux基础/https协议.html#伪造证书攻击)伪造证书攻击
+### 伪造证书攻击
 
 HSTS 只解决了 SSL 剥离的问题，然而即使在全程使用 HTTPS 的情况下，我们仍然有可能被监听。
 
@@ -86,7 +84,7 @@ HSTS 只解决了 SSL 剥离的问题，然而即使在全程使用 HTTPS 的情
 >
 > 2016 年 Mozilla 发现沃通 CA 存在严重的信任问题，例如偷签 `github.com` 的证书，故意倒填证书日期绕过浏览器对 SHA-1 证书的限制等，将停止信任 WoSign 和 StartCom 签发的新证书。
 
-### [#](http://www.liuwq.com/views/linux基础/https协议.html#hpkp)HPKP
+### HPKP
 
 HPKP 技术是为了解决伪造证书攻击而诞生的。
 
@@ -95,8 +93,6 @@ HPKP（Public Key Pinning Extension for HTTP）在 HSTS 上更进一步，HPKP �
 ```text
 Public-Key-Pins: pin-sha256="base64=="; max-age=expireTime [; includeSubDomains][; report-uri="reportURI"]
 ```
-
-1
 
 和 HSTS 类似，HPKP 也依赖于服务器的头部返回，不能解决第一次访问的问题，浏览器本身也会内置一些 HPKP 列表。
 

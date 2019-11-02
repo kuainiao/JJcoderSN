@@ -84,9 +84,7 @@ def _get_queryset(klass):
 def get_object_or_404(klass, *args, **kwargs):
     """
     使用get（）返回一个对象，如果该对象不存在，则引发Http404异常。
-
     klass可以是Model，Manager或QuerySet对象。在get（）查询中使用所有其他传递的参数和关键字参数。
-
    与QuerySet.get（）一样，如果找到多个对象，则会引发MultipleObjectsReturned。
     """
     queryset = _get_queryset(klass)

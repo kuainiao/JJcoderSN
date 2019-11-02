@@ -1,10 +1,6 @@
 # socket跟TCP/IP 的关系,单台服务器上的并发TCP连接数可以有多少
 
-------
-
-# socket跟TCP/IP 的关系,单台服务器上的并发TCP连接数可以有多少
-
-## [#](http://www.liuwq.com/views/linux基础/socket与TCP-IP关系.html#常识一：文件句柄限制)常识一：文件句柄限制
+## 常识一：文件句柄限制
 
 > 在linux下编写网络服务器程序的朋友肯定都知道每一个tcp连接都要占一个文件描述符，一旦这个文件描述符使用完了，新的连接到来返回给我们的错误是`“Socket/File:Can'topen so many files”`。
 
@@ -35,7 +31,7 @@ net.ipv4.ip_conntrack_max = 1000000
 net.ipv4.netfilter.ip_conntrack_max = 1000000
 ```
 
-## [#](http://www.liuwq.com/views/linux基础/socket与TCP-IP关系.html#常识二：端口号范围限制？)常识二：端口号范围限制？
+## 常识二：端口号范围限制？
 
 > 操作系统上端口号`1024`以下是系统保留的，从`1024-65535`是用户使用的。由于每个TCP连接都要占一个端口号，所以我们最多可以有60000多个并发连接。我想有这种错误思路朋友不在少数吧？（其中我过去就一直这么认为）
 

@@ -1,10 +1,7 @@
 """
-The metadata API is used to allow customization of how `OPTIONS` requests
-are handled. We currently provide a single default implementation that returns
-some fairly ad-hoc information about the view.
+元数据API用于允许自定义“ OPTIONS”请求的方式被处理。目前，我们提供了一个默认的实现，该实现返回有关视图的一些临时信息。
 
-Future implementations might use JSON schema or other definitions in order
-to return this information in a more standardized way.
+未来的实现可能会依次使用JSON模式或其他定义以更标准化的方式返回此信息。
 """
 from collections import OrderedDict
 
@@ -27,10 +24,7 @@ class BaseMetadata:
 
 class SimpleMetadata(BaseMetadata):
     """
-    This is the default metadata implementation.
-    It returns an ad-hoc set of information about the view.
-    There are not any formalized standards for `OPTIONS` responses
-    for us to base this on.
+    这是默认的元数据实现。它返回有关视图的临时信息集。没有任何针对“ OPTIONS”响应的正式标准可作为我们依据的标准。
     """
     label_lookup = ClassLookupDict({
         serializers.Field: 'field',
@@ -71,14 +65,13 @@ class SimpleMetadata(BaseMetadata):
 
     def determine_actions(self, request, view):
         """
-        For generic class based views we return information about
-        the fields that are accepted for 'PUT' and 'POST' methods.
+        对于基于通用类的视图，我们返回有关“ PUT”和“ POST”方法接受的字段的信息。
         """
         actions = {}
         for method in {'PUT', 'POST'} & set(view.allowed_methods):
             view.request = clone_request(request, method)
             try:
-                # Test global permissions
+                # 测试全局权限
                 if hasattr(view, 'check_permissions'):
                     view.check_permissions(view.request)
                 # Test object permissions
@@ -137,7 +130,7 @@ class SimpleMetadata(BaseMetadata):
             field_info['children'] = self.get_serializer_info(field)
 
         if (not field_info.get('read_only') and
-            not isinstance(field, (serializers.RelatedField, serializers.ManyRelatedField)) and
+                not isinstance(field, (serializers.RelatedField, serializers.ManyRelatedField)) and
                 hasattr(field, 'choices')):
             field_info['choices'] = [
                 {

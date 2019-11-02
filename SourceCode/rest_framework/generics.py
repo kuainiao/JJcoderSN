@@ -22,87 +22,72 @@ def get_object_or_404(queryset, *filter_args, **filter_kwargs):
 
 class GenericAPIView(views.APIView):
     """
-    Base class for all other generic views.
+    所有其他通用视图的基类。
     """
-    # You'll need to either set these attributes,
-    # or override `get_queryset()`/`get_serializer_class()`.
-    # If you are overriding a view method, it is important that you call
-    # `get_queryset()` instead of accessing the `queryset` property directly,
-    # as `queryset` will get evaluated only once, and those results are cached
-    # for all subsequent requests.
+    # 您需要设置这些属性，或覆盖`get_queryset（）`/`get_serializer_class（）`。
+    # 如果要覆盖视图方法，则必须调用`get_queryset（）`而不是直接访问`queryset`属性，这一点很重要，
+    # 因为`queryset`只会被评估一次，并且所有结果都将被缓存后续请求。
     queryset = None
     serializer_class = None
 
-    # If you want to use object lookups other than pk, set 'lookup_field'.
-    # For more complex lookup requirements override `get_object()`.
+    # 如果要使用除pk以外的对象查找，请设置'lookup_field'。 对于更复杂的查找要求，请覆盖`get_object（）`。
     lookup_field = 'pk'
     lookup_url_kwarg = None
 
-    # The filter backend classes to use for queryset filtering
+    # 用于查询集过滤的过​​滤器后端类
     filter_backends = api_settings.DEFAULT_FILTER_BACKENDS
 
-    # The style to use for queryset pagination.
+    # 用于查询集分页的样式。
     pagination_class = api_settings.DEFAULT_PAGINATION_CLASS
 
     def get_queryset(self):
         """
-        Get the list of items for this view.
-        This must be an iterable, and may be a queryset.
-        Defaults to using `self.queryset`.
+       获取此视图的项目列表。这必须是可迭代的，并且可以是查询集。默认使用`self.queryset`。
 
-        This method should always be used rather than accessing `self.queryset`
-        directly, as `self.queryset` gets evaluated only once, and those results
-        are cached for all subsequent requests.
-
-        You may want to override this if you need to provide different
-        querysets depending on the incoming request.
-
-        (Eg. return a list of items that is specific to the user)
+        应始终使用此方法，而不是直接访问“ self.queryset”，因为“ self.queryset”仅被评估一次，并且那些结果将为所有后续请求缓存。
+        如果您需要根据传入请求提供不同的查询集，则可能要覆盖此设置。(例如，返回特定于用户的商品列表）
         """
         assert self.queryset is not None, (
-            "'%s' should either include a `queryset` attribute, "
-            "or override the `get_queryset()` method."
-            % self.__class__.__name__
+                "'%s' should either include a `queryset` attribute, "
+                "or override the `get_queryset()` method."
+                % self.__class__.__name__
         )
 
         queryset = self.queryset
         if isinstance(queryset, QuerySet):
-            # Ensure queryset is re-evaluated on each request.
+            # 确保对每个请求重新评估查询集。
             queryset = queryset.all()
         return queryset
 
     def get_object(self):
         """
-        Returns the object the view is displaying.
+        返回视图显示的对象。
 
-        You may want to override this if you need to provide non-standard
-        queryset lookups.  Eg if objects are referenced using multiple
-        keyword arguments in the url conf.
+        如果需要提供非标准的查询集查找，则可能要覆盖此方法。例如，是否使用url conf中的多个关键字参数引用了对象。
         """
         queryset = self.filter_queryset(self.get_queryset())
 
-        # Perform the lookup filtering.
+        # 执行查找过滤。
         lookup_url_kwarg = self.lookup_url_kwarg or self.lookup_field
 
         assert lookup_url_kwarg in self.kwargs, (
-            'Expected view %s to be called with a URL keyword argument '
-            'named "%s". Fix your URL conf, or set the `.lookup_field` '
-            'attribute on the view correctly.' %
-            (self.__class__.__name__, lookup_url_kwarg)
+                'Expected view %s to be called with a URL keyword argument '
+                'named "%s". Fix your URL conf, or set the `.lookup_field` '
+                'attribute on the view correctly.' %
+                (self.__class__.__name__, lookup_url_kwarg)
         )
 
         filter_kwargs = {self.lookup_field: self.kwargs[lookup_url_kwarg]}
         obj = get_object_or_404(queryset, **filter_kwargs)
 
-        # May raise a permission denied
+        # 可能会提出拒绝的许可
         self.check_object_permissions(self.request, obj)
 
         return obj
 
     def get_serializer(self, *args, **kwargs):
         """
-        Return the serializer instance that should be used for validating and
-        deserializing input, and for serializing output.
+        返回应用于验证和反序列化输入以及序列化输出的序列化器实例。
         """
         serializer_class = self.get_serializer_class()
         kwargs['context'] = self.get_serializer_context()
@@ -110,25 +95,21 @@ class GenericAPIView(views.APIView):
 
     def get_serializer_class(self):
         """
-        Return the class to use for the serializer.
-        Defaults to using `self.serializer_class`.
+        返回用于序列化器的类。默认使用`self.serializer_class`。
 
-        You may want to override this if you need to provide different
-        serializations depending on the incoming request.
-
-        (Eg. admins get full serialization, others get basic serialization)
+        如果您需要根据传入请求提供不同的序列化，则可能需要覆盖此方法。（例如，管理员获得完整的序列化，其他获得基本的序列化）
         """
         assert self.serializer_class is not None, (
-            "'%s' should either include a `serializer_class` attribute, "
-            "or override the `get_serializer_class()` method."
-            % self.__class__.__name__
+                "'%s' should either include a `serializer_class` attribute, "
+                "or override the `get_serializer_class()` method."
+                % self.__class__.__name__
         )
 
         return self.serializer_class
 
     def get_serializer_context(self):
         """
-        Extra context provided to the serializer class.
+        提供给序列化程序类的额外上下文。
         """
         return {
             'request': self.request,
@@ -138,12 +119,8 @@ class GenericAPIView(views.APIView):
 
     def filter_queryset(self, queryset):
         """
-        Given a queryset, filter it with whichever filter backend is in use.
-
-        You are unlikely to want to override this method, although you may need
-        to call it either from a list view, or from a custom `get_object`
-        method if you want to apply the configured filtering backend to the
-        default queryset.
+        给定一个查询集，请使用哪个过滤器后端对其进行过滤。
+尽管您可能需要从列表视图或自定义“ get_object”方法调用它（如果要将配置的过滤后端应用于默认查询集），但您不太可能希望覆盖此方法。
         """
         for backend in list(self.filter_backends):
             queryset = backend().filter_queryset(self.request, queryset, self)
@@ -152,7 +129,7 @@ class GenericAPIView(views.APIView):
     @property
     def paginator(self):
         """
-        The paginator instance associated with the view, or `None`.
+        与视图关联的分页器实例，或“None”。
         """
         if not hasattr(self, '_paginator'):
             if self.pagination_class is None:
@@ -163,7 +140,7 @@ class GenericAPIView(views.APIView):
 
     def paginate_queryset(self, queryset):
         """
-        Return a single page of results, or `None` if pagination is disabled.
+        返回单页结果；如果禁用了分页，则返回“None”。
         """
         if self.paginator is None:
             return None
@@ -171,20 +148,20 @@ class GenericAPIView(views.APIView):
 
     def get_paginated_response(self, data):
         """
-        Return a paginated style `Response` object for the given output data.
+        返回给定输出数据的分页样式`Response`对象。
         """
         assert self.paginator is not None
         return self.paginator.get_paginated_response(data)
 
 
-# Concrete view classes that provide method handlers
-# by composing the mixin classes with the base view.
+# 提供方法处理程序的具体视图类 通过将mixin类与基本视图组成。
 
 class CreateAPIView(mixins.CreateModelMixin,
                     GenericAPIView):
     """
-    Concrete view for creating a model instance.
+    用于创建模型实例的具体视图。
     """
+
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
@@ -192,8 +169,9 @@ class CreateAPIView(mixins.CreateModelMixin,
 class ListAPIView(mixins.ListModelMixin,
                   GenericAPIView):
     """
-    Concrete view for listing a queryset.
+    列出查询集的具体视图。
     """
+
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
@@ -201,8 +179,9 @@ class ListAPIView(mixins.ListModelMixin,
 class RetrieveAPIView(mixins.RetrieveModelMixin,
                       GenericAPIView):
     """
-    Concrete view for retrieving a model instance.
+    用于检索模型实例的具体视图。
     """
+
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
@@ -210,8 +189,9 @@ class RetrieveAPIView(mixins.RetrieveModelMixin,
 class DestroyAPIView(mixins.DestroyModelMixin,
                      GenericAPIView):
     """
-    Concrete view for deleting a model instance.
+    用于删除模型实例的具体视图。
     """
+
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
 
@@ -219,8 +199,9 @@ class DestroyAPIView(mixins.DestroyModelMixin,
 class UpdateAPIView(mixins.UpdateModelMixin,
                     GenericAPIView):
     """
-    Concrete view for updating a model instance.
+    用于更新模型实例的具体视图。
     """
+
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
 
@@ -232,8 +213,9 @@ class ListCreateAPIView(mixins.ListModelMixin,
                         mixins.CreateModelMixin,
                         GenericAPIView):
     """
-    Concrete view for listing a queryset or creating a model instance.
+   列出查询集或创建模型实例的具体视图。
     """
+
     def get(self, request, *args, **kwargs):
         return self.list(request, *args, **kwargs)
 
@@ -245,8 +227,9 @@ class RetrieveUpdateAPIView(mixins.RetrieveModelMixin,
                             mixins.UpdateModelMixin,
                             GenericAPIView):
     """
-    Concrete view for retrieving, updating a model instance.
+    用于检索，更新模型实例的具体视图。
     """
+
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
@@ -261,8 +244,9 @@ class RetrieveDestroyAPIView(mixins.RetrieveModelMixin,
                              mixins.DestroyModelMixin,
                              GenericAPIView):
     """
-    Concrete view for retrieving or deleting a model instance.
+    用于检索或删除模型实例的具体视图。
     """
+
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
@@ -275,8 +259,9 @@ class RetrieveUpdateDestroyAPIView(mixins.RetrieveModelMixin,
                                    mixins.DestroyModelMixin,
                                    GenericAPIView):
     """
-    Concrete view for retrieving, updating or deleting a model instance.
+    用于检索，更新或删除模型实例的具体视图。
     """
+
     def get(self, request, *args, **kwargs):
         return self.retrieve(request, *args, **kwargs)
 
