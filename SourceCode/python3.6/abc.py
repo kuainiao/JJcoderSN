@@ -1,5 +1,5 @@
-# Copyright 2007 Google, Inc. All Rights Reserved.
-# Licensed to PSF under a Contributor Agreement.
+# 版权所有2007 Google，Inc.保留所有权利。
+# 根据贡献者协议授权给PSF。
 
 """Abstract Base Classes (ABCs) according to PEP 3119."""
 
@@ -107,7 +107,6 @@ class abstractproperty(property):
 
 
 class ABCMeta(type):
-
     """Metaclass for defining Abstract Base Classes (ABCs).
 
     Use this metaclass to create an ABC.  An ABC can be subclassed
@@ -186,8 +185,8 @@ class ABCMeta(type):
         subtype = type(instance)
         if subtype is subclass:
             if (cls._abc_negative_cache_version ==
-                ABCMeta._abc_invalidation_counter and
-                subclass in cls._abc_negative_cache):
+                    ABCMeta._abc_invalidation_counter and
+                    subclass in cls._abc_negative_cache):
                 return False
             # Fall back to the subclass check.
             return cls.__subclasscheck__(subclass)
