@@ -1,6 +1,6 @@
 """
-Helper functions for mapping model fields to a dictionary of default
-keyword arguments that should be used for their equivalent serializer fields.
+用于将模型字段映射到默认字典的辅助函数
+应用于其等效序列化器字段的关键字参数。
 """
 import inspect
 
@@ -18,18 +18,15 @@ NUMERIC_FIELD_TYPES = (
 
 class ClassLookupDict:
     """
-    Takes a dictionary with classes as keys.
-    Lookups against this object will traverses the object's inheritance
-    hierarchy in method resolution order, and returns the first matching value
-    from the dictionary or raises a KeyError if nothing matches.
+   以类别为键的字典。针对此对象的查找将以方法解析顺序遍历该对象的继承层次结构，并从字典中返回第一个匹配值，如果没有匹配项，则引发KeyError。
     """
+
     def __init__(self, mapping):
         self.mapping = mapping
 
     def __getitem__(self, key):
         if hasattr(key, '_proxy_class'):
-            # Deal with proxy classes. Ie. BoundField behaves as if it
-            # is a Field instance when using ClassLookupDict.
+            # 处理代理类。就是使用ClassLookupDict时，BoundField的行为就像是一个Field实例一样。
             base_class = key._proxy_class
         else:
             base_class = key.__class__
@@ -45,8 +42,7 @@ class ClassLookupDict:
 
 def needs_label(model_field, field_name):
     """
-    Returns `True` if the label based on the model's verbose name
-    is not equal to the default label it would have based on it's field name.
+    如果基于模型的详细名称的标签与其基于字段名称的默认标签不相等，则返回True。
     """
     default_label = field_name.replace('_', ' ').capitalize()
     return capfirst(model_field.verbose_name) != default_label
@@ -54,8 +50,7 @@ def needs_label(model_field, field_name):
 
 def get_detail_view_name(model):
     """
-    Given a model class, return the view name to use for URL relationships
-    that refer to instances of the model.
+    给定模型类，返回视图名称以用于引用模型实例的URL关系。
     """
     return '%(model_name)s-detail' % {
         'app_label': model._meta.app_label,
@@ -65,13 +60,12 @@ def get_detail_view_name(model):
 
 def get_field_kwargs(field_name, model_field):
     """
-    Creates a default instance of a basic non-relational field.
+    创建基本非关系字段的默认实例。
     """
     kwargs = {}
     validator_kwarg = list(model_field.validators)
 
-    # The following will only be used by ModelField classes.
-    # Gets removed for everything else.
+    # 以下内容仅由ModelField类使用。 被移除。
     kwargs['model_field'] = model_field
 
     if model_field.verbose_name and needs_label(model_field, field_name):
@@ -91,12 +85,12 @@ def get_field_kwargs(field_name, model_field):
     if isinstance(model_field, models.SlugField):
         kwargs['allow_unicode'] = model_field.allow_unicode
 
-    if isinstance(model_field, models.TextField) or (postgres_fields and isinstance(model_field, postgres_fields.JSONField)):
+    if isinstance(model_field, models.TextField) or (
+            postgres_fields and isinstance(model_field, postgres_fields.JSONField)):
         kwargs['style'] = {'base_template': 'textarea.html'}
 
     if isinstance(model_field, models.AutoField) or not model_field.editable:
-        # If this field is read-only, then return early.
-        # Further keyword arguments are not valid.
+        # 如果此字段是只读的，则提早返回。 其他关键字参数无效。
         kwargs['read_only'] = True
         return kwargs
 

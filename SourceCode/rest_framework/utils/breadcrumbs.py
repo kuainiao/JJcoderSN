@@ -3,29 +3,25 @@ from django.urls import get_script_prefix, resolve
 
 def get_breadcrumbs(url, request=None):
     """
-    Given a url returns a list of breadcrumbs, which are each a
-    tuple of (name, url).
+   给定url，返回面包屑列表，每个面包屑都是（name，url）的元组。
     """
     from rest_framework.reverse import preserve_builtin_query_params
     from rest_framework.views import APIView
 
     def breadcrumbs_recursive(url, breadcrumbs_list, prefix, seen):
         """
-        Add tuples of (name, url) to the breadcrumbs list,
-        progressively chomping off parts of the url.
+        将（name，url）的元组添加到面包屑列表中，逐步删除部分url。
         """
         try:
             (view, unused_args, unused_kwargs) = resolve(url)
         except Exception:
             pass
         else:
-            # Check if this is a REST framework view,
-            # and if so add it to the breadcrumbs
+            # 检查这是否是REST框架视图，如果是，则将其添加到面包屑中
             cls = getattr(view, 'cls', None)
             initkwargs = getattr(view, 'initkwargs', {})
             if cls is not None and issubclass(cls, APIView):
-                # Don't list the same view twice in a row.
-                # Probably an optional trailing slash.
+                # 不要连续两次列出同一视图。 可能是可选的斜杠。
                 if not seen or seen[-1] != view:
                     c = cls(**initkwargs)
                     name = c.get_view_name()
@@ -38,13 +34,11 @@ def get_breadcrumbs(url, request=None):
             return breadcrumbs_list
 
         elif url.endswith('/'):
-            # Drop trailing slash off the end and continue to try to
-            # resolve more breadcrumbs
+            # 末尾添加斜杠，并继续尝试解决更多的面包屑
             url = url.rstrip('/')
             return breadcrumbs_recursive(url, breadcrumbs_list, prefix, seen)
 
-        # Drop trailing non-slash off the end and continue to try to
-        # resolve more breadcrumbs
+        # 将结尾的非斜杠删除掉，并继续尝试解决更多的面包屑
         url = url[:url.rfind('/') + 1]
         return breadcrumbs_recursive(url, breadcrumbs_list, prefix, seen)
 

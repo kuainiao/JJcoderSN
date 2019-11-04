@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 class Token(models.Model):
     """
-    The default authorization token model.
+    默认授权令牌模型。
     """
     key = models.CharField(_("Key"), max_length=40, primary_key=True)
     user = models.OneToOneField(

@@ -19,6 +19,7 @@ from .utils import get_pk_description, is_list_view
 # TODO: ???: move up to base.
 header_regex = re.compile('^[a-zA-Z][0-9A-Za-z_]*:')
 
+
 # Generator #
 
 
@@ -119,9 +120,7 @@ class SchemaGenerator(BaseSchemaGenerator):
         'delete': 'destroy',
     }
 
-    # Map the method names we use for viewset actions onto external schema names.
-    # These give us names that are more suitable for the external representation.
-    # Set by 'SCHEMA_COERCE_METHOD_NAMES'.
+    # 将用于视图集操作的方法名称映射到外部架构名称。 这些为我们提供了更适合外部表示的名称。 由“ SCHEMA_COERCE_METHOD_NAMES”设置。
     coerce_method_names = None
 
     def __init__(self, title=None, url=None, description=None, patterns=None, urlconf=None, version=None):
@@ -133,14 +132,13 @@ class SchemaGenerator(BaseSchemaGenerator):
 
     def get_links(self, request=None):
         """
-        Return a dictionary containing all the links that should be
-        included in the API schema.
+        返回一个字典，其中包含应该包含在API模式中的所有链接。
         """
         links = LinkNode()
 
         paths, view_endpoints = self._get_paths_and_endpoints(request)
 
-        # Only generate the path prefix for paths that will be included
+        # 仅为将包含的路径生成路径前缀
         if not paths:
             return None
         prefix = self.determine_path_prefix(paths)
@@ -157,7 +155,7 @@ class SchemaGenerator(BaseSchemaGenerator):
 
     def get_schema(self, request=None, public=False):
         """
-        Generate a `coreapi.Document` representing the API schema.
+        生成代表API模式的`coreapi.Document`。
         """
         self._initialise_endpoints()
 
@@ -178,8 +176,7 @@ class SchemaGenerator(BaseSchemaGenerator):
     # Method for generating the link layout....
     def get_keys(self, subpath, method, view):
         """
-        Return a list of keys that should be used to layout a link within
-        the schema document.
+        返回键列表，这些键应用于在架构文档中布局链接。
 
         /users/                   ("users", "list"), ("users", "create")
         /users/{pk}/              ("users", "read"), ("users", "update"), ("users", "delete")
@@ -189,10 +186,10 @@ class SchemaGenerator(BaseSchemaGenerator):
         /users/{pk}/groups/{pk}/  ("users", "groups", "read"), ("users", "groups", "update"), ("users", "groups", "delete")
         """
         if hasattr(view, 'action'):
-            # Viewsets have explicitly named actions.
+            # 视图集已明确命名动作。
             action = view.action
         else:
-            # Views have no associated action, so we determine one from the method.
+            # 视图没有关联的动作，因此我们从方法中确定一个。
             if is_list_view(subpath, method, view):
                 action = 'list'
             else:
@@ -250,6 +247,7 @@ class SchemaGenerator(BaseSchemaGenerator):
                 return '/'
             prefixes.append('/' + prefix + '/')
         return common_path(prefixes)
+
 
 # View Inspectors #
 
@@ -347,6 +345,7 @@ class AutoSchema(ViewInspector):
 
     Responsible for per-view introspection and schema generation.
     """
+
     def __init__(self, manual_fields=None):
         """
         Parameters:
@@ -412,7 +411,8 @@ class AutoSchema(ViewInspector):
             # An explicit docstring on the method or action.
             return self._get_description_section(view, method.lower(), formatting.dedent(smart_text(method_docstring)))
         else:
-            return self._get_description_section(view, getattr(view, 'action', method.lower()), view.get_view_description())
+            return self._get_description_section(view, getattr(view, 'action', method.lower()),
+                                                 view.get_view_description())
 
     def _get_description_section(self, view, header, description):
         lines = [line for line in description.splitlines()]
@@ -626,6 +626,7 @@ class ManualSchema(ViewInspector):
     Allows providing a list of coreapi.Fields,
     plus an optional description.
     """
+
     def __init__(self, fields, description='', encoding=None):
         """
         Parameters:
@@ -640,7 +641,6 @@ class ManualSchema(ViewInspector):
         self._encoding = encoding
 
     def get_link(self, path, method, base_url):
-
         if base_url and path.startswith('/'):
             path = path[1:]
 

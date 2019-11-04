@@ -74,14 +74,13 @@ class SimpleMetadata(BaseMetadata):
                 # 测试全局权限
                 if hasattr(view, 'check_permissions'):
                     view.check_permissions(view.request)
-                # Test object permissions
+                # 测试对象权限
                 if method == 'PUT' and hasattr(view, 'get_object'):
                     view.get_object()
             except (exceptions.APIException, PermissionDenied, Http404):
                 pass
             else:
-                # If user has appropriate permissions for the view, include
-                # appropriate metadata about the fields that should be supplied.
+                # 如果用户对该视图具有适当的权限，请包括关于应该提供的字段的适当的元数据。
                 serializer = view.get_serializer()
                 actions[method] = self.get_serializer_info(serializer)
             finally:
@@ -91,12 +90,10 @@ class SimpleMetadata(BaseMetadata):
 
     def get_serializer_info(self, serializer):
         """
-        Given an instance of a serializer, return a dictionary of metadata
-        about its fields.
+        给定序列化程序的实例，返回有关其字段的元数据字典。
         """
         if hasattr(serializer, 'child'):
-            # If this is a `ListSerializer` then we want to examine the
-            # underlying child serializer instance instead.
+            # 如果这是一个`ListSerializer`，那么我们想检查基础子序列化器实例。
             serializer = serializer.child
         return OrderedDict([
             (field_name, self.get_field_info(field))
@@ -106,8 +103,7 @@ class SimpleMetadata(BaseMetadata):
 
     def get_field_info(self, field):
         """
-        Given an instance of a serializer field, return a dictionary
-        of metadata about it.
+       给定序列化器字段的实例，返回有关它的元数据字典。
         """
         field_info = OrderedDict()
         field_info['type'] = self.label_lookup[field]

@@ -1,5 +1,5 @@
 """
-Helper classes for parsers.
+解析器的帮助器类。
 """
 import datetime
 import decimal
@@ -16,9 +16,9 @@ from rest_framework.compat import coreapi
 
 class JSONEncoder(json.JSONEncoder):
     """
-    JSONEncoder subclass that knows how to encode date/time/timedelta,
-    decimal types, generators and other basic python objects.
+    JSONEncoder子类，它知道如何编码日期/时间/时间增量，十进制类型，生成器和其他基本的python对象。
     """
+
     def default(self, obj):
         # For Date Time string spec, see ECMA 262
         # https://ecma-international.org/ecma-262/5.1/#sec-15.9.1.15
@@ -39,7 +39,7 @@ class JSONEncoder(json.JSONEncoder):
         elif isinstance(obj, datetime.timedelta):
             return str(obj.total_seconds())
         elif isinstance(obj, decimal.Decimal):
-            # Serializers will coerce decimals to strings by default.
+            # 默认情况下，序列化程序会将小数转换为字符串。
             return float(obj)
         elif isinstance(obj, uuid.UUID):
             return str(obj)
