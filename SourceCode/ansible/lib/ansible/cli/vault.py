@@ -3,6 +3,7 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
+
 __metaclass__ = type
 
 import os
@@ -52,7 +53,8 @@ class VaultCLI(CLI):
     def init_parser(self):
         super(VaultCLI, self).init_parser(
             desc="encryption/decryption utility for Ansible data files",
-            epilog="\nSee '%s <command> --help' for more information on a specific command.\n\n" % os.path.basename(sys.argv[0])
+            epilog="\nSee '%s <command> --help' for more information on a specific command.\n\n" % os.path.basename(
+                sys.argv[0])
         )
 
         common = opt_help.argparse.ArgumentParser(add_help=False)
@@ -73,7 +75,8 @@ class VaultCLI(CLI):
                               action='store', type=str,
                               help='the vault id used to encrypt (required if more than vault-id is provided)')
 
-        create_parser = subparsers.add_parser('create', help='Create new vault encrypted file', parents=[vault_id, common])
+        create_parser = subparsers.add_parser('create', help='Create new vault encrypted file',
+                                              parents=[vault_id, common])
         create_parser.set_defaults(func=self.execute_create)
         create_parser.add_argument('args', help='Filename', metavar='file_name', nargs='*')
 
@@ -93,7 +96,8 @@ class VaultCLI(CLI):
         encrypt_parser.set_defaults(func=self.execute_encrypt)
         encrypt_parser.add_argument('args', help='Filename', metavar='file_name', nargs='*')
 
-        enc_str_parser = subparsers.add_parser('encrypt_string', help='Encrypt a string', parents=[common, output, vault_id])
+        enc_str_parser = subparsers.add_parser('encrypt_string', help='Encrypt a string',
+                                               parents=[common, output, vault_id])
         enc_str_parser.set_defaults(func=self.execute_encrypt_string)
         enc_str_parser.add_argument('args', help='String to encrypt', metavar='string_to_encrypt', nargs='*')
         enc_str_parser.add_argument('-p', '--prompt', dest='encrypt_string_prompt',
@@ -123,7 +127,8 @@ class VaultCLI(CLI):
         if options.vault_ids:
             for vault_id in options.vault_ids:
                 if u';' in vault_id:
-                    raise AnsibleOptionsError("'%s' is not a valid vault id. The character ';' is not allowed in vault ids" % vault_id)
+                    raise AnsibleOptionsError(
+                        "'%s' is not a valid vault id. The character ';' is not allowed in vault ids" % vault_id)
 
         if getattr(options, 'output_file', None) and len(options.args) > 1:
             raise AnsibleOptionsError("At most one input file may be used with the --output option")
@@ -182,8 +187,9 @@ class VaultCLI(CLI):
                                          create_new_password=True)
 
             if len(vault_secrets) > 1 and not encrypt_vault_id:
-                raise AnsibleOptionsError("The vault-ids %s are available to encrypt. Specify the vault-id to encrypt with --encrypt-vault-id" %
-                                          ','.join([x[0] for x in vault_secrets]))
+                raise AnsibleOptionsError(
+                    "The vault-ids %s are available to encrypt. Specify the vault-id to encrypt with --encrypt-vault-id" %
+                    ','.join([x[0] for x in vault_secrets]))
 
             if not vault_secrets:
                 raise AnsibleOptionsError("A vault password is required to use Ansible's Vault")
@@ -399,7 +405,8 @@ class VaultCLI(CLI):
             if show_delimiter:
                 human_index = index + 1
                 if name:
-                    err_msg = '# The encrypted version of variable ("%s", the string #%d from %s).\n' % (name, human_index, src)
+                    err_msg = '# The encrypted version of variable ("%s", the string #%d from %s).\n' % (
+                    name, human_index, src)
                 else:
                     err_msg = '# The encrypted version of the string #%d from %s.)\n' % (human_index, src)
             output.append({'out': yaml_text, 'err': err_msg})

@@ -1,9 +1,5 @@
 # 一、HAProxy实现高级负载均衡实战和ACL控制
 
-
-
-![img](assets/1216496-20171121164523977-1483487077.png)
-
  **haproxy实现高级负载均衡实战**
 
 　　环境：随着公司业务的发展，公司负载均衡服务已经实现四层负载均衡，但业务的复杂程度提升，公司要求把mobile手机站点作为单独的服务提供，不在和pc站点一起提供服务，此时需要做7层规则负载均衡，运维总监要求，能否用一种服务同既能实现七层负载均衡，又能实现四层负载均衡，并且性能高效，配置管理容易，而且还是开源。
@@ -39,7 +35,7 @@ yum -y install keepalived
 
 vim /etc/keepalived/keepalived.conf
 
-```
+```json
 ! Configuration File for keepalived
 global_defs {
    notification_email {
