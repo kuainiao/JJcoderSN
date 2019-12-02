@@ -19,8 +19,8 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.synced_folder ".", "/vagrant", type: "rsync",
-    rsync__verbose: true,
-    rsync__exclude: ['.git*', 'node_modules*','*.log','*.box','Vagrantfile']
+                          rsync__verbose: true,
+                          rsync__exclude: ['.git*', 'node_modules*', '*.log', '*.box', 'Vagrantfile']
 
   config.vm.provision "shell", inline: <<-SHELL
 ## 设置yum的阿里云源
