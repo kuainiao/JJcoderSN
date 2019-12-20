@@ -1,14 +1,10 @@
 # YAML 语法
 
-> 个人感觉这篇文档属于"搬运工"性质
->
-> 可以查看官方或者其他的博客资料，会有一大堆的内容
-
 YAML语言的设计参考了JSON，XML和SDL等语言。YAML 强调以**数据为中心**,简洁易读,编写简单。
 
 **有意思的命名：**
 
-AML全称是”YAML Ain’t a Markup Language”（YAML不是一种置标语言）的递归缩写。 在开发的这种语言时，YAML 的意思其实是：”Yet Another Markup Language”（仍是一种置标语言）。
+YAML全称是”YAML Ain’t a Markup Language”（YAML不是一种置标语言）的递归缩写。 在开发的这种语言时，YAML 的意思其实是：”Yet Another Markup Language”（仍是一种置标语言）。
 
 ## 语法特点
 

@@ -99,7 +99,7 @@ VCS 和文本编辑器的撤销功能比起来，有一个很重要的区别是�
 >
 > 不过也有一些例外，比如游戏开发。游戏的开发中有大量的大尺寸数据和媒体文件，并且这些文件的格式也不容易压缩尺寸，如果用分布式 VCS 会导致仓库的体积非常庞大。所以一些大型游戏的开发会选择中央式的 VCS 来管理代码。
 
-# 上手 1：新公司用 Git 管理代码，怎么快速上手？
+# 用 Git 管理代码，怎么快速上手？
 
 > 已经有 Git 经验的可以跳过这一节
 
@@ -133,25 +133,17 @@ VCS 和文本编辑器的撤销功能比起来，有一个很重要的区别是�
     .gitignore
     ```
 
-     
-
     设置项目类型，
 
     ```
-    .gitignore
+.gitignore
     ```
-
-     
-
+    
     是 Git 仓库中的一个特殊的文本文件，它里面记录了你不希望提交到仓库的目录和文件的名称或类型，例如你的
 
-     
-
     ```
-    /build
+/build
     ```
-
-     
 
     目录；把 ① 和 ② 填好之后，就可以点 ③ 来完成远程仓库的创建了
 
@@ -481,7 +473,7 @@ git push
 
 
 
-# 上手 2：团队工作的基本工作模型
+# 团队工作的基本工作模型
 
 对于 Git 来说，团队合作和个人独立工作最大的不同在于，你会提交代码，别人也会提交；你会 push，别人也会 push，因此除了把代码上传，每个人还需要把别人最新的代码下载到自己的电脑。而且，这些工作都是并行进行的。
 
@@ -512,10 +504,6 @@ git clone https://github.com/rengwuxian/git-practice.git git-practice-another
 
 
 现在，你就可以假装 `/git-practice` 这个目录是你的电脑上的工作目录，而那个新建的 `/git-practice-another` 是你同事的电脑上的工作目录。
-
-
-
-![img](git%E8%AF%A6%E8%A7%A3.assets/15fd779626c48d66)
 
 
 
@@ -669,7 +657,7 @@ git push
 
 
 
-# 进阶 1：HEAD、master 与 branch
+# HEAD、master 与 branch
 
 这一节主要是几个概念的解释：HEAD、master 以及 Git 中非常重要的一个概念： branch。
 
@@ -878,8 +866,6 @@ git commit
 
 ![img](git%E8%AF%A6%E8%A7%A3.assets/15fe3354ab0861a7)
 
-
-
 ### 删除 branch
 
 删除 `branch` 的方法非常简单：`git branch -d 名称`。例如要删除 `feature1` 这个 branch：
@@ -941,7 +927,7 @@ Git 中的 `HEAD` 和每一个 `branch` 以及其他的引用，都是以文本�
     2. 切换的方式是 `git checkout 名称`；
     3. 删除的方式是 `git branch -d 名称`。
 
-    # 进阶 2：push 的本质
+    # push 的本质
 
     在之前的内容里，我粗略地说过，`push` 指令做的事是把你的本地提交上传到中央仓库去，用本地的内容来覆盖掉远端的内容。这个说法其实是不够准确的，但 Git 的知识系统比较庞大，在你对 Git 了解比较少的时候，用「上传本地提交」来解释会比较好理解；而在你知道了 `branch`，并且明白了 `branch` 的具体含义以后，我就可以告诉你 `push` 到底是什么了。
 
@@ -998,7 +984,7 @@ Git 中的 `HEAD` 和每一个 `branch` 以及其他的引用，都是以文本�
     2. `push` 的时候，如果当前分支是一个本地创建的分支，需要指定远程仓库名和分支名，用 `git push origin branch_name` 的格式，而不能只用 `git push`；或者可以通过 `git config` 修改 `push.default` 来改变 `push` 时的行为逻辑。
     3. `push` 的时候之后上传当前分支，并不会上传 `HEAD`；远程仓库的 `HEAD` 是永远指向默认分支（即 `master`）的。
 
-    # 进阶 3：merge：合并 commits
+    # merge：合并 commits
 
     前面说到，`pull` 的内部操作其实是把远程仓库取到本地后（使用的是 `fetch`），再用一次 `merge` 来把远端仓库的新 `commits` 合并到本地。这一节就说一下，`merge` 到底是什么。
 
@@ -2103,7 +2089,7 @@ Git 中的 `HEAD` 和每一个 `branch` 以及其他的引用，都是以文本�
                         1. 如果出错内容在私有 `branch`：在本地把内容修正后，强制 `push` (`push -f`）一次就可以解决；
                         2. 如果出错内容在 `master`：不要强制 `push`，而要用 `revert` 把写错的 `commit` 撤销。
 
-# 高级 7：reset 的本质——不止可以撤销提交
+# reset 的本质——不止可以撤销提交
 
 前面讲到，在最新的 `commit` 写错时，可以用 `reset --hard` 来把 `commit` 撤销：
 
@@ -2297,7 +2283,7 @@ git status
 
 除了上面这三种参数，还有一些没有列出的较为不常用的参数；另外除了我讲的功能外，`reset` 其实也还有一些别的功能和用法。不过 `reset` 最关键的功能、用法和本质原理就是上面这些了，想了解更多的话，可以去官网了解一下。
 
-# 高级 8：checkout 的本质
+# checkout 的本质
 
 在前面的 `branch` 的部分，我说到 `checkout` 可以用来切换 `branch`：
 
@@ -2354,7 +2340,7 @@ git checkout --detach
 
 ![git checkout --detach](git%E8%AF%A6%E8%A7%A3.assets/1600acce7b90b009)git checkout --detach
 
-# 高级 9：紧急情况：「立即给我打个包，现在马上！」
+# 紧急情况：「立即给我打个包」
 
 前面在讲 `branch` 的时候讲到，利用 `branch` 可以实现一人多任务的需求，从而可以轻松应对「嘿，这个先别做了，给你个新活」的情况。但有时，尤其是在互联网公司，你可能会遇到比这更紧急的情况：你正对着电脑发呆，忽然见到一个同事屁股着着火就跑来找你了：「快快快，立即给我打个包，现在马上，拜托拜托！」
 
@@ -2390,7 +2376,7 @@ git stash pop
 git stash -u
 ```
 
-# 高级 10：branch 删过了才想起来有用？
+# branch 删过了才想起来有用？
 
 `branch` 用完就删是好习惯，但有的时候，不小心手残删了一个还有用的 `branch` ，或者把一个 `branch` 删掉了才想起来它还有用，怎么办？
 
@@ -2433,7 +2419,7 @@ git reflog master
 
 ![img](git%E8%AF%A6%E8%A7%A3.assets/15fe3de0548714c7)
 
-# 额外说点：.gitignore——排除不想被管理的文件和目录
+# .gitignore——排除不想被管理的文件和目录
 
 在 Git 中有一个特殊的文本文件：`.gitignore`。这个文本文件记录了所有你希望被 Git 忽略的目录和文件。
 

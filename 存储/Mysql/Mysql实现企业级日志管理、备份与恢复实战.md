@@ -1,12 +1,6 @@
 # Mysql实现企业级日志管理、备份与恢复实战
 
- 
-
-![img](Mysql%E5%AE%9E%E7%8E%B0%E4%BC%81%E4%B8%9A%E7%BA%A7%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86%E3%80%81%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D%E5%AE%9E%E6%88%98.assets/1216496-20171208155409312-1146096933.png)
-
-Mysql实现企业级日志管理、备份与恢复实战
-
-　　**环境背景：**随着业务的发展，公司业务和规模不断扩大，网站积累了大量的用户信息和数据，对于一家互联网公司来说，用户和业务数据是根基。一旦公司的数据错乱或者丢失，对于互联网公司而言就等于说是灭顶之灾，为防止系统出现操作失误或系统故障导致数据丢失，公司要求加强用户数据的可靠性，要求全面加强数据层面备份，并能在故障发生时第一时间恢复。
+**环境背景：**随着业务的发展，公司业务和规模不断扩大，网站积累了大量的用户信息和数据，对于一家互联网公司来说，用户和业务数据是根基。一旦公司的数据错乱或者丢失，对于互联网公司而言就等于说是灭顶之灾，为防止系统出现操作失误或系统故障导致数据丢失，公司要求加强用户数据的可靠性，要求全面加强数据层面备份，并能在故障发生时第一时间恢复。
 
 **总架构图**，详见 http://www.cnblogs.com/along21/p/8000812.html
 
@@ -26,19 +20,19 @@ Mysql实现企业级日志管理、备份与恢复实战
 
 几乎热备，物理备份
 
- 
-
 ## 实战一：mysqldump+binlog 实现备份与恢复
 
 ### 1、准备备份的目录，开启二进制日志
 
+```
 mkdir /backup
 
-**chown -R** **mysql.mysql** /backup/ 把备份的目录所属人所属组改为mysql
+chown -R mysql.mysql  /backup/ 把备份的目录所属人所属组改为mysql
 
 vim /etc/my.cnf
 
 log-bin = /var/lib/mysql/bin-log 开启二进制日志，并制定路径
+```
 
 ![img](Mysql%E5%AE%9E%E7%8E%B0%E4%BC%81%E4%B8%9A%E7%BA%A7%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86%E3%80%81%E5%A4%87%E4%BB%BD%E4%B8%8E%E6%81%A2%E5%A4%8D%E5%AE%9E%E6%88%98.assets/1216496-20171208155409906-755029904.png)
 
@@ -76,29 +70,30 @@ mysqldump **--database along** --flush-log > /backup/mysql-along-backup-`date +%
 
 OPTIONS：
 
-　　**--lock-all-tables**：**锁定**所有表
-
-　　--lock-tables：锁定备份的表
-
-　　--single-transaction：启动一个大的单一事务实现备份
-
-　　--compress：压缩传输
-
-　　--events：备份指定库的事件调度器
-
-　　--routines：备份存储过程和存储函数
-
-　　--triggers：备份触发器
-
-　　**--master-data**={0|1|2}
-
-　　　　0：不记录
-
-　　　　1：记录CHANGE MASTER TO语句；此语句未被注释
-
-　　　　**2：记录为注释语句**
-
-　　**--flush-logs：**锁定表之后**执行flush logs命令，生成一个新的二进制日志**
+> 　　**--lock-all-tables**：**锁定**所有表
+>
+> 　　--lock-tables：锁定备份的表
+>
+> 　　--single-transaction：启动一个大的单一事务实现备份
+>
+> 　　--compress：压缩传输
+>
+> 　　--events：备份指定库的事件调度器
+>
+> 　　--routines：备份存储过程和存储函数
+>
+> 　　--triggers：备份触发器
+>
+> 　　**--master-data**={0|1|2}
+>
+> 　　　　0：不记录
+>
+> 　　　　1：记录CHANGE MASTER TO语句；此语句未被注释
+>
+> 　　　　**2：记录为注释语句**
+>
+> 　　**--flush-logs：**锁定表之后**执行flush logs命令，生成一个新的二进制日志**
+>
 
  
 

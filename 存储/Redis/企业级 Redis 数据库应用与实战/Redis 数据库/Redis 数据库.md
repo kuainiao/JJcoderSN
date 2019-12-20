@@ -107,7 +107,7 @@ iptables: Firewall is not running.
 [root@Redis ~]# cd /usr/local/
 [root@Redis local]# wget http://download.redis.io/releases/redis-3.2.10.tar.gz
 [root@Redis local]# tar xzf redis-3.2.10.tar.gz
-[root@Redis local]# \rm redis-3.2.10.tar.gz 
+[root@Redis local]# rm redis-3.2.10.tar.gz 
 [root@Redis local]# mv redis-3.2.10 redis
 [root@Redis local]# cd redis/
 [root@Redis redis]# make

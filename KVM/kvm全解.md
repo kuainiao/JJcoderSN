@@ -1,18 +1,4 @@
-# ***\*kvm虚拟化\****
-
-# ***\*目录\****
-
-[kvm软件安装](#_kvm软件安装)
-
-[guest os安装](#_guest os安装)
-
-[kvm存储](#_kvm存储)
-
-[kvm管理](#_kvm管理)
-
-[脚本管理kvm](#_脚本管理kvm)
-
- 
+# kvm虚拟化
 
 什么是虚拟化
 
@@ -130,7 +116,7 @@ vps 虚拟专用服务器
 
 云主机
 
-# ***\*kvm软件安装\****
+# kvm软件安装
 
 环境准备
 
@@ -216,7 +202,7 @@ virt-manager：图形管理程序
 
  
 
-# ***\*guest os安装\****
+# guest os安装
 
 1.图形方式（非常重要 非常简单）
 
@@ -224,7 +210,7 @@ virt-manager：图形管理程序
 
 3.命令行模式（重中之重 最常用 模板镜像+配置文件 方式配置规格）
 
-## ***\*图形模式安装guest os\****
+## 图形模式安装guest os
 
 \# virt-manager
 
@@ -232,11 +218,11 @@ virt-manager：图形管理程序
 
   ![img](kvm%E5%85%A8%E8%A7%A3.assets/wpsU6qIB9.jpg)
 
-## ***\*guestos安装出错\****
+## guestos安装出错
 
 如果所有问题都排查过后还是安装不上guestos，最后的原因就是在安装宿主机系统的时候各种兼容性软件没有安装而且Yum也没有自动处理导致的
 
-## ***\*完全文本方式安装\****
+## 完全文本方式安装
 
 注意：不需要讲
 
@@ -288,7 +274,7 @@ virt-manager：图形管理程序
 
  
 
-## ***\*命令行模式安装\****
+## 命令行模式安装
 
 虚拟机的组成部分
 
@@ -427,7 +413,6 @@ vm1.img
    <target dev='vda' bus='virtio'/>
 
    <address type='pci' domain='0x0000' bus='0x00' slot='0x06' function='0x0'/>
-
   </disk>
 
  
@@ -441,7 +426,6 @@ vm1.img
    <target dev='vda' bus='virtio'/>
 
    <address type='pci' domain='0x0000' bus='0x00' slot='0x16' function='0x0'/>
-
    </disk>
 
   
@@ -449,7 +433,6 @@ vm1.img
   <controller type='usb' index='0' model='ich9-ehci1'>
 
    <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x7'/>
-
   </controller>
 
   <controller type='usb' index='0' model='ich9-uhci1'>
@@ -457,7 +440,6 @@ vm1.img
    <master startport='0'/>
 
    <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x0' multifunction='on'/>
-
   </controller>
 
   <controller type='usb' index='0' model='ich9-uhci2'>
@@ -465,7 +447,6 @@ vm1.img
    <master startport='2'/>
 
    <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x1'/>
-
   </controller>
 
   <controller type='usb' index='0' model='ich9-uhci3'>
@@ -473,7 +454,6 @@ vm1.img
    <master startport='4'/>
 
    <address type='pci' domain='0x0000' bus='0x00' slot='0x04' function='0x2'/>
-
   </controller>
 
   <controller type='pci' index='0' model='pci-root'/>
@@ -481,7 +461,6 @@ vm1.img
   <controller type='virtio-serial' index='0'>
 
    <address type='pci' domain='0x0000' bus='0x00' slot='0x05' function='0x0'/>
-
   </controller>
 
  
@@ -495,7 +474,6 @@ vm1.img
    <model type='virtio'/>
 
    <address type='pci' domain='0x0000' bus='0x00' slot='0x03' function='0x0'/>
-
   </interface>
 
   
@@ -521,7 +499,6 @@ vm1.img
    <target type='virtio' name='org.qemu.guest_agent.0'/>
 
    <address type='virtio-serial' controller='0' bus='0' port='1'/>
-
   </channel>
 
   <input type='mouse' bus='ps2'/>
@@ -531,14 +508,13 @@ vm1.img
   <memballoon model='virtio'>
 
    <address type='pci' domain='0x0000' bus='0x00' slot='0x07' function='0x0'/>
-
   </memballoon>
 
  </devices>
 
 </domain>    
 
-## ***\*升级配置\****
+## 升级配置
 
 \1. 修改配置文件（比如添加磁盘，那就添加如下配置）
 
@@ -551,7 +527,6 @@ vm1.img
    <target dev='vda' bus='virtio'/>
 
    <address type='pci' domain='0x0000' bus='0x00' slot='0x16' function='0x0'/>
-
    </disk>
 
   
@@ -566,7 +541,7 @@ vm1.img
 
 \# virsh define /etc/libvirtd/qemu/vm3.xml
 
-## ***\*安装系统问题\****
+## 安装系统问题
 
 问题：用图形安装guest os的时候卡住不动
 
@@ -586,7 +561,7 @@ vm1.img
 
 ![img](kvm%E5%85%A8%E8%A7%A3.assets/wpsH148Gk.jpg) 
 
-# ***\*kvm\*******\*存储\****
+# kvm存储
 
 概念：
 
@@ -600,7 +575,7 @@ vm1.img
 
  
 
-## ***\*存储池管理\****  
+## 存储池管理
 
   1.创建基于文件夹的存储池（目录）
 
@@ -664,7 +639,7 @@ Virsh vol-delete --pool vmdisk  .qcow2
 
  
 
-## ***\*生产环境存储池使用\****
+## 生产环境存储池使用
 
 1.首先创建了一个LVM ，使用lvcreate命令，创建一个名为lv_kvm，大小为250G的逻辑卷，卷组名为VolGroup(VolGroup是已经创建好的卷组，创建方法在上一篇文章中)
 
@@ -802,7 +777,7 @@ Virsh vol-delete --pool vmdisk  .qcow2
 
  
 
-## ***\*磁盘\*******\*格式\****
+## 磁盘格式
 
 建立虚拟机磁盘镜像文件：
 
@@ -858,7 +833,7 @@ qemu-kvm  qemu是早先的一个模拟器，kvm是基于qemu发展出来的。
 
  
 
-## ***\*挂载磁盘\****
+## 挂载磁盘
 
 作为虚拟化环境管理员，你肯定遇到过虚拟机无法启动的情况。实施排错时，你需要对虚拟机的内部进行检查。而Libguestfs Linux工具集可以在这种情况下为你提供帮助。
 
@@ -896,7 +871,7 @@ Linux平台上运行下面的scp命令：
 
 \1. ><fs> run          //进入交互式shell之后第一个命令
 
-\2. ><fs> list-filesystems //列出磁盘镜像文件内的文件系统
+2. ><fs> list-filesystems //列出磁盘镜像文件内的文件系统
 
 /dev/vda1: ext4
 
@@ -994,7 +969,7 @@ Virt-rescue提供直接访问方式：
 
 mtab文件在centos7的启动过程中非常有用，删掉会导致不能启动
 
-# ***\*kvm\*******\*管理\****
+# kvm管理
 
 虚拟机的基本管理命令：
 
@@ -1204,7 +1179,7 @@ Domain vm1 started
 
  
 
-## ***\*虚拟机克隆\****
+## 虚拟机克隆
 
 虚拟机克隆
 
@@ -1246,7 +1221,7 @@ Domain vm1 started
 
 ​    Clone 'vm2' created successfully.   
 
-## ***\*增量镜像（扩展）\****
+## 增量镜像（扩展）
 
 1、概述
 
@@ -1306,6 +1281,7 @@ backing file: node.img (actual path: node.img)
 
 [root@target kvm_node]# vim /etc/libvirt/qemu/node4.xml 
 
+```
 <domain type='kvm'>
 
  <name>node4</name>                 #node4的虚拟机名，须修改，否则与基本虚拟机冲突
@@ -1406,6 +1382,7 @@ backing file: node.img (actual path: node.img)
 
     <video>
 
+
    <model type='cirrus' vram='9216' heads='1'/>
 
    <address type='pci' domain='0x0000' bus='0x00' slot='0x02' function='0x0'/>
@@ -1421,6 +1398,7 @@ backing file: node.img (actual path: node.img)
  </devices>
 
 </domain>
+```
 
 4、根据xml配置定义虚拟机node4
 
@@ -1454,7 +1432,7 @@ backing file: node.img (actual path: node.img)
 
 234M  node4.img
 
-## ***\*快照\****
+## 快照
 
 为虚拟机vm8创建一个快照
 
@@ -1638,7 +1616,7 @@ anaconda-ks.cfg  install.log
 
   
 
-## ***\*热迁移\****
+## 热迁移
 
 热迁移
 
@@ -1726,7 +1704,7 @@ File---------> Add Connection
 
  
 
-## ***\*kvm网络管理\****
+## kvm网络管理
 
 画图工具：https://www.processon.com
 
@@ -1814,7 +1792,8 @@ virbr0		    8000.5254003c2ba7	yes		     virbr0-nic
 
   \# cat ifcfg-br0 
 
-  TYPE=Bridge
+```
+TYPE=Bridge
 
   NAME=br0
 
@@ -1843,6 +1822,7 @@ virbr0		    8000.5254003c2ba7	yes		     virbr0-nic
   ONBOOT="yes"
 
   BRIDGE=br0
+```
 
   
 
@@ -1868,6 +1848,7 @@ virbr0		    8000.5254003c2ba7	yes		     virbr0-nic
 
 \# vim /etc/libvirt/qemu/networks/nat3.xml
 
+```
 <network>
 
  <name>nat3</name>
@@ -1893,6 +1874,7 @@ virbr0		    8000.5254003c2ba7	yes		     virbr0-nic
  </ip>
 
 </network>
+```
 
  
 
@@ -1904,6 +1886,7 @@ virbr0		    8000.5254003c2ba7	yes		     virbr0-nic
 
 配置文件方式创建isolated网络：      
 
+```
 <network>
 
  <name>isolate1</name>
@@ -1927,6 +1910,7 @@ virbr0		    8000.5254003c2ba7	yes		     virbr0-nic
  </ip>
 
 </network>       
+```
 
  
 
@@ -1986,21 +1970,25 @@ virbr0 使用 dnsmasq 提供 DHCP 服务，可以在宿主机中查看该进程�
 
   [root@master dnsmasq]# cat virbr0.status 
 
-  [
+ 
+
+```
+ [
 
    {
 
-​    "ip-address": "192.168.122.28",
+    "ip-address": "192.168.122.28",
 
-​    "mac-address": "52:54:00:94:a7:a1",
+    "mac-address": "52:54:00:94:a7:a1",
 
-​    "hostname": "vm1",
+    "hostname": "vm1",
 
-​    "expiry-time": 1511626337
+    "expiry-time": 1511626337
 
    }
 
   ]
+```
 
  
 
@@ -2034,21 +2022,23 @@ Virtual Networks
 
 ​		# cat /etc/sysconfig/network-scripts/ifcfg-br0
 
-​		DEVICE=br0
+```
+DEVICE=br0
 
-​		TYPE=Bridge
+TYPE=Bridge
 
-​		BOOTPROTO=static
+BOOTPROTO=static
 
-​		IPADDR=192.168.0.230
+IPADDR=192.168.0.230
 
-​		PREFIX=24
+PREFIX=24
 
-​		GATEWAY=192.168.1.254
+GATEWAY=192.168.1.254
 
-​		DNS1=8.8.8.8
+DNS1=8.8.8.8
 
-​		ONBOOT=yes
+ONBOOT=yes
+```
 
 ​	
 
@@ -2080,10 +2070,6 @@ Virtual Networks
 
  
 
-\~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
- 
-
 从外面客户端访问KVM中NAT方式的内网虚拟机：
 
 本机开启路由，开启防火墙，写入如下规则：
@@ -2098,11 +2084,12 @@ Virtual Networks
 
  
 
-# ***\*脚本\*******\*管理kvm\****
+# 脚本管理kvm
 
-## ***\*批量创建虚机脚本\****
+## 批量创建虚机脚本
 
-\#!/bin/bash
+```
+#!/bin/bash
 
 \#kvm batch create vm tool
 
@@ -2142,95 +2129,94 @@ batch_self_define() {
 
  
 
-​    kvmname=`openssl rand -hex 5`
+    kvmname=`openssl rand -hex 5`
 
  
 
-​    sourceimage=/var/lib/libvirt/images/vmmodel.img
+    sourceimage=/var/lib/libvirt/images/vmmodel.img
 
-​    sourcexml=/etc/libvirt/qemu/vmmodel.xml
-
- 
-
-​    newimg=/var/lib/libvirt/images/${kvmname}.img
-
-​    newxml=/etc/libvirt/qemu/${kvmname}.xml
+    sourcexml=/etc/libvirt/qemu/vmmodel.xml
 
  
 
-​    cp $sourceimage  $newimg
+    newimg=/var/lib/libvirt/images/${kvmname}.img
 
-​    cp $sourcexml $newxml
-
- 
-
-​    kvmuuid=`uuidgen`
-
-​    kvmmem=${1}000000
-
-​    kvmcpu=$2
-
-​    kvmimg=$newimg
-
-​    kvmmac=`openssl rand -hex 3 | sed -r 's/..\B/&:/g'`
+    newxml=/etc/libvirt/qemu/${kvmname}.xml
 
  
 
-​    sed -i "s@kvmname@$kvmname@;s@kvmuuid@$kvmuuid@;s@kvmmem@$kvmmem@;s@kvmcpu@$kvmcpu@;s@kvmimg@$kvmimg@;s@kvmmac@$kvmmac@" $newxml
+    cp $sourceimage  $newimg
 
-​    virsh define $newxml
+    cp $sourcexml $newxml
 
-​    virsh list --all
+ 
+
+    kvmuuid=`uuidgen`
+
+    kvmmem=${1}000000
+
+    kvmcpu=$2
+
+    kvmimg=$newimg
+
+    kvmmac=`openssl rand -hex 3 | sed -r 's/..\B/&:/g'`
+
+ 
+
+    sed -i "s@kvmname@$kvmname@;s@kvmuuid@$kvmuuid@;s@kvmmem@$kvmmem@;s@kvmcpu@$kvmcpu@;s@kvmimg@$kvmimg@;s@kvmmac@$kvmmac@" $newxml
+
+    virsh define $newxml
+
+    virsh list --all
 
 }
 
 self_define() {
 
-​    read -p "请输入新虚机名称:" newname
+    read -p "请输入新虚机名称:" newname
 
-​    read -p "请输入新虚机内存大小(G):" newmem
+    read -p "请输入新虚机内存大小(G):" newmem
 
-​    read -p "请输入新虚机cpu个数:" newcpu
-
- 
-
-​    sourceimage=/var/lib/libvirt/images/vmmodel.img
-
-​    sourcexml=/etc/libvirt/qemu/vmmodel.xml
+    read -p "请输入新虚机cpu个数:" newcpu
 
  
 
-​    newimg=/var/lib/libvirt/images/${newname}.img
+    sourceimage=/var/lib/libvirt/images/vmmodel.img
 
-​    newxml=/etc/libvirt/qemu/${newname}.xml
-
- 
-
-​    cp $sourceimage  $newimg
-
-​    cp $sourcexml $newxml
+    sourcexml=/etc/libvirt/qemu/vmmodel.xml
 
  
 
-​    kvmname=$newname
+    newimg=/var/lib/libvirt/images/${newname}.img
 
-​    kvmuuid=`uuidgen`
+    newxml=/etc/libvirt/qemu/${newname}.xml
 
-​    kvmmem=${newmem}000000
+ 
+    cp $sourceimage  $newimg
 
-​    kvmcpu=$newcpu
-
-​    kvmimg=$newimg
-
-​    kvmmac=`openssl rand -hex 3 | sed -r 's/..\B/&:/g'`
+    cp $sourcexml $newxml
 
  
 
-​    sed -i "s@kvmname@$kvmname@;s@kvmuuid@$kvmuuid@;s@kvmmem@$kvmmem@;s@kvmcpu@$kvmcpu@;s@kvmimg@$kvmimg@;s@kvmmac@$kvmmac@" $newxml
+    kvmname=$newname
 
-​    virsh define $newxml
+    kvmuuid=`uuidgen`
 
-​    virsh list --all
+    kvmmem=${newmem}000000
+
+    kvmcpu=$newcpu
+
+    kvmimg=$newimg
+
+    kvmmac=`openssl rand -hex 3 | sed -r 's/..\B/&:/g'`
+
+ 
+
+    sed -i "s@kvmname@$kvmname@;s@kvmuuid@$kvmuuid@;s@kvmmem@$kvmmem@;s@kvmcpu@$kvmcpu@;s@kvmimg@$kvmimg@;s@kvmmac@$kvmmac@" $newxml
+
+    virsh define $newxml
+
+    virsh list --all
 
 }
 
@@ -2242,37 +2228,37 @@ case $op in
 
 2)
 
-​    read -p "请输入要创建的虚拟机的个数:" num
+    read -p "请输入要创建的虚拟机的个数:" num
 
-​    read -p "请输入新虚机内存大小(G):" newmem
+    read -p "请输入新虚机内存大小(G):" newmem
 
-​    read -p "请输入新虚机cpu个数:" newcpu
+    read -p "请输入新虚机cpu个数:" newcpu
 
  
 
-​    for((i=1;i<=$num;i++))
+    for((i=1;i<=$num;i++))
 
-​    do
+    do
 
-​        batch_self_define $newmem $newcpu
+        batch_self_define $newmem $newcpu
 
-​    done;;
+    done;;
 
  
 
 3)
 
-​    read -p "请输入要创建的虚拟机的个数:" num
+    read -p "请输入要创建的虚拟机的个数:" num
 
  
 
-​    for((i=1;i<=$num;i++))
+    for((i=1;i<=$num;i++))
 
-​    do
+    do
 
-​        batch_self_define 1 1
+        batch_self_define 1 1
 
-​    done;;
+    done;;
 
  
 
@@ -2281,15 +2267,13 @@ case $op in
  exit;;
 
 esac
+```
 
- 
-
- 
-
-## ***\*配置文件模板\****
+## 配置文件模板
 
 \# vim /etc/libvirt/qemu/vmmodel.xml
 
+```
 <domain type='kvm'>
 
  <name>kvmname</name>
@@ -2418,7 +2402,7 @@ esac
 
    <target type='isa-serial' port='0'>
 
-​    <model name='isa-serial'/>
+    <model name='isa-serial'/>
 
    </target>
 
@@ -2451,42 +2435,41 @@ esac
  </devices>
 
 </domain>
+```
 
- 
-
-## ***\*随机生成mac地址\****
+## 随机生成mac地址
 
 其中5种方式：
 
+```
 \# echo $[$RANDOM%9]$[$RANDOM%9]:$[$RANDOM%9]$[$RANDOM%9]:$[$RANDOM%9]$[$RANDOM%9]
+```
 
 65:42:31
 
- 
-
+```
 \# echo `openssl rand -hex 1`:`openssl rand -hex 1`:`openssl rand -hex 1`
+```
 
 99:6e:67
 
- 
-
+```
 \# openssl rand -hex 3 | sed -r 's/(..)/\1:/g'|sed 's/.$//'
+```
 
 e9:b6:12
 
- 
-
+```
 \# openssl rand -hex 3 | sed -r 's/(..)(..)(..)/\1:\2:\3/g'
+```
 
-94:89:e3
+94:89:e3 
 
- 
-
+```
 \# openssl rand -hex 3 | sed -r 's/..\B/&:/g'
+```
 
 c5:66:90
-
- 
 
 \B 表示 非单词边界
 
@@ -2496,17 +2479,17 @@ c5:66:90
 
 b>  表示以b结尾的单词
 
- 
-
 使用UUID：
 
+```
 \# uuidgen | sed -r 's/(..)(..)(..)(.*)/\1:\2:\3/'
-
- 
+```
 
 使用熵池里面的随机数：
 
+```
 \# echo -n 00:60:2F; dd bs=1 count=3 if=/dev/random 2>/dev/null | hexdump -v -e '/1 ":%02X"'
+```
 
  
 

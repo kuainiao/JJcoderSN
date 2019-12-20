@@ -1,18 +1,6 @@
-# [项目实战8—tomcat企业级Web应用服务器配置与会话保持](https://www.cnblogs.com/along21/p/8024719.html)
+# tomcat企业级Web应用服务器配置与会话保持
 
-分类: [Linux架构篇](https://www.cnblogs.com/along21/category/1114615.html)
-
-undefined
-
-![img](tomcat%E4%BC%81%E4%B8%9A%E7%BA%A7Web%E5%BA%94%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE%E4%B8%8E%E4%BC%9A%E8%AF%9D%E4%BF%9D%E6%8C%81.assets/1216496-20171211193641962-553283125.png)
-
-tomcat企业级Web应用服务器配置与实战
-
-　　**环境背景：**公司业务经过长期发展，有了很大突破，已经实现盈利，现公司要求加强技术架构应用功能和安全性以及开始向企业应用、移动APP等领域延伸，此时原来开发web服务的php语言已经不适应新的场景，需要上java技术架构，现要求你根据公司需要，实现基于java平台的web应用服务选型、搭建、实现和应用，此时你如何选择？
-
-　　项目实战系列，总架构图 http://www.cnblogs.com/along21/p/8000812.html
-
-　　本篇实战所需的包，都存放在我的网盘中 http://pan.baidu.com/s/1c2B7BO0，需要的私聊我。
+**环境背景：**公司业务经过长期发展，有了很大突破，已经实现盈利，现公司要求加强技术架构应用功能和安全性以及开始向企业应用、移动APP等领域延伸，此时原来开发web服务的php语言已经不适应新的场景，需要上java技术架构，现要求你根据公司需要，实现基于java平台的web应用服务选型、搭建、实现和应用，此时你如何选择？
 
 ## 实战一：在linux上，安装tomcat
 
@@ -66,13 +54,15 @@ https://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-8/v8.5.23/bin/
 
 ① 解包
 
-**tar xvf** apache-tomcat-8.5.11.tar.gz -C /usr/local/
+```
+tar xvf  apache-tomcat-8.5.11.tar.gz -C /usr/local/
+```
 
 ② 为了方便管理，设置软连接，若以后换版本了，可以很容易切换
 
+```
 ln -s /usr/local/apache-tomcat-7.0.78/ /usr/local/tomcat
-
- 
+```
 
 （3）设置环境配置管理脚本
 

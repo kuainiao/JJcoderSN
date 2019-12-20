@@ -1,14 +1,6 @@
-# 企业级nosql数据库应用与实战-redis的主从和集群
+# 实战-redis的主从和集群
 
-
-
-
-
-![img](assets/1216496-20171212124321613-1184870891.png)
-
-**企业级nosql数据库应用与实战-redis**
-
-　　**环境背景：**随着互联网2.0时代的发展，越来越多的公司更加注重用户体验和互动，这些公司的平台上会出现越来越多方便用户操作和选择的新功能，如优惠券发放、抢红包、购物车、热点新闻、购物排行榜等，这些业务的特点是数据更新频繁、数据结构简单、功能模块相对独立、以及访问量巨大，对于这些业务来说，如果使用mysql做数据存储的话，大量的读写请求会造成服务器巨大压力，是否有更轻量的解决，能解决此类问题？
+**环境背景：**随着互联网2.0时代的发展，越来越多的公司更加注重用户体验和互动，这些公司的平台上会出现越来越多方便用户操作和选择的新功能，如优惠券发放、抢红包、购物车、热点新闻、购物排行榜等，这些业务的特点是数据更新频繁、数据结构简单、功能模块相对独立、以及访问量巨大，对于这些业务来说，如果使用mysql做数据存储的话，大量的读写请求会造成服务器巨大压力，是否有更轻量的解决，能解决此类问题？
 
 　　**项目实战系列**，总架构图 <http://www.cnblogs.com/along21/p/8000812.html>
 
@@ -18,7 +10,9 @@
 
 ① 配置好yum 源，下载redis
 
+```
 yum -y install redis
+```
 
 ② 防火墙关闭，和selinux
 
@@ -26,50 +20,45 @@ yum -y install redis
 
 ④ 各节点之间可以通过主机名互相通信
 
- 
-
-## 实战一：redis 主从复制的实现
+## redis 主从复制的实现
 
 原理架构图：
 
 ![img](assets/1216496-20171212124322941-835571426.png)
 
-### 1、环境准备
+### 环境准备
 
-| 机器名称     | IP配置         | 服务角色 |
-| ------------ | -------------- | -------- |
-| redis-master | 192.168.30.107 | redis主  |
-| redis-slave1 | 192.168.30.7   | redis从  |
-| redis-slave2 | 192.168.30.2   | redis从  |
+| 机器名称     | IP配置          | 服务角色 |
+| ------------ | --------------- | -------- |
+| redis-master | 192.168.122.100 | redis主  |
+| redis-slave1 | 192.168.122.101 | redis从  |
+| redis-slave2 | 192.168.122.102 | redis从  |
 
-### 2、在所有机器上与配置基本配置
-
-yum install redis 下载安装
-
-cp /etc/redis.conf{,.back} 备份配置文件，好习惯
-
-vim /etc/redis.conf 配置配置文件，修改2项
+### 在所有机器上与配置基本配置
 
 ```
-bind 192.168.30.107   #监听地址（各自写各自的IP，也可以写0.0.0.0，监听所有地址）
+yum install redis # 下载安装
+cp /etc/redis.conf{,.back} # 备份配置文件，好习惯
+vim /etc/redis.conf # 配置配置文件，修改2项
+```
+
+```
+bind 192.168.122.100   #监听地址（各自写各自的IP，也可以写0.0.0.0，监听所有地址）
 daemonize yes   #后台守护进程运行
 ```
 
-### 3、依照上面设定的从主机，在从主机配置文件中开启从配置（需要配置2台机器）
+### 依照上面设定的从主机，在从主机配置文件中开启从配置（需要配置2台机器）
 
-（1）yum install redis 下载安装
-
+```
+yum install redis 下载安装
 cp /etc/redis.conf{,.back} 备份配置文件，好习惯
-
- 
-
-（2）开启从配置
-
+开启从配置
 vim /etc/redis.conf 开启从配置，只需修改一项
+```
 
 ```
 ### REPLICATION ###  在这一段配置
-slaveof 192.168.30.107 6379
+slaveof 192.168.122.100 6379
 下边保持默认就好，需要的自己修改
 #masterauth <master-password>   #如果设置了访问认证就需要设定此项。
 slave-serve-stale-data yes   #当slave与master连接断开或者slave正处于同步状态时，如果slave收到请求允许响应，no表示返回错误。
@@ -77,15 +66,13 @@ slave-read-only yes   #slave节点是否为只读。
 slave-priority 100   #设定此节点的优先级，是否优先被同步。
 ```
 
-### 4、查询并测试
+### 查询并测试
 
-（1）打开所有机器上的redis 服务
+打开所有机器上的redis 服务
 
 systemctl start redis
 
-（2）在主上登录查询主从关系，确实主从已经实现
-
-**redis-cli -h** 192.168.30.107
+在主上登录查询主从关系，确实主从已经实现
 
 192.168.30.107:6379> **info Replication**
 
@@ -103,14 +90,7 @@ repl_backlog_active:1
 repl_backlog_size:1048576
 repl_backlog_first_byte_offset:2
 repl_backlog_histlen:42
-
 ```
-
-
-
-![img](assets/1216496-20171212124323582-1976305983.png)
-
- 
 
 （3）日志也能查看到
 
@@ -128,30 +108,28 @@ tail /var/log/redis/redis.log
 1258:C 17 Oct 10:49:11.429 * RDB: 4 MB of memory used by copy-on-write
 1254:M 17 Oct 10:49:11.519 * Background saving terminated with success
 1254:M 17 Oct 10:49:11.520 * Synchronization with slave 192.168.122.102:6379 succeeded
-
 ```
 
-
-
-![img](assets/1216496-20171212124324535-302880925.png)
-
- 
-
-（4）测试主从
+ 测试主从
 
 ① 在主上置一个key
 
-192.168.30.107:6379> set master test
-
-![img](assets/1216496-20171212124324801-1303144064.png)
+```
+192.168.122.100:6379> set master test
+OK
+```
 
 ② 在从上能够查询到这个key的value，测试成功
 
-![img](assets/1216496-20171212124325066-1761062202.png)
+```
+[root@centos702 ~]# redis-cli -h 192.168.122.101
+192.168.122.101:6379> get master
+"test"
+```
 
-### 5、高级配置（根据自己需要设置）
+### 高级配置（根据自己需要设置）
 
-（1）一个**RDB文件**从master端传到slave端，分为两种情况：
+一个**RDB文件**从master端传到slave端，分为两种情况：
 
 ① 支持disk：master端将RDB file写到disk，稍后再传送到slave端；
 
@@ -159,7 +137,7 @@ tail /var/log/redis/redis.log
 
 `无磁盘diskless 方式适合磁盘读写速度慢但网络带宽非常高的环境。`
 
-（2）设置
+设置
 
 vim /etc/redis.conf
 
@@ -172,21 +150,21 @@ min-slaves-to-write 3   #主节点仅允许其能够通信的从节点数量大�
 min-slaves-max-lag 10   #从节点延迟时长超出此处指定的时长时，主节点会拒绝写入操作；
 ```
 
-## 实战二：Sentinel（哨兵）实现Redis的高可用性
+## Sentinel（哨兵）实现Redis的高可用性
 
 ### 原理及架构图
 
-a）原理
+原理
 
-　　`Sentinel`（哨兵）是Redis的高可用性（`HA`）解决方案，由**一个或多个Sentinel**实例组成的Sentinel系统可以**监视任意多个主服务器**，以及这些主服务器属下的所有从服务器，并在被监视的**主**服务器进行**下线状态**时，**自动**将下线主服务器属下的某个**从服务器升级为新的主服务器**，然后由**新的主**服务器**代替**已**下线的主服务器**继续处理命令请求。
+`Sentinel`（哨兵）是Redis的高可用性（`HA`）解决方案，由**一个或多个Sentinel**实例组成的Sentinel系统可以**监视任意多个主服务器**，以及这些主服务器属下的所有从服务器，并在被监视的**主**服务器进行**下线状态**时，**自动**将下线主服务器属下的某个**从服务器升级为新的主服务器**，然后由**新的主**服务器**代替**已**下线的主服务器**继续处理命令请求。
 
-　　Redis提供的sentinel（哨兵）机制，通过sentinel模式启动redis后，自动监控master/slave的运行状态，基本原理是：`心跳机制+投票裁决`
+Redis提供的sentinel（哨兵）机制，通过sentinel模式启动redis后，自动监控master/slave的运行状态，基本原理是：`心跳机制+投票裁决`
 
 ① **监控**（`Monitoring`）： Sentinel 会不断地检查你的主服务器和从服务器是否运作正常。
 
 ② **提醒**（`Notification`）： 当被监控的某个 Redis 服务器出现问题时， Sentinel 可以通过 API 向管理员或者其他应用程序发送通知。
 
-③ **自动故障迁移**（`Automatic failover`）： 当一个主服务器不能正常工作时， Sentinel 会开始一次自动故障迁移操作， 它会**将失效主服务器的其中一个从服务器升级为新的主服务器， 并让失效主服务器的其他从服务器改为复制新的主服务器**； 当客户端试图连接失效的主服务器时， **集群也会向客户端返回新主服务器的地址**， 使得集群可以使用新主服务器代替失效服务器。
+③ **自动故障迁移**（`Automatic failover`）： 当一个主服务器不能正常工作时，Sentinel 会开始一次自动故障迁移操作， 它会**将失效主服务器的其中一个从服务器升级为新的主服务器， 并让失效主服务器的其他从服务器改为复制新的主服务器**； 当客户端试图连接失效的主服务器时， **集群也会向客户端返回新主服务器的地址**， 使得集群可以使用新主服务器代替失效服务器。
 
  
 
@@ -208,15 +186,15 @@ b）架构流程图
 
 ![img](assets/1216496-20171212124326879-1410171727.png)
 
-### 1、环境准备
+### 环境准备
 
-| 机器名称     | IP配置         | 服务角色 | 备注         |
-| ------------ | -------------- | -------- | ------------ |
-| redis-master | 192.168.30.107 | redis主  | 开启sentinel |
-| redis-slave1 | 192.168.30.7   | redis从  | 开启sentinel |
-| redis-slave2 | 192.168.30.2   | redis从  | 开启sentinel |
+| 机器名称     | IP配置          | 服务角色 | 备注         |
+| ------------ | --------------- | -------- | ------------ |
+| redis-master | 192.168.122.100 | redis主  | 开启sentinel |
+| redis-slave1 | 192.168.122.101 | redis从  | 开启sentinel |
+| redis-slave2 | 192.168.122.102 | redis从  | 开启sentinel |
 
-### 2、按照上实验实现主从
+### 按照上实验实现主从
 
 （1）打开所有机器上的redis 服务
 
@@ -227,25 +205,29 @@ systemctl start redis
 （2）在主上登录查询主从关系，确实主从已经实现
 
 ```
-redis-cli -h 192.168.30.107
-
-192.168.30.107:6379> **info Replication
+192.168.122.100:6379> info replication
+# Replication
+role:master
+connected_slaves:2
+slave0:ip=192.168.122.101,port=6379,state=online,offset=941,lag=1
+slave1:ip=192.168.122.102,port=6379,state=online,offset=941,lag=1
+master_repl_offset:941
+repl_backlog_active:1
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:2
+repl_backlog_histlen:940
 ```
 
-![img](assets/1216496-20171212124327410-1555737497.png)
+### 在任意一个机器上配置sentinel 哨兵
 
- 
-
-### 3、在任意一个机器上配置sentinel 哨兵
-
-（1）配置sentinel
+配置sentinel
 
 vim /etc/redis-sentinel.conf
 
 ```
 port 26379   #默认监听端口26379
 #sentinel announce-ip 1.2.3.4   #监听地址，注释默认是0.0.0.0
-sentinel monitor mymaster 192.168.30.107 6379 1   #指定主redis和投票裁决的机器数，即至少有1个sentinel节点同时判定主节点故障时，才认为其真的故障
+sentinel monitor mymaster 192.168.122.101 6379 1   #指定主redis和投票裁决的机器数，即至少有1个sentinel节点同时判定主节点故障时，才认为其真的故障
 下面保存默认就行，根据自己的需求修改
 sentinel down-after-milliseconds mymaster 5000   #如果联系不到节点5000毫秒，我们就认为此节点下线。
 sentinel failover-timeout mymaster 60000   #设定转移主节点的目标节点的超时时长。
@@ -253,53 +235,75 @@ sentinel auth-pass <master-name> <password>   #如果redis节点启用了auth，
 sentinel parallel-syncs <master-name> <numslaves>   #指在failover过程中，能够被sentinel并行配置的从节点的数量；
 ```
 
- 注意：只需指定主机器的IP，等sentinel 服务开启，它能自己查询到主上的从redis；并能完成自己的操作
+>  注意：只需指定主机器的IP，等sentinel 服务开启，它能自己查询到主上的从redis；并能完成自己的操作
+>
 
- 
-
-（2）指定优先级
+指定优先级
 
 vim /etc/redis.conf 根据自己的需求设置优先级
 
 slave-priority 100 #复制集群中，主节点故障时，sentinel应用场景中的主节点选举时使用的优先级；**数字越小优先级越高**，但**0表示不参与选举**；当优先级一样时，随机选举。
 
- 
+### 开启sentienl 服务
 
-### 4、开启sentienl 服务
-
-（1）开启服务
+开启服务
 
 systemctl start redis-sentinel 在哨兵上开启服务，打开了26379端口
 
-![img](assets/1216496-20171212124327676-1793480398.png)
-
- 
-
-（2）开启服务后，/etc/redis-sentinel.conf 配置文件会生成从redis 的信息
-
-![img](assets/1216496-20171212124328144-501947031.png)
-
- 
-
-### 5、模拟主master-redis 故障，一个从升为新主
-
-（1）模拟主master-redis 故障
-
 ```
-kill 6500  # 注意kill的是redis-server
+[root@centos702 ~]# systemctl start redis-sentinel
+[root@centos702 ~]# ss -ntal | grep 6379
+LISTEN     0      128          *:26379                    *:*                  
+LISTEN     0      128    192.168.122.101:6379                     *:*                  
+LISTEN     0      128       [::]:26379                 [::]:* 
 ```
 
-![img](assets/1216496-20171212124328691-933878217.png)
+开启服务后，/etc/redis-sentinel.conf 配置文件会生成从redis 的信息
 
- 
+```
+ # Generated by CONFIG REWRITE
+supervised systemd
+sentinel known-slave mymaster 192.168.122.102 6379
+sentinel known-slave mymaster 192.168.122.101 6379
+sentinel current-epoch 3
+```
 
-（2）新主生成
+### 模拟主master-redis 故障，一个从升为新主
+
+模拟主master-redis 故障
+
+```
+[root@centos701 ~]# ps aux | grep 6379
+redis     6250  0.1  0.7 142960  7956 ?        Ssl  01:25   0:02 /usr/bin/redis-server 192.168.122.100:6379
+
+kill 6250  # 注意kill的是redis-server
+```
+
+新主生成
 
 a）redis-cli -h 192.168.30.2 info Replication 在从上查询主是谁
 
-![img](assets/1216496-20171212124329176-1770589879.png)
+```
+192.168.122.101:6379> info Replication
+# Replication
+role:slave
+master_host:192.168.122.102
+master_port:6379
+master_link_status:up
+master_last_io_seconds_ago:1
+master_sync_in_progress:0
+slave_repl_offset:2980
+slave_priority:100
+slave_read_only:1
+connected_slaves:0
+master_repl_offset:0
+repl_backlog_active:0
+repl_backlog_size:1048576
+repl_backlog_first_byte_offset:0
+repl_backlog_histlen:0
+```
 
-b）在新主192.168.30.7 查询日志
+在新主192.168.30.7 查询日志
 
 tail -200 /var/log/redis/redis.log
 
@@ -321,7 +325,7 @@ d）也可通过sentinel 专门的日志查看，下一步有截图
 
 tail /var/log/redis/**sentinel.log**
 
-### 6、旧主修复，变为从
+### 旧主修复，变为从
 
 systemctl start redis 再把服务开启来，模拟故障修复
 
@@ -329,7 +333,7 @@ tail /var/log/redis/redis.log 变为从，且主为新主192.168.30.7
 
 ![img](assets/1216496-20171212124333472-281853122.png)
 
-### 7、新主发生故障，继续寻找一个从升为新主
+### 新主发生故障，继续寻找一个从升为新主
 
 （1）在新主192.168.30.7 上模拟故障
 
@@ -371,7 +375,7 @@ redis-cli -h 192.168.30.107 info Replication
 
  
 
-## 实战三：redis 集群cluster 及主从复制模型的实现
+## redis 集群cluster 及主从复制模型的实现
 
 ### 原理及架构图
 
@@ -413,7 +417,7 @@ a）原理
 
 （3）能实现横向扩展的原理
 
-　　每个redis 节点之间，都会有自己内部的连通机制，能**知道每个数据在哪个节点的hash槽中**。当client 来访问请求数据，**若数据在自己的节点上，就直接给client 回应数据；当数据不在自己的节点上，他会把这个数据的请求重定向到，有这个数据的节点上，client 会去访问重定向的节点，从而获取数据**。
+每个redis 节点之间，都会有自己内部的连通机制，能**知道每个数据在哪个节点的hash槽中**。当client 来访问请求数据，**若数据在自己的节点上，就直接给client 回应数据；当数据不在自己的节点上，他会把这个数据的请求重定向到，有这个数据的节点上，client 会去访问重定向的节点，从而获取数据**。
 
  
 
@@ -452,7 +456,7 @@ c）过程分析
 
 **备注：**
 
-　　本实验需6台机器来实现；由于我现在实验的机器有限，我用2台机器来实现；每台机器开启3个实例，分别代表3个redis 节点；大家若环境允许，可以直接开启6台机器。
+本实验需6台机器来实现；由于我现在实验的机器有限，我用2台机器来实现；每台机器开启3个实例，分别代表3个redis 节点；大家若环境允许，可以直接开启6台机器。
 
 **注意：**实验前，需关闭前面实验开启的redis 的服务。
 

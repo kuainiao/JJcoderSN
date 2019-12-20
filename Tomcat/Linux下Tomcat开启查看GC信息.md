@@ -1,10 +1,4 @@
-# [Linux下Tomcat开启查看GC信息](https://www.cnblogs.com/along21/p/9177578.html)
-
-分类: [Linux架构篇](https://www.cnblogs.com/along21/category/1114615.html)
-
-undefined
-
-**本文收录在[Linux运维企业架构实战系列](http://www.cnblogs.com/along21/p/8000812.html)**
+# Linux下Tomcat开启查看GC信息
 
 ## 一、开启GC日志
 

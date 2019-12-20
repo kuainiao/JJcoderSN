@@ -35,7 +35,7 @@ Docker 需要用到 `centos-extra` 这个源，如果您关闭了，需要重启
 旧版本的 Docker 被叫做 `docker` 或 `docker-engine`，如果您安装了旧版本的 Docker ，您需要卸载掉它。
 
 ```
-$ sudo yum remove docker \
+sudo yum remove docker \
                   docker-client \
                   docker-client-latest \
                   docker-common \
@@ -56,8 +56,8 @@ Docker CE 包，目前的包名为 `docker-ce`。
 为了方便添加软件源，支持 devicemapper 存储类型，安装如下软件包
 
 ```
-$ sudo yum update
-$ sudo yum install -y yum-utils \
+sudo yum update
+sudo yum install -y yum-utils \
   device-mapper-persistent-data \
   lvm2
 ```
@@ -67,7 +67,7 @@ $ sudo yum install -y yum-utils \
 添加 Docker 稳定版本的 yum 软件源
 
 ```
-$ sudo yum-config-manager \
+sudo yum-config-manager \
     --add-repo \
     https://download.docker.com/linux/centos/docker-ce.repo
 ```
@@ -77,8 +77,8 @@ $ sudo yum-config-manager \
 更新一下 yum 软件源的缓存，并安装 Docker。
 
 ```
-$ sudo yum update
-$ sudo yum install docker-ce
+sudo yum update
+ sudo yum install docker-ce 
 ```
 
 如果弹出 GPG key 的接收提示，请确认是否为 `060a 61c5 1b55 8a7f 742b 77aa c52f eb6b 621e 9f35`，如果是，可以接受并继续安装。
@@ -93,7 +93,7 @@ $ sudo yum install docker-ce
 加入 docker 用户组命令
 
 ```
-$ sudo usermod -aG docker USER_NAME
+sudo usermod -aG docker USER_NAME
 ```
 
 用户更新组信息后，重新登录系统即可生效。
@@ -103,7 +103,7 @@ $ sudo usermod -aG docker USER_NAME
 如果想安装指定版本的 Docker，可以查看一下版本并安装。
 
 ```
-$ yum list docker-ce --showduplicates | sort -r
+yum list docker-ce --showduplicates | sort -r
 
 docker-ce.x86_64  3:18.09.1-3.el7                     docker-ce-stable
 docker-ce.x86_64  3:18.09.0-3.el7                     docker-ce-stable
@@ -124,13 +124,13 @@ $ sudo yum install docker-ce-<VERSION STRING>
 如果想添加到开机启动
 
 ```
-$ sudo systemctl enable docker
+sudo systemctl enable docker
 ```
 
 启动 docker 服务
 
 ```
-$ sudo systemctl start docker
+sudo systemctl start docker
 ```
 
 ### 验证安装
@@ -138,7 +138,7 @@ $ sudo systemctl start docker
 验证 Docker CE 安装是否正确，可以运行 `hello-world` 镜像
 
 ```
-$ sudo docker run hello-world
+sudo docker run hello-world
 ```
 
 ## 更新和卸载 Docker

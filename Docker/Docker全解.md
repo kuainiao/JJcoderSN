@@ -8,14 +8,6 @@
 
 docker 安装
 
-上应用的一个简单流程
-
-国内源
-
-基本概念
-
-操作 
-
 Docker介绍：
 
 官网：
@@ -116,31 +108,27 @@ Docker的部署模式是：复制->运行。
 
  
 
-## 容器和 VM 的主要区别：
+## 容器和 VM 的主要区别
 
-容器提供了基于进程的隔离，而虚拟机提供了资源的完全隔离。
+1. 容器提供了基于进程的隔离，而虚拟机提供了资源的完全隔离。
 
-虚拟机可能需要一分钟来启动，而容器只需要一秒钟或更短。
+2. 虚拟机可能需要一分钟来启动，而容器只需要一秒钟或更短。
 
-容器使用宿主操作系统的内核，而虚拟机使用独立的内核。
+3. 容器使用宿主操作系统的内核，而虚拟机使用独立的内核。
 
-Docker 的局限性之一是，它只能用在 64 位的操作系统上。
+4. Docker 的局限性之一是，它只能用在 64 位的操作系统上。
 
-容器只是一个进程，而虚拟机不是
+5. 容器只是一个进程，而虚拟机不是
 
-容器占用内存低 虚拟机占用内存偏高
+6. 容器占用内存低 虚拟机占用内存偏高
 
- 
-
-## Docker对服务器端开发/部署带来的变化：
+## Docker对服务器端开发/部署带来的变化
 
 实现更轻量级的虚拟化，方便快速部署
 
 对于部署来说可以极大的减少部署的时间成本和人力成本
 
-Docker支持将应用打包进一个可以移植的容器中，重新定义了应用开发，测试，部署上线的过程，核心理念就
-
-是 Build once, Run anywhere
+Docker支持将应用打包进一个可以移植的容器中，重新定义了应用开发，测试，部署上线的过程，核心理念就是 Build once, Run anywhere
 
 1）标准化应用发布，docker容器包含了运行环境和可执行程序，可以跨平台和主机使用；
 
@@ -154,71 +142,43 @@ Docker支持将应用打包进一个可以移植的容器中，重新定义了�
 
 6）可以作为集群系统的轻量主机或节点，在IaaS平台上，已经出现了CaaS，通过容器替代原来的主机。
 
- 
+## Docker 优势
 
-## Docker 优势：
-
-1、交付物标准化
+1、**交付物标准化**
 
 Docker是软件工程领域的"标准化"交付组件，最恰到好处的类比是"集装箱"。
 
-集装箱将零散、不易搬运的大量物品封装成一个整体，集装箱更重要的意义在于它提供了一种通用的封装货物的
-
-标准，卡车、火车、货轮、桥吊等运输或搬运工具采用此标准，隧道、桥梁等也采用此标准。以集装箱为中心的
-
-标准化设计大大提高了物流体系的运行效率。
+集装箱将零散、不易搬运的大量物品封装成一个整体，集装箱更重要的意义在于它提供了一种通用的封装货物的标准，卡车、火车、货轮、桥吊等运输或搬运工具采用此标准，隧道、桥梁等也采用此标准。以集装箱为中心的标准化设计大大提高了物流体系的运行效率。
 
 传统的软件交付物包括：应用程序、依赖软件安装包、配置说明文档、安装文档、上线文档等非标准化组件。
 
 Docker的标准化交付物称为"镜像"，它包含了应用程序及其所依赖的运行环境，大大简化了应用交付的模式。
 
- 
+2、**一次构建，多次交付**
 
-2、一次构建，多次交付
+类似于集装箱的"一次装箱，多次运输"，Docker镜像可以做到"一次构建，多次交付"。当涉及到应用程序多副本部署或者应用程序迁移时，更能体现Docker的价值。 
 
-类似于集装箱的"一次装箱，多次运输"，Docker镜像可以做到"一次构建，多次交付"。当涉及到应用程序多副本
+3、**应用隔离**
 
-部署或者应用程序迁移时，更能体现Docker的价值。
+集装箱可以有效做到货物之间的隔离，使化学物品和食品可以堆砌在一起运输。Docker可以隔离不同应用程序之间的相互影响，但是比虚拟机开销更小。总之，容器技术部署速度快，开发、测试更敏捷；提高系统利用率，降低资源成本。
 
- 
+## Docker的度量
 
-3、应用隔离
+Docker是利用容器来实现的一种`轻量级的虚拟技术`，从而在保证隔离性的同时达到节省资源的目的。Docker的可移植性可以让它一次建立，到处运行。Docker的度量可以从以下四个方面进行：
 
-集装箱可以有效做到货物之间的隔离，使化学物品和食品可以堆砌在一起运输。Docker可以隔离不同应用程序
+1）**隔离性**
 
-之间的相互影响，但是比虚拟机开销更小。
+ Docker采用libcontainer作为默认容器，代替了以前的LXC。libcontainer的隔离性主要是通过内核的命名空间来实现 的，有`pid、net、ipc、mnt、uts`命令空间，将容器的进程、网络、消息、文件系统和主机名进行隔离。
 
-总之，容器技术部署速度快，开发、测试更敏捷；提高系统利用率，降低资源成本。
-
-﻿
-
-## Docker的度量：
-
-Docker是利用容器来实现的一种轻量级的虚拟技术，从而在保证隔离性的同时达到节省资源的目的。Docker的
-
-可移植性可以让它一次建立，到处运行。Docker的度量可以从以下四个方面进行：
-
-1）隔离性
-
- Docker采用libcontainer作为默认容器，代替了以前的LXC。libcontainer的隔离性主要是通过内核的命名空
-
- 间来实现 的，有pid、net、ipc、mnt、uts命令空间，将容器的进程、网络、消息、文件系统和主机名进行隔
-
- 离。
-
-2）可度量性
+2）**可度量性**
 
  Docker主要通过cgroups控制组来控制资源的度量和分配。
 
-3）移植性
+3）**移植性**
 
- Docker利用AUFS来实现对容器的快速更新。
+ Docker利用AUFS来实现对容器的快速更新。AUFS是一种支持将不同目录挂载到同一个虚拟文件系统下的文件系统，支持对每个目录的读写权限管理。AUFS具有层的念，每一次修改都是在已有的只写层进行增量修改，修改的内容将形成新的文件层，不影响原有的层。
 
- AUFS是一种支持将不同目录挂载到同一个虚拟文件系统下的文件系统，支持对每个目录的读写权限管理。AUFS具有层
-
- 的概念，每一次修改都是在已有的只写层进行增量修改，修改的内容将形成新的文件层，不影响原有的层。
-
-4）安全性
+4）**安全性**
 
  安全性可以分为容器内部之间的安全性；容器与托管主机之间的安全性。
 
@@ -226,273 +186,140 @@ Docker是利用容器来实现的一种轻量级的虚拟技术，从而在保�
 
  容器与托管主机之间的安全性主要是通过内核能力机制的控制，可以防止Docker非法入侵托管主机。
 
- 
+#### Docker容器使用AUFS作为文件系统，有如下优势
 
-Docker容器使用AUFS作为文件系统，有如下优势：
-
-1）节省存储空间
+1）**节省存储空间**
 
  多个容器可以共享同一个基础镜像存储。
 
-2）快速部署
+2）**快速部署**
 
  如果部署多个来自同一个基础镜像的容器时，可以避免多次复制操作。
 
-3）升级方便
+3）**升级方便**
 
  升级一个基础镜像即可影响到所有基于它的容器。
 
-4）增量修改
+4）**增量修改**
 
  可以在不改变基础镜像的同时修改其目录的文件，所有的更高都发生在最上层的写操作层，增加了基础镜像的可共享内容。
 
 # docker容器历史
 
-课外阅读 ：）
-
 PaaS:
 
-  从过去以物理机和虚拟机为主体的开发运维环境，向以容器为核心的基础设施的转变过程，并不是一次温和的改革，而是涵盖了对网络、存储、调度、操作系统、分布式原理等各个方面的容器化理解和改造。
+ 从过去以物理机和虚拟机为主体的开发运维环境，向以容器为核心的基础设施的转变过程，并不是一次温和的改革，而是涵盖了对网络、存储、调度、操作系统、分布式原理等各个方面的容器化理解和改造。
 
- 
+ 2013 年的后端技术领域，已经太久没有出现过令人兴奋的东西了。曾经被人们寄予厚望的云计算技术，也已经从当初虚无缥缈的概念蜕变成了实实在在的虚拟机和账单。而相比于如日中天 AWS 和盛极一时的 OpenStack，以 Cloud Foundry 为代表的开源 PaaS 项目，却成为了当时云计算技术中的一股清流。
 
-  2013 年的后端技术领域，已经太久没有出现过令人兴奋的东西了。曾经被人们寄予厚望的云计算技术，也已经从当初虚无缥缈的概念蜕变成了实实在在的虚拟机和账单。而相比于如日中天 AWS 和盛极一时的 OpenStack，以 Cloud Foundry 为代表的开源 PaaS 项目，却成为了当时云计算技术中的一股清流。
+ 当时，Cloud Foundry 项目已经基本度过了最艰难的概念普及和用户教育阶段，吸引了包括百度、京东、华为、IBM 等一大批国内外技术厂商，开启了以开源 PaaS 为核心构建平台层服务能力的变革。如果你有机会问问当时的云计算从业者们，他们十有八九都会告诉你：PaaS 的时代就要来了！这个说法其实一点儿没错，如果不是后来一个叫 Docker 的开源项目突然冒出来的话。
 
- 
+ 事实上，当时还名叫 dotCloud 的 Docker 公司，也是这股 PaaS 热潮中的一份子。只不过相比于 Heroku、Pivotal、Red Hat 等 PaaS 弄潮儿们，dotCloud 公司实在是太微不足道了，而它的主打产品由于跟主流的 Cloud Foundry 社区脱节，长期以来也无人问津。眼看就要被如火如荼的 PaaS 风潮抛弃，dotCloud 公司却做出了这样一个决定：开源自己的容器项目 Docker。显然，这个决定在当时根本没人在乎。
 
-  当时，Cloud Foundry 项目已经基本度过了最艰难的概念普及和用户教育阶段，吸引了包括百度、京东、华为、IBM 等一大批国内外技术厂商，开启了以开源 PaaS 为核心构建平台层服务能力的变革。如果你有机会问问当时的云计算从业者们，他们十有八九都会告诉你：PaaS 的时代就要来了！
+ "容器"这个概念从来就不是什么新鲜的东西，也不是 Docker 公司发明的。即使在当时最热门的 PaaS 项目 Cloud Foundry 中，容器也只是其最底层、最没人关注的那一部分。说到这里，正好以当时的事实标准 Cloud Foundry 为例，来解说一下 PaaS 技术。
 
- 
+ PaaS 项目被大家接纳的一个主要原因，就是它提供了一种名叫"应用托管"的能力。 在当时，虚拟机和云计算已经是比较普遍的技术和服务了，那时主流用户的普遍用法，就是租一批 AWS 或者 OpenStack 的虚拟机，然后像以前管理物理服务器那样，用脚本或者手工的方式在这些机器上部署应用。
 
-  这个说法其实一点儿没错，如果不是后来一个叫 Docker 的开源项目突然冒出来的话。
+ 当然，这个部署过程难免会碰到云端虚拟机和本地环境不一致的问题，所以当时的云计算服务，比的就是谁能更好地模拟本地服务器环境，能带来更好的"上云"体验。而 PaaS 开源项目的出现，就是当时解决这个问题的一个最佳方案。
 
- 
+ 举个例子，虚拟机创建好之后，运维人员只需要在这些机器上部署一个 Cloud Foundry 项目，然后开发者只要执行一条命令就能把本地的应用部署到云上，这条命令就是：
 
-事实上，当时还名叫 dotCloud 的 Docker 公司，也是这股 PaaS 热潮中的一份子。只不过相比于 Heroku、Pivotal、Red Hat 等 PaaS 弄潮儿们，dotCloud 公司实在是太微不足道了，而它的主打产品由于跟主流的 Cloud Foundry 社区脱节，长期以来也无人问津。眼看就要被如火如荼的 PaaS 风潮抛弃，dotCloud 公司却做出了这样一个决定：开源自己的容器项目 Docker。
+ $ cf push " 我的应用 "
 
- 
+ 事实上，像 Cloud Foundry 这样的 PaaS 项目，最核心的组件就是一套应用的打包和分发机制。 Cloud Foundry 为每种主流编程语言都定义了一种打包格式，而"cfpush"的作用，基本上等同于用户把应用的可执行文件和启动脚本打进一个压缩包内，上传到云上 Cloud Foundry 的存储中。接着，Cloud Foundry 会通过调度器选择一个可以运行这个应用的虚拟机，然后通知这个机器上的 Agent 把应用压缩包下载下来启动。
 
-显然，这个决定在当时根本没人在乎。
+ 这时候关键来了，由于需要在一个虚拟机上启动很多个来自不同用户的应用，Cloud Foundry 会调用操作系统的 Cgroups 和 Namespace 机制为每一个应用单独创建一个称作"沙盒"的隔离环境，然后在"沙盒"中启动这些应用进程。这样，就实现了把多个用户的应用互不干涉地在虚拟机里批量地、自动地运行起来的目的。
 
- 
+ 这，正是 PaaS 项目最核心的能力。 而这些 Cloud Foundry 用来运行应用的隔离环境，或者说"沙盒"，就是所谓的"容器"。
 
-"容器"这个概念从来就不是什么新鲜的东西，也不是 Docker 公司发明的。即使在当时最热门的 PaaS 项目 Cloud Foundry 中，容器也只是其最底层、最没人关注的那一部分。说到这里，正好以当时的事实标准 Cloud Foundry 为例，来解说一下 PaaS 技术。
+ 而 Docker 项目，实际上跟 Cloud Foundry 的容器并没有太大不同，所以在它发布后不久，Cloud Foundry 的首席产品经理 James Bayer 就在社区里做了一次详细对比，告诉用户 Docker 实际上只是一个同样使用 Cgroups 和 Namespace 实现的"沙盒"而已，没有什么特别的黑科技，也不需要特别关注。
 
- 
+ 然而，短短几个月，Docker 项目就迅速崛起了。它的崛起速度如此之快，以至于 Cloud Foundry 以及所有的 PaaS 社区还没来得及成为它的竞争对手，就直接被宣告出局了。那时候，一位多年的 PaaS 从业者曾经如此感慨道：这简直就是一场"降维打击"啊。
 
-PaaS 项目被大家接纳的一个主要原因，就是它提供了一种名叫"应用托管"的能力。 在当时，虚拟机和云计算已经是比较普遍的技术和服务了，那时主流用户的普遍用法，就是租一批 AWS 或者 OpenStack 的虚拟机，然后像以前管理物理服务器那样，用脚本或者手工的方式在这些机器上部署应用。
+ 事实上，Docker 项目确实与 Cloud Foundry 的容器在大部分功能和实现原理上都是一样的，可偏偏就是这剩下的一小部分不一样的功能，成了 Docker 项目接下来"呼风唤雨"的不二法宝。这个功能，就是 Docker 镜像。
 
- 
+ 恐怕连 Docker 项目的作者 Solomon Hykes 自己当时都没想到，这个小小的创新，在短短几年内就如此迅速地改变了整个云计算领域的发展历程。
 
-当然，这个部署过程难免会碰到云端虚拟机和本地环境不一致的问题，所以当时的云计算服务，比的就是谁能更好地模拟本地服务器环境，能带来更好的"上云"体验。而 PaaS 开源项目的出现，就是当时解决这个问题的一个最佳方案。
+ 前面已经介绍过，PaaS 之所以能够帮助用户大规模部署应用到集群里，是因为它提供了一套应用打包的功能。可就是这个打包功能，却成了 PaaS 日后不断遭到用户诟病的一个"软肋"。
 
- 
+ 出现这个问题的根本原因是，一旦用上了 PaaS，用户就必须为每种语言、每种框架，甚至每个版本的应用维护一个打好的包。这个打包过程，没有任何章法可循，更麻烦的是，明明在本地运行得好好的应用，却需要做很多修改和配置工作才能在 PaaS 里运行起来。而这些修改和配置，并没有什么经验可以借鉴，基本上得靠不断试错，直到你摸清楚了本地应用和远端 PaaS 匹配的"脾气"才能够搞定。
 
-举个例子，虚拟机创建好之后，运维人员只需要在这些机器上部署一个 Cloud Foundry 项目，然后开发者只要执行一条命令就能把本地的应用部署到云上，这条命令就是：
+ 最后结局就是，"cf push"确实是能一键部署了，但是为了实现这个一键部署，用户为每个应用打包的工作可谓一波三折，费尽心机。
 
- 
+ 而Docker 镜像解决的，恰恰就是打包这个根本性的问题。 所谓 Docker 镜像，其实就是一个压缩包。但是这个压缩包里的内容，比 PaaS 的应用可执行文件 + 启停脚本的组合就要丰富多了。实际上，大多数 Docker 镜像是直接由一个完整操作系统的所有文件和目录构成的，所以这个压缩包里的内容跟你本地开发和测试环境用的操作系统是完全一样的。
 
-$ cf push " 我的应用 "
+ 这就有意思了：假设你的应用在本地运行时，能看见的环境是 CentOS 7.2 操作系统的所有文件和目录，那么只要用 CentOS 7.2 的 ISO 做一个压缩包，再把你的应用可执行文件也压缩进去，那么无论在哪里解压这个压缩包，都可以得到与你本地测试时一样的环境。当然，你的应用也在里面！
 
-是不是很神奇？
+ 这就是 Docker 镜像最厉害的地方：只要有这个压缩包在手，你就可以使用某种技术创建一个"沙盒"，在"沙盒"中解压这个压缩包，然后就可以运行你的程序了。
 
- 
+ 更重要的是，这个压缩包包含了完整的操作系统文件和目录，也就是包含了这个应用运行所需要的所有依赖，所以你可以先用这个压缩包在本地进行开发和测试，完成之后，再把这个压缩包上传到云端运行。
 
-事实上，像 Cloud Foundry 这样的 PaaS 项目，最核心的组件就是一套应用的打包和分发机制。 Cloud Foundry 为每种主流编程语言都定义了一种打包格式，而"cf push"的作用，基本上等同于用户把应用的可执行文件和启动脚本打进一个压缩包内，上传到云上 Cloud Foundry 的存储中。接着，Cloud Foundry 会通过调度器选择一个可以运行这个应用的虚拟机，然后通知这个机器上的 Agent 把应用压缩包下载下来启动。
+ 在这个过程中，你完全不需要进行任何配置或者修改，因为这个压缩包赋予了你一种极其宝贵的能力：本地环境和云端环境的高度一致！这，正是 Docker 镜像的精髓。
 
- 
+ 那么，有了 Docker 镜像这个利器，PaaS 里最核心的打包系统一下子就没了用武之地，最让用户抓狂的打包过程也随之消失了。相比之下，在当今的互联网里，Docker 镜像需要的操作系统文件和目录，可谓唾手可得。
 
-这时候关键来了，由于需要在一个虚拟机上启动很多个来自不同用户的应用，Cloud Foundry 会调用操作系统的 Cgroups 和 Namespace 机制为每一个应用单独创建一个称作"沙盒"的隔离环境，然后在"沙盒"中启动这些应用进程。这样，就实现了把多个用户的应用互不干涉地在虚拟机里批量地、自动地运行起来的目的。
+ 所以，你只需要提供一个下载好的操作系统文件与目录，然后使用它制作一个压缩包即可，这个命令就是：`$ docker build " 我的镜像 "`
 
- 
-
-这，正是 PaaS 项目最核心的能力。 而这些 Cloud Foundry 用来运行应用的隔离环境，或者说"沙盒"，就是所谓的"容器"。
-
- 
-
-而 Docker 项目，实际上跟 Cloud Foundry 的容器并没有太大不同，所以在它发布后不久，Cloud Foundry 的首席产品经理 James Bayer 就在社区里做了一次详细对比，告诉用户 Docker 实际上只是一个同样使用 Cgroups 和 Namespace 实现的"沙盒"而已，没有什么特别的黑科技，也不需要特别关注。
-
- 
-
-然而，短短几个月，Docker 项目就迅速崛起了。它的崛起速度如此之快，以至于 Cloud Foundry 以及所有的 PaaS 社区还没来得及成为它的竞争对手，就直接被宣告出局了。那时候，一位多年的 PaaS 从业者曾经如此感慨道：这简直就是一场"降维打击"啊。
-
- 
-
-事实上，Docker 项目确实与 Cloud Foundry 的容器在大部分功能和实现原理上都是一样的，可偏偏就是这剩下的一小部分不一样的功能，成了 Docker 项目接下来"呼风唤雨"的不二法宝。
-
- 
-
-这个功能，就是 Docker 镜像。
-
- 
-
-恐怕连 Docker 项目的作者 Solomon Hykes 自己当时都没想到，这个小小的创新，在短短几年内就如此迅速地改变了整个云计算领域的发展历程。
-
- 
-
-前面已经介绍过，PaaS 之所以能够帮助用户大规模部署应用到集群里，是因为它提供了一套应用打包的功能。可就是这个打包功能，却成了 PaaS 日后不断遭到用户诟病的一个"软肋"。
-
- 
-
-出现这个问题的根本原因是，一旦用上了 PaaS，用户就必须为每种语言、每种框架，甚至每个版本的应用维护一个打好的包。这个打包过程，没有任何章法可循，更麻烦的是，明明在本地运行得好好的应用，却需要做很多修改和配置工作才能在 PaaS 里运行起来。而这些修改和配置，并没有什么经验可以借鉴，基本上得靠不断试错，直到你摸清楚了本地应用和远端 PaaS 匹配的"脾气"才能够搞定。
-
- 
-
-最后结局就是，"cf push"确实是能一键部署了，但是为了实现这个一键部署，用户为每个应用打包的工作可谓一波三折，费尽心机。
-
- 
-
-而Docker 镜像解决的，恰恰就是打包这个根本性的问题。 所谓 Docker 镜像，其实就是一个压缩包。但是这个压缩包里的内容，比 PaaS 的应用可执行文件 + 启停脚本的组合就要丰富多了。实际上，大多数 Docker 镜像是直接由一个完整操作系统的所有文件和目录构成的，所以这个压缩包里的内容跟你本地开发和测试环境用的操作系统是完全一样的。
-
- 
-
-这就有意思了：假设你的应用在本地运行时，能看见的环境是 CentOS 7.2 操作系统的所有文件和目录，那么只要用 CentOS 7.2 的 ISO 做一个压缩包，再把你的应用可执行文件也压缩进去，那么无论在哪里解压这个压缩包，都可以得到与你本地测试时一样的环境。当然，你的应用也在里面！
-
- 
-
-这就是 Docker 镜像最厉害的地方：只要有这个压缩包在手，你就可以使用某种技术创建一个"沙盒"，在"沙盒"中解压这个压缩包，然后就可以运行你的程序了。
-
- 
-
-更重要的是，这个压缩包包含了完整的操作系统文件和目录，也就是包含了这个应用运行所需要的所有依赖，所以你可以先用这个压缩包在本地进行开发和测试，完成之后，再把这个压缩包上传到云端运行。
-
- 
-
-在这个过程中，你完全不需要进行任何配置或者修改，因为这个压缩包赋予了你一种极其宝贵的能力：本地环境和云端环境的高度一致！
-
- 
-
-这，正是 Docker 镜像的精髓。
-
- 
-
-那么，有了 Docker 镜像这个利器，PaaS 里最核心的打包系统一下子就没了用武之地，最让用户抓狂的打包过程也随之消失了。相比之下，在当今的互联网里，Docker 镜像需要的操作系统文件和目录，可谓唾手可得。
-
- 
-
-所以，你只需要提供一个下载好的操作系统文件与目录，然后使用它制作一个压缩包即可，这个命令就是：
-
- 
-
-$ docker build " 我的镜像 "
-
-一旦镜像制作完成，用户就可以让 Docker 创建一个"沙盒"来解压这个镜像，然后在"沙盒"中运行自己的应用，这个命令就是：
-
- 
-
-$ docker run " 我的镜像 "
+一旦镜像制作完成，用户就可以让 Docker 创建一个"沙盒"来解压这个镜像，然后在"沙盒"中运行自己的应用，这个命令就是：`$ docker run " 我的镜像 "`
 
 当然，docker run 创建的"沙盒"，也是使用 Cgroups 和 Namespace 机制创建出来的隔离环境。我会在后面的文章中，详细介绍这个机制的实现原理。
 
- 
+ 所以，Docker 项目给 PaaS 世界带来的"降维打击"，其实是提供了一种非常便利的打包机制。这种机制直接打包了应用运行所需要的整个操作系统，从而保证了本地环境和云端环境的高度一致，避免了用户通过"试错"来匹配两种不同运行环境之间差异的痛苦过程。而对于开发者们来说，在终于体验到了生产力解放所带来的痛快之后，他们自然选择了用脚投票，直接宣告了 PaaS 时代的结束。
 
-所以，Docker 项目给 PaaS 世界带来的"降维打击"，其实是提供了一种非常便利的打包机制。这种机制直接打包了应用运行所需要的整个操作系统，从而保证了本地环境和云端环境的高度一致，避免了用户通过"试错"来匹配两种不同运行环境之间差异的痛苦过程。
+ 不过，Docker 项目固然解决了应用打包的难题，但正如前面所介绍的那样，它并不能代替 PaaS 完成大规模部署应用的职责。
 
- 
+ 遗憾的是，考虑到 Docker 公司是一个与自己有潜在竞争关系的商业实体，再加上对 Docker 项目普及程度的错误判断，Cloud Foundry 项目并没有第一时间使用 Docker 作为自己的核心依赖，去替换自己那套饱受诟病的打包流程。
 
-而对于开发者们来说，在终于体验到了生产力解放所带来的痛快之后，他们自然选择了用脚投票，直接宣告了 PaaS 时代的结束。
+ 反倒是一些机敏的创业公司，纷纷在第一时间推出了 Docker 容器集群管理的开源项目（比如 Deis 和 Flynn），它们一般称自己为 CaaS，即 Container-as-a-Service，用来跟"过时"的 PaaS 们划清界限。
 
- 
+ 而在 2014 年底的 DockerCon 上，Docker 公司雄心勃勃地对外发布了自家研发的"Docker 原生"容器集群管理项目 Swarm，不仅将这波"CaaS"热推向了一个前所未有的高潮，更是寄托了整个 Docker 公司重新定义 PaaS 的宏伟愿望。
 
-不过，Docker 项目固然解决了应用打包的难题，但正如前面所介绍的那样，它并不能代替 PaaS 完成大规模部署应用的职责。
+ 在 2014 年的这段巅峰岁月里，Docker 公司离自己的理想真的只有一步之遥。
 
- 
+ 2013~2014 年，以 Cloud Foundry 为代表的 PaaS 项目，逐渐完成了教育用户和开拓市场的艰巨任务，也正是在这个将概念逐渐落地的过程中，应用"打包"困难这个问题，成了整个后端技术圈子的一块心病。
 
-遗憾的是，考虑到 Docker 公司是一个与自己有潜在竞争关系的商业实体，再加上对 Docker 项目普及程度的错误判断，Cloud Foundry 项目并没有第一时间使用 Docker 作为自己的核心依赖，去替换自己那套饱受诟病的打包流程。
+ Docker 项目的出现，则为这个根本性的问题提供了一个近乎完美的解决方案。这正是 Docker 项目刚刚开源不久，就能够带领一家原本默默无闻的 PaaS 创业公司脱颖而出，然后迅速占领了所有云计算领域头条的技术原因。
 
- 
+ 而在成为了基础设施领域近十年难得一见的技术明星之后，dotCloud 公司则在 2013 年底大胆改名为 Docker 公司。不过，这个在当时就颇具争议的改名举动，也成为了日后容器技术圈风云变幻的一个关键伏笔。
 
-反倒是一些机敏的创业公司，纷纷在第一时间推出了 Docker 容器集群管理的开源项目（比如 Deis 和 Flynn），它们一般称自己为 CaaS，即 Container-as-a-Service，用来跟"过时"的 PaaS 们划清界限。
+ 之前说到，伴随着 PaaS 概念的逐步普及，以 Cloud Foundry 为代表的经典 PaaS 项目，开始进入基础设施领域的视野，平台化和 PaaS 化成了这个生态中的一个最为重要的进化趋势。
 
- 
+ 就在对开源 PaaS 项目落地的不断尝试中，这个领域的从业者们发现了 PaaS 中最为棘手也最亟待解决的一个问题：究竟如何给应用打包？
 
-而在 2014 年底的 DockerCon 上，Docker 公司雄心勃勃地对外发布了自家研发的"Docker 原生"容器集群管理项目 Swarm，不仅将这波"CaaS"热推向了一个前所未有的高潮，更是寄托了整个 Docker 公司重新定义 PaaS 的宏伟愿望。
+ 遗憾的是，无论是 Cloud Foundry、OpenShift，还是 Clodify，面对这个问题都没能给出一个完美的答案，反而在竞争中走向了碎片化的歧途。
 
- 
+ 而就在这时，一个并不引人瞩目的 PaaS 创业公司 dotCloud，却选择了开源自家的一个容器项目 Docker。更出人意料的是，就是这样一个普通到不能再普通的技术，却开启了一个名为"Docker"的全新时代。
 
-在 2014 年的这段巅峰岁月里，Docker 公司离自己的理想真的只有一步之遥。
+ Docker 项目的崛起，是不是偶然呢？这个以"鲸鱼"为注册商标的技术创业公司，最重要的战略之一就是：坚持把"开发者"群体放在至高无上的位置。
 
- 
+ 相比于其他正在企业级市场里厮杀得头破血流的经典 PaaS 项目们，Docker 项目的推广策略从一开始就呈现出一副"憨态可掬"的亲人姿态，把每一位后端技术人员（而不是他们的老板）作为主要的传播对象。
 
-2013~2014 年，以 Cloud Foundry 为代表的 PaaS 项目，逐渐完成了教育用户和开拓市场的艰巨任务，也正是在这个将概念逐渐落地的过程中，应用"打包"困难这个问题，成了整个后端技术圈子的一块心病。
+ 简洁的 UI，有趣的 demo，"1 分钟部署一个 WordPress 网站""3 分钟部署一个 Nginx 集群"，这种同开发者之间与生俱来的亲近关系，使 Docker 项目迅速成为了全世界 Meetup 上最受欢迎的一颗新星。
 
- 
+ 在过去的很长一段时间里，相较于前端和互联网技术社区，服务器端技术社区一直是一个相对沉闷而小众的圈子。在这里，从事 Linux 内核开发的极客们自带"不合群"的"光环"，后端开发者们啃着多年不变的 TCP/IP 发着牢骚，运维更是天生注定的幕后英雄。
 
-Docker 项目的出现，则为这个根本性的问题提供了一个近乎完美的解决方案。这正是 Docker 项目刚刚开源不久，就能够带领一家原本默默无闻的 PaaS 创业公司脱颖而出，然后迅速占领了所有云计算领域头条的技术原因。
+ 而 Docker 项目，却给后端开发者提供了走向聚光灯的机会。就比如 Cgroups 和 Namespace 这种已经存在多年却很少被人们关心的特性，在 2014 年和 2015 年竟然频繁入选各大技术会议的分享议题，就因为听众们想要知道 Docker 这个东西到底是怎么一回事儿。
 
- 
+ 而 Docker 项目之所以能取得如此高的关注，一方面正如前面所说的那样，它解决了应用打包和发布这一困扰运维人员多年的技术难题；而另一方面，就是因为它第一次把一个纯后端的技术概念，通过非常友好的设计和封装，交到了最广大的开发者群体手里。
 
-而在成为了基础设施领域近十年难得一见的技术明星之后，dotCloud 公司则在 2013 年底大胆改名为 Docker 公司。不过，这个在当时就颇具争议的改名举动，也成为了日后容器技术圈风云变幻的一个关键伏笔。
+ 在这种独特的氛围烘托下，你不需要精通 TCP/IP，也无需深谙 Linux 内核原理，哪怕只是一个前端或者网站的 PHP 工程师，都会对如何把自己的代码打包成一个随处可以运行的 Docker 镜像充满好奇和兴趣。
 
- 
+ 这种受众群体的变革，正是 Docker 这样一个后端开源项目取得巨大成功的关键。这也是经典 PaaS 项目想做却没有做好的一件事情：PaaS 的最终用户和受益者，一定是为这个 PaaS 编写应用的开发者们，而在 Docker 项目开源之前，PaaS 与开发者之间的关系却从未如此紧密过。
 
-之前说到，伴随着 PaaS 概念的逐步普及，以 Cloud Foundry 为代表的经典 PaaS 项目，开始进入基础设施领域的视野，平台化和 PaaS 化成了这个生态中的一个最为重要的进化趋势。
+ 解决了应用打包这个根本性的问题，同开发者与生俱来的的亲密关系，再加上 PaaS 概念已经深入人心的完美契机，成为 Docker 这个技术上看似平淡无奇的项目一举走红的重要原因。
 
- 
+ 一时之间，"容器化"取代"PaaS 化"成为了基础设施领域最炙手可热的关键词，一个以"容器"为中心的、全新的云计算市场，正呼之欲出。而作为这个生态的一手缔造者，此时的 dotCloud 公司突然宣布将公司名称改为"Docker"。
 
-就在对开源 PaaS 项目落地的不断尝试中，这个领域的从业者们发现了 PaaS 中最为棘手也最亟待解决的一个问题：究竟如何给应用打包？
+ 这个举动，在当时颇受质疑。在大家印象中，Docker 只是一个开源项目的名字。可是现在，这个单词却成了 Docker 公司的注册商标，任何人在商业活动中使用这个单词，以及鲸鱼的 Logo，都会立刻受到法律警告。
 
- 
-
-遗憾的是，无论是 Cloud Foundry、OpenShift，还是 Clodify，面对这个问题都没能给出一个完美的答案，反而在竞争中走向了碎片化的歧途。
-
- 
-
-而就在这时，一个并不引人瞩目的 PaaS 创业公司 dotCloud，却选择了开源自家的一个容器项目 Docker。更出人意料的是，就是这样一个普通到不能再普通的技术，却开启了一个名为"Docker"的全新时代。
-
- 
-
-Docker 项目的崛起，是不是偶然呢？这个以"鲸鱼"为注册商标的技术创业公司，最重要的战略之一就是：坚持把"开发者"群体放在至高无上的位置。
-
- 
-
-相比于其他正在企业级市场里厮杀得头破血流的经典 PaaS 项目们，Docker 项目的推广策略从一开始就呈现出一副"憨态可掬"的亲人姿态，把每一位后端技术人员（而不是他们的老板）作为主要的传播对象。
-
- 
-
-简洁的 UI，有趣的 demo，"1 分钟部署一个 WordPress 网站""3 分钟部署一个 Nginx 集群"，这种同开发者之间与生俱来的亲近关系，使 Docker 项目迅速成为了全世界 Meetup 上最受欢迎的一颗新星。
-
- 
-
-在过去的很长一段时间里，相较于前端和互联网技术社区，服务器端技术社区一直是一个相对沉闷而小众的圈子。在这里，从事 Linux 内核开发的极客们自带"不合群"的"光环"，后端开发者们啃着多年不变的 TCP/IP 发着牢骚，运维更是天生注定的幕后英雄。
-
- 
-
-而 Docker 项目，却给后端开发者提供了走向聚光灯的机会。就比如 Cgroups 和 Namespace 这种已经存在多年却很少被人们关心的特性，在 2014 年和 2015 年竟然频繁入选各大技术会议的分享议题，就因为听众们想要知道 Docker 这个东西到底是怎么一回事儿。
-
- 
-
-而 Docker 项目之所以能取得如此高的关注，一方面正如前面所说的那样，它解决了应用打包和发布这一困扰运维人员多年的技术难题；而另一方面，就是因为它第一次把一个纯后端的技术概念，通过非常友好的设计和封装，交到了最广大的开发者群体手里。
-
- 
-
-在这种独特的氛围烘托下，你不需要精通 TCP/IP，也无需深谙 Linux 内核原理，哪怕只是一个前端或者网站的 PHP 工程师，都会对如何把自己的代码打包成一个随处可以运行的 Docker 镜像充满好奇和兴趣。
-
- 
-
-这种受众群体的变革，正是 Docker 这样一个后端开源项目取得巨大成功的关键。这也是经典 PaaS 项目想做却没有做好的一件事情：PaaS 的最终用户和受益者，一定是为这个 PaaS 编写应用的开发者们，而在 Docker 项目开源之前，PaaS 与开发者之间的关系却从未如此紧密过。
-
- 
-
-解决了应用打包这个根本性的问题，同开发者与生俱来的的亲密关系，再加上 PaaS 概念已经深入人心的完美契机，成为 Docker 这个技术上看似平淡无奇的项目一举走红的重要原因。
-
- 
-
-一时之间，"容器化"取代"PaaS 化"成为了基础设施领域最炙手可热的关键词，一个以"容器"为中心的、全新的云计算市场，正呼之欲出。而作为这个生态的一手缔造者，此时的 dotCloud 公司突然宣布将公司名称改为"Docker"。
-
- 
-
-这个举动，在当时颇受质疑。在大家印象中，Docker 只是一个开源项目的名字。可是现在，这个单词却成了 Docker 公司的注册商标，任何人在商业活动中使用这个单词，以及鲸鱼的 Logo，都会立刻受到法律警告。
-
- 
-
-Docker 项目在短时间内迅速崛起的三个重要原因：
-
-  Docker 镜像通过技术手段解决了 PaaS 的根本性问题；
-
-  Docker 容器同开发者之间有着与生俱来的密切关系；
-
-PaaS 概念已经深入人心的完美契机。
+>  Docker 项目在短时间内迅速崛起的三个重要原因：
+>
+> Docker 镜像通过技术手段解决了 PaaS 的根本性问题；
+>
+> Docker 容器同开发者之间有着与生俱来的密切关系；
+>
+> PaaS 概念已经深入人心的完美契机。
+>
 
  
 
@@ -510,19 +337,13 @@ CaaS  container as a service
 
  
 
-PaaS 项目成功的主要原因
+#### PaaS 项目成功的主要原因
 
-   是它提供了一种名叫"应用托管"的能力。 
+   是它`提供了一种名叫"应用托管"的能力`。 paas之前主流用户的普遍用法是租一批 AWS 或者 OpenStack 的虚拟机，然后像以前管理物理服务器那样，用脚本或者手工的方式在这些机器上部署应用。
 
-   paas之前主流用户的普遍用法是租一批 AWS 或者 OpenStack 的虚拟机，然后像以前管理物理服务器那样，用脚本或者手工的方式在这些机器上部署应用。
+ 这个部署过程会碰到云端虚拟机和本地环境不一致的问题，所以当时的云计算服务，比的就是谁能更好地模拟本地服务器环境，能带来更好的"上云"体验。而 PaaS 开源项目的出现，就是当时解决这个问题的一个最佳方案。
 
- 
-
-   这个部署过程会碰到云端虚拟机和本地环境不一致的问题，所以当时的云计算服务，比的就是谁能更好地模拟本地服务器环境，能带来更好的"上云"体验。而 PaaS 开源项目的出现，就是当时解决这个问题的一个最佳方案。
-
- 
-
-PaaS 如何部署应用
+#### PaaS 如何部署应用
 
   虚拟机创建好之后，运维人员只需要在这些机器上部署一个 Cloud Foundry 项目，然后开发者只要执行一条命令就能把本地的应用部署到云上，这条命令就是：
 
@@ -530,9 +351,7 @@ PaaS 如何部署应用
 
   namespace cgroups 沙盒
 
- 
-
-PaaS 项目的核心组件
+#### PaaS 项目的核心组件
 
   像 Cloud Foundry 这样的 PaaS 项目，最核心的组件就是一套应用的打包和分发机制。 Cloud Foundry 为每种主流编程语言都定义了一种打包格式，而"cf push"的作用，基本上等同于用户把应用的可执行文件和启动脚本打进一个压缩包内，上传到云上 Cloud Foundry 的存储中。接着，Cloud Foundry 会通过调度器选择一个可以运行这个应用的虚拟机，然后通知这个机器上的 Agent 把应用压缩包下载下来启动。
 
@@ -540,35 +359,30 @@ PaaS 项目的核心组件
 
   由于需要在一个虚拟机上启动很多个来自不同用户的应用，Cloud Foundry 会调用操作系统的 Cgroups 和 Namespace 机制为每一个应用单独创建一个称作"沙盒"的隔离环境，然后在"沙盒"中启动这些应用进程。这就实现了把多个用户的应用互不干涉地在虚拟机里批量自动地运行起来的目的。
 
-  这正是 PaaS 项目最核心的能力。 而这些 Cloud Foundry 用来运行应用的隔离环境，或者说"沙盒"，就是所谓的"容器"。
+  这正是 PaaS 项目最核心的能力。 而这些 Cloud Foundry 用来运行应用的隔离环境，或者说"沙盒"，就是所谓的"容器"。 
 
- 
-
-注：
-
-Cloud Foundry是当时非常主流非常火的一个PaaS项目
+> 注：
+>
+> Cloud Foundry是当时非常主流非常火的一个PaaS项目
+>
 
  
 
 ## docker对paas的降维打击
 
-Docker 镜像
+#### Docker 镜像
 
   Docker 项目确实与 Cloud Foundry 的容器在大部分功能和实现原理上都是一样的，可偏偏就是这剩下的一小部分不一样的功能，成了 Docker 项目接下来"呼风唤雨"的不二法宝。这个功能，就是 Docker 镜像。
 
- 
-
-  恐怕连 Docker 项目的作者 Solomon Hykes 自己当时都没想到，这个小小的创新，在短短几年内就如此迅速地改变了整个云计算领域的发展历程。
+ 恐怕连 Docker 项目的作者 Solomon Hykes 自己当时都没想到，这个小小的创新，在短短几年内就如此迅速地改变了整个云计算领域的发展历程。
 
  
 
-PaaS的问题：
+#### PaaS的问题
 
   PaaS 之所以能够帮助用户大规模部署应用到集群里，是因为它提供了一套应用打包的功能。可就是这个打包功能，却成了 PaaS 日后不断遭到用户诟病的一个"软肋"。
 
- 
-
-  根本原因：
+ **根本原因：**
 
 ​    一旦用上了 PaaS，用户就必须为每种语言、每种框架，甚至每个版本的应用维护一个打好的包。这个打包过程，没有任何章法可循，更麻烦的是，明明在本地运行得好好的应用，却需要做很多修改和配置工作才能在 PaaS 里运行起来。而这些修改和配置，并没有什么经验可以借鉴，基本上得靠不断试错，直到你摸清楚了本地应用和远端 PaaS 匹配的"脾气"才能够搞定。
 
@@ -586,47 +400,27 @@ swarm+compose
 
  
 
-Docker 镜像的精髓
+#### Docker 镜像的精髓
 
   所谓 Docker 镜像，其实就是一个压缩包。但是这个压缩包里的内容，比 PaaS 的应用可执行文件 + 启停脚本的组合就要丰富多了。实际上，大多数 Docker 镜像是直接由一个完整操作系统的所有文件和目录构成的，所以这个压缩包里的内容跟你本地开发和测试环境用的操作系统是完全一样的。
 
- 
+ 这就有意思了：假设你的应用在本地运行时，能看见的环境是 CentOS 7.2 操作系统的所有文件和目录，那么只要用 CentOS 7.2 的 ISO 做一个压缩包，再把你的应用可执行文件也压缩进去，那么无论在哪里解压这个压缩包，都可以得到与你本地测试时一样的环境。当然，你的应用也在里面！
 
-这就有意思了：假设你的应用在本地运行时，能看见的环境是 CentOS 7.2 操作系统的所有文件和目录，那么只要用 CentOS 7.2 的 ISO 做一个压缩包，再把你的应用可执行文件也压缩进去，那么无论在哪里解压这个压缩包，都可以得到与你本地测试时一样的环境。当然，你的应用也在里面！
+ 这就是 Docker 镜像最厉害的地方：只要有这个压缩包在手，你就可以使用某种技术创建一个"沙盒"，在"沙盒"中解压这个压缩包，然后就可以运行你的程序了。
 
- 
+ 更重要的是，这个压缩包包含了完整的操作系统文件和目录，也就是包含了这个应用运行所需要的所有依赖，所以你可以先用这个压缩包在本地进行开发和测试，完成之后，再把这个压缩包上传到云端运行。
 
-这就是 Docker 镜像最厉害的地方：只要有这个压缩包在手，你就可以使用某种技术创建一个"沙盒"，在"沙盒"中解压这个压缩包，然后就可以运行你的程序了。
-
- 
-
-更重要的是，这个压缩包包含了完整的操作系统文件和目录，也就是包含了这个应用运行所需要的所有依赖，所以你可以先用这个压缩包在本地进行开发和测试，完成之后，再把这个压缩包上传到云端运行。
-
- 
-
-在这个过程中，你完全不需要进行任何配置或者修改，因为这个压缩包赋予了你一种极其宝贵的能力：本地环境和云端环境的高度一致！
-
- 
-
-这，正是 Docker 镜像的精髓。
-
- 
+ 在这个过程中，你完全不需要进行任何配置或者修改，因为这个压缩包赋予了你一种极其宝贵的能力：本地环境和云端环境的高度一致！这，正是 Docker 镜像的精髓。 
 
 那么，有了 Docker 镜像这个利器，PaaS 里最核心的打包系统一下子就没了用武之地，最让用户抓狂的打包过程也随之消失了。相比之下，在当今的互联网里，Docker 镜像需要的操作系统文件和目录，可谓唾手可得。
-
- 
 
 所以，你只需要提供一个下载好的操作系统文件与目录，然后使用它制作一个压缩包即可，这个命令就是：
 
 \# docker build " 镜像 "
 
- 
-
 镜像制作完成，用户就可以让 Docker 创建一个"沙盒"来解压这个镜像，然后在"沙盒"中运行自己的应用，这个命令就是：
 
 \# docker run " 镜像 "
-
- 
 
 Docker 项目给 PaaS 世界带来的"降维打击"
 
@@ -636,7 +430,7 @@ Docker 项目给 PaaS 世界带来的"降维打击"
 
 # docker安装
 
-CentOS 7 中 Docker 的安装:
+#### CentOS 7 中 Docker 的安装:
 
 Docker 软件包已经包括在默认的 CentOS-Extras 软件源(联网使用centos7u2自带网络Yum源)里。因此想要安装 docker，只需要运行下面的 yum 命令：    
 
@@ -660,56 +454,80 @@ yum install docker
   systemctl enable docker.service
 ```
 
- 
-
-确定docker服务在运行：
+#### 确定docker服务在运行
 
 结果会显示服务端和客户端的版本，如果只显示客户端版本说明服务没有启动
 
 ```
-[root@docker1 yum]# docker version
+[root@centos711 ~]# docker version
+Client:
+ Version:         1.13.1
+ API version:     1.26
+ Package version: docker-1.13.1-103.git7f2769b.el7.centos.x86_64
+ Go version:      go1.10.3
+ Git commit:      7f2769b/1.13.1
+ Built:           Sun Sep 15 14:06:47 2019
+ OS/Arch:         linux/amd64
+
+Server:
+ Version:         1.13.1
+ API version:     1.26 (minimum version 1.12)
+ Package version: docker-1.13.1-103.git7f2769b.el7.centos.x86_64
+ Go version:      go1.10.3
+ Git commit:      7f2769b/1.13.1
+ Built:           Sun Sep 15 14:06:47 2019
+ OS/Arch:         linux/amd64
+ Experimental:    false
 ```
 
-  Client:
-
-   Version:     1.10.3
-
-   API version:   1.22
-
-   Package version: docker-common-1.10.3-46.el7.centos.14.x86_64
-
-   Go version:    go1.6.3
-
-   Git commit:    cb079f6-unsupported
-
-   Built:      Fri Sep 16 13:24:25 2016
-
-   OS/Arch:     linux/amd64
-
- 
-
-  Server:
-
-   Version:     1.10.3
-
-   API version:    1.22
-
-   Package version: docker-common-1.10.3-46.el7.centos.14.x86_64
-
-   Go version:    go1.6.3
-
-   Git commit:    cb079f6-unsupported
-
-   Built:      Fri Sep 16 13:24:25 2016
-
-   OS/Arch:     linux/amd64
-
- 
-
-﻿查看docker基本信息：
+#### ﻿查看docker基本信息：
 
 ```
- docker info
+[root@centos711 ~]# docker info 
+Containers: 0
+ Running: 0
+ Paused: 0
+ Stopped: 0
+Images: 0
+Server Version: 1.13.1
+Storage Driver: overlay2
+ Backing Filesystem: xfs
+ Supports d_type: true
+ Native Overlay Diff: true
+Logging Driver: journald
+Cgroup Driver: systemd
+Plugins: 
+ Volume: local
+ Network: bridge host macvlan null overlay
+Swarm: inactive
+Runtimes: docker-runc runc
+Default Runtime: docker-runc
+Init Binary: /usr/libexec/docker/docker-init-current
+containerd version:  (expected: aa8187dbd3b7ad67d8e5e3a15115d3eef43a7ed1)
+runc version: 9c3c5f853ebf0ffac0d087e94daef462133b69c7 (expected: 9df8b306d01f59d3a8029be411de015b7304dd8f)
+init version: fec3683b971d9c3ef73f284f176672c44b448662 (expected: 949e6facb77383876aeff8a6944dde66b3089574)
+Security Options:
+ seccomp
+  WARNING: You're not using the default seccomp profile
+  Profile: /etc/docker/seccomp.json
+Kernel Version: 3.10.0-1062.el7.x86_64
+Operating System: CentOS Linux 7 (Core)
+OSType: linux
+Architecture: x86_64
+Number of Docker Hooks: 3
+CPUs: 2
+Total Memory: 1.795 GiB
+Name: centos711
+ID: PIUA:XIP3:IS5J:RBJV:JOQT:ASLT:IM46:MZXM:BXIJ:2JEL:JBS7:EQ54
+Docker Root Dir: /var/lib/docker
+Debug Mode (client): false
+Debug Mode (server): false
+Registry: https://index.docker.io/v1/
+Experimental: false
+Insecure Registries:
+ 127.0.0.0/8
+Live Restore Enabled: false
+Registries: docker.io (secure)
 ```
 
 校验Docker的安装
@@ -718,55 +536,35 @@ yum install docker
 [root@master ~]# docker run -it ubuntu bash
 ```
 
-Unable to find image 'ubuntu:latest' locally
-
-Trying to pull repository daocloud.io/ubuntu ... 
-
-latest: Pulling from daocloud.io/ubuntu
-
-22ecafbbcc4a: Pull complete 
-
-580435e0a086: Pull complete 
-
-Digest: sha256:80c2902178d79f439b13c5a244f3b1ef67ca890dbbe58d19caa13301ca56a505
-
- 
-
 如果自动进入下面的容器环境，说明﻿ubuntu镜像运行成功，Docker的安装也没有问题：可以操作容器了
 
+```
 root@50a0449d7729:/# pwd   
-
-/
 
 root@50a0449d7729:/# ls
 
 bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+```
 
  
 
 ## docker版本与官方安装方式
 
-moby、docker-ce与docker-ee
+#### moby、docker-ce与docker-ee
 
 最早时docker是一个开源项目，主要由docker公司维护。
 
 2017年3月1日起，docker公司将原先的docker项目改名为moby，并创建了docker-ce和docker-ee。
 
- 
+**三者关系**：
 
-三者关系：
+moby是继承了原先的docker的项目，是社区维护的的开源项目，谁都可以在moby的基础打造自己的容器产品
 
-  moby是继承了原先的docker的项目，是社区维护的的开源项目，谁都可以在moby的基础打造自己的容器产品
+docker-ce是docker公司维护的开源项目，是一个基于moby项目的免费的容器产品
 
-  docker-ce是docker公司维护的开源项目，是一个基于moby项目的免费的容器产品
+docker-ee是docker公司维护的闭源产品，是docker公司的商业产品。
 
-  docker-ee是docker公司维护的闭源产品，是docker公司的商业产品。
-
- 
-
-  moby project由社区维护，docker-ce project是docker公司维护，docker-ee是闭源的。
-
- 
+moby project由社区维护，docker-ce project是docker公司维护，docker-ee是闭源的。
 
   要使用免费的docker，从https://github.com/docker/docker-ce上获取。
 
@@ -774,51 +572,44 @@ moby、docker-ce与docker-ee
 
  
 
-docker-ce的发布计划
+**docker-ce的发布计划**
 
   v1.13.1之后，发布计划更改为:
 
   Edge:  月版本，每月发布一次，命名格式为YY.MM，维护到下个月的版本发布
 
-  Stable: 季度版本，每季度发布一次，命名格式为YY.MM，维护4个月
+  Stable: 季度版本，每季度发布一次，命名格式为YY.MM，维护4个月 
 
- 
-
-安装：
+**安装**：
 
   docker-ce的release计划跟随moby的release计划，可以使用下面的命令直接安装最新的docker-ce:
 
   \# curl -fsSL https://get.docker.com/ | sh
 
- 
-
 CentOS
 
   如果是centos，上面的安装命令会在系统上添加yum源:/etc/yum.repos.d/docker-ce.repo 
 
-  \# wget https://download.docker.com/linux/centos/docker-ce.repo
+```
+  wget https://download.docker.com/linux/centos/docker-ce.repo
 
-  \# mv docker-ce.repo /etc/yum.repos.d
+  mv docker-ce.repo /etc/yum.repos.d
 
-  \# yum install -y docker-ce
-
- 
+  yum install -y docker-ce
+```
 
   或者直接下载rpm安装:
 
- 
+```
+  wget https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-17.09.0.ce-1.el7.centos.x86_64.rpm
 
-  \# wget https://download.docker.com/linux/centos/7/x86_64/stable/Packages/docker-ce-17.09.0.ce-1.el7.centos.x86_64.rpm
+ yum localinstall docker-ce-17.09.0.ce-1.el7.centos.x86_64.rpm
+```
 
-  \# yum localinstall docker-ce-17.09.0.ce-1.el7.centos.x86_64.rpm
-
-  
-
-注意：
-
-  在说docker的时候尽量说Linux docker
-
-  因为Docker on Mac，以及 Windows Docker（Hyper-V 实现），实际上是基于虚拟化技术实现的，跟我们介绍使用的 Linux 容器完全不同。
+> 注意：
+>
+>   在说docker的时候尽量说Linux docker,因为Docker on Mac，以及 Windows Docker（Hyper-V 实现），实际上是基于虚拟化技术实现的，跟我们介绍使用的 Linux 容器完全不同。
+>
 
  
 
@@ -828,43 +619,26 @@ CentOS
 
 删除已安装的Docker
 
- 
-
- 
-
 ```
   yum remove docker \
-
-        docker-client \
-        
+        docker-client \       
          docker-client-latest \
-
         docker-common \
-
         docker-latest \
-
          docker-latest-logrotate \
-
          docker-logrotate \
-
         docker-selinux \
-
         docker-engine-selinux \
-
         docker-engine
 ```
-
- 
 
 配置阿里云Docker Yum源
 
 ```
  yum install -y yum-utils device-mapper-persistent-data lvm2 git
 
- yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+ yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo 
 ```
-
- 
 
 安装指定版本
 
@@ -874,13 +648,9 @@ CentOS
    yum list docker-ce --showduplicates
 ```
 
- 
-
   安装较旧版本（比如Docker 17.03.2) ：
 
 ​    需要指定完整的rpm包的包名，并且加上--setopt=obsoletes=0 参数：
-
-​    
 
 ```
  yum install -y --setopt=obsoletes=0 \
@@ -890,9 +660,7 @@ CentOS
     docker-ce-selinux-17.03.2.ce-1.el7.centos.noarch
 ```
 
- 
-
-  安装Docker新版本（比如Docker 18.03.0)：
+安装Docker新版本（比如Docker 18.03.0)：
 
 ​    加上rpm包名的版本号部分或不加都可以：   
 
@@ -905,8 +673,6 @@ CentOS
 ```
   yum install docker-ce -y
 ```
-
- 
 
 启动Docker服务：
 
@@ -927,154 +693,20 @@ CentOS
   Docker version 1.13.1, build 8633870/1.13.1 
 
 ```
- docker version
+ docker version   
 ```
-
-  Client:
-
-   Version:      18.09.0
-
-   API version:    1.39
-
-   Go version:     go1.10.4
-
-   Git commit:     4d60db4
-
-   Built:       Wed Nov  7 00:48:22 2018
-
-   OS/Arch:      linux/amd64
-
-   Experimental:    false
-
- 
-
-  Server: Docker Engine - Community
-
-   Engine:
-
-   Version:      18.09.0
-
-   API version:    1.39 (minimum version 1.12)
-
-   Go version:    go1.10.4
-
-   Git commit:    4d60db4
-
-   Built:       Wed Nov  7 00:19:08 2018
-
-   OS/Arch:      linux/amd64
-
-   Experimental:   false
-
-   
 
 查看docker运行状态
 
 ```
- docker info
+ docker info 
 ```
-
-  Containers: 0
-
-   Running: 0
-
-   Paused: 0
-
-   Stopped: 0
-
-  Images: 0
-
-  Server Version: 18.09.0
-
-  Storage Driver: overlay2
-
-   Backing Filesystem: xfs
-
-   Supports d_type: true
-
-   Native Overlay Diff: true
-
-  Logging Driver: json-file
-
-  Cgroup Driver: cgroupfs
-
-  Plugins:
-
-   Volume: local
-
-   Network: bridge host macvlan null overlay
-
-   Log: awslogs fluentd gcplogs gelf journald json-file local logentries splunk syslog
-
-  Swarm: inactive
-
-  Runtimes: runc
-
-  Default Runtime: runc
-
-  Init Binary: docker-init
-
-  containerd version: c4446665cb9c30056f4998ed953e6d4ff22c7c39
-
-  runc version: 4fc53a81fb7c994640722ac585fa9ca548971871
-
-  init version: fec3683
-
-  Security Options:
-
-   seccomp
-
-   Profile: default
-
-  Kernel Version: 3.10.0-957.el7.x86_64
-
-  Operating System: CentOS Linux 7 (Core)
-
-  OSType: linux
-
-  Architecture: x86_64
-
-  CPUs: 4
-
-  Total Memory: 1.934GiB
-
-  Name: docker
-
-  ID: MF5S:ZX25:SWJ3:XEIG:FFHP:5VXF:F5AL:KQFF:KKXP:XZGY:YGTE:EBQF
-
-  Docker Root Dir: /var/lib/docker
-
-  Debug Mode (client): false
-
-  Debug Mode (server): false
-
-  Registry: https://index.docker.io/v1/
-
-  Labels:
-
-  Experimental: false
-
-  Insecure Registries:
-
-   127.0.0.0/8
-
-  Live Restore Enabled: false
-
-  Product License: Community Engine
-
- 
-
-\~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
- 
 
 报错1：
 
   docker info的时候报如下错误
 
   bridge-nf-call-iptables is disabled
-
- 
 
 解决1：
 
@@ -1087,10 +719,8 @@ CentOS
 
   net.bridge.bridge-nf-call-iptables = 1
 
-  net.bridge.bridge-nf-call-arptables = 1
+  net.bridge.bridge-nf-call-arptables = 1 
 ```
-
- 
 
 问题2：
 
@@ -1104,8 +734,6 @@ CentOS
 
   Error response from daemon: Get https://daocloud.io/v2/: dial tcp: lookup daocloud.io on 192.168.1.2:53: read udp  192.168.1.189:41335->192.168.1.2:53: i/o timeout
 
- 
-
 解决2：
 
   我的虚拟机用的网关和dns都是虚拟机自己的.1或者.2，把DNS改成8.8.8.8问题就解决了，ping百度也秒出结果
@@ -1115,8 +743,6 @@ CentOS
 
   nameserver 8.8.8.8
 ```
-
- 
 
 ## 登陆登出Docker Hub
 
@@ -1148,9 +774,7 @@ logout   Log out from a Docker registry
 
  
 
-注：推送镜像库到私有源（可注册 docker 官方账户，推送到官方自有账户）
-
- 
+注：推送镜像库到私有源（可注册 docker 官方账户，推送到官方自有账户） 
 
 ## 国内源镜像源
 
@@ -1158,45 +782,31 @@ logout   Log out from a Docker registry
 
 去查看如何使用网易蜂巢的docker镜像库
 
- 
-
 daocloud.io
 
- 
-
-Docker 加速器  
+#### Docker 加速器  
 
 使用 Docker 的时候，需要经常从官方获取镜像，但是由于显而易见的网络原因，拉取镜像的过程非常耗时，严重影响使用 Docker 的体验。因此 DaoCloud 推出了加速器工具解决这个难题，通过智能路由和缓存机制，极大提升了国内网络访问 Docker Hub 的速度，目前已经拥有了广泛的用户群体，并得到了 Docker 官方的大力推荐。
 
 如果您是在国内的网络环境使用 Docker，那么 Docker 加速器一定能帮助到您。   
 
- 
-
 Docker 加速器对 Docker 的版本有要求吗？   
 
-需要 Docker 1.8 或更高版本才能使用，如果您没有安装 Docker 或者版本较旧，请安装或升级。   
-
- 
+需要 Docker 1.8 或更高版本才能使用，如果您没有安装 Docker 或者版本较旧，请安装或升级。    
 
 Docker 加速器支持什么系统？   
 
-Linux, MacOS 以及 Windows 平台。   
-
- 
+Linux, MacOS 以及 Windows 平台。    
 
 Docker 加速器是否收费？   
 
 DaoCloud 为了降低国内用户使用 Docker 的门槛，提供永久免费的加速器服务，请放心使用。  
 
- 
-
 国内比较好的镜像源：网易蜂巢、aliyun和daocloud,下面是daocloud配置方式：
 
 ﻿Docker Hub并没有在国内部署服务器或者使用国内的CDN服务，因此在国内特殊的网络环境下，镜像下载十分耗时。
 
-为了克服跨洋网络延迟，能够快速高效地下载Docker镜像，可以采用DaoCloud提供的服务Docker Hub Mirror，速度
-
-快很多
+为了克服跨洋网络延迟，能够快速高效地下载Docker镜像，可以采用DaoCloud提供的服务Docker Hub Mirror，速度快很多
 
 1.注册网站账号
 
@@ -1222,8 +832,6 @@ sudo daomonit -token=e16ed16b2972865e19b143695cf08cad850d5570 save-config
 service daomonit start
 ```
 
-  
-
 3.配置完成后从Docker Hub Mirror下载镜像，命令：
 
 ```
@@ -1232,13 +840,11 @@ service daomonit start
 
  
 
-注1：wing第一次使用daocloud是配置了加速器的，可以直接使用dao pull centos拉取经过加速之后的镜像，但是后来发现，不使用加速器也可以直接在daocloud官网上找到想要拉取的镜像地址进行拉取，﻿比如：#docker pull 
+注1：wing第一次使用daocloud是配置了加速器的，可以直接使用dao pull centos拉取经过加速之后的镜像，但是后来发现，不使用加速器也可以直接在daocloud官网上找到想要拉取的镜像地址进行拉取，﻿比如：
 
-daocloud.io/library/tomcat:6.0-jre7
+#docker pull daocloud.io/library/tomcat:6.0-jre7
 
 注2：上面配置加速器的方法，官网会更新，最新方法你应该根据官网提示去操作。
-
-===========以下为wing亲测================
 
 使用国内镜像：
 
@@ -1248,27 +854,16 @@ daocloud.io/library/tomcat:6.0-jre7
 
 进入镜像市场：填写搜索的镜像名称
 
- 
-
- 
-
 选择第一个
 
- 
-
-点击右边快速部署：
-
- 
-
- 
-
- 
+点击右边快速部署： 
 
 写入名称，选择我的主机，按提示继续在主机上进行所有操作
 
  
 
-\# mkdir /docker
+```
+# mkdir /docker
 
 \# cd /docker
 
@@ -1279,6 +874,7 @@ daocloud.io/library/tomcat:6.0-jre7
 \# daomonit -token=36e3dedaa2e6b352f47b26a3fa9b67ffd54f5077 save-config
 
 \# service daomonit start
+```
 
  
 
@@ -1290,53 +886,57 @@ daocloud.io/library/tomcat:6.0-jre7
 
 接下来我们在镜像市场找到一个centos的镜像:点击右面的拉取按钮,会出现拉取命令如下：
 
-我们按命令执行：
+我们按命令执行： 
 
-  \# docker pull daocloud.io/library/centos:latest
+```
+ \# docker pull daocloud.io/library/centos:latest
+```
 
   出现如下提示：说明拉取成功
 
-  Trying to pull repository daocloud.io/library/centos ... 
+```
+ Trying to pull repository daocloud.io/library/centos ... 
 
   latest: Pulling from daocloud.io/library/centos
-
- 
 
   08d48e6f1cff: Pull complete 
 
   Digest: sha256:934ff980b04db1b7484595bac0c8e6f838e1917ad3a38f904ece64f70bbca040
 
   Status: Downloaded newer image for daocloud.io/library/centos:latest
+```
 
  
 
 查看一下本地镜像：    
 
+```
   [root@docker1 docker]# docker images
 
   REPOSITORY          TAG         IMAGE ID       CREATED       SIZE
 
   daocloud.io/library/centos  latest        0584b3d2cf6d     3 weeks ago     196.5 MB
-
- 
+```
 
 在拉取回来的本地镜像执行命令：
 
   万年不变的"你好世界"：   
 
-  \# docker run daocloud.io/library/centos /bin/echo "hello world"
+```
+ \# docker run daocloud.io/library/centos /bin/echo "hello world"
 
 ​    hello world
-
-  
+```
 
   使用容器中的shell：
 
-  [root@docker1 docker]# docker run -i -t centos /bin/bash  
+```
+[root@docker1 docker]# docker run -i -t centos /bin/bash  
 
   Unable to find image 'centos:latest' locally
 
   Trying to pull repository docker.io/library/centos ...  
+```
 
   注意上面这样是不行的，因为默认使用的是docker官方默认镜像库的位置，需要按如下命令执行：
 
@@ -1488,31 +1088,25 @@ daocloud.io/library/tomcat:6.0-jre7
 
  
 
-# ***\*docker基本概念\****
+# docker基本概念
 
-Docker系统
+#### Docker系统
 
 Docker系统有两个程序：docker服务端和docker客户端
 
-  docker服务端：
+  **docker服务端**：
 
 ​    是一个服务进程，管理着所有的容器。
 
 ​    docker engine
 
-​    
-
-  docker客户端：
+ #### docker客户端
 
 ​    扮演着docker服务端的远程控制器，可以用来控制docker的服务端进程。
 
- 
-
   大部分情况下，docker服务端和客户端运行在一台机器上。
 
- 
-
-Docker三大核心组件：
+#### Docker三大核心组件
 
   Docker 镜像 - Docker  images 
 
@@ -1520,9 +1114,7 @@ Docker三大核心组件：
 
   Docker 容器 - Docker  containers 
 
- 
-
-容器的三大组成要素：
+#### 容器的三大组成要素
 
   名称空间 namespace
 
@@ -1624,7 +1216,7 @@ docker仓库
 
    
 
-docker 仓库：
+#### docker 仓库
 
   用来保存镜像，可以理解为代码控制中的代码仓库。同样的，Docker 仓库也有公有和私有的概念。
 
@@ -1646,19 +1238,13 @@ docker 国内仓库
 
   daocloud
 
- 
-
 docker共有仓库
 
   docker.io
 
- 
-
 docker私有仓库
 
   个人或者公司部署的非公开库
-
- 
 
 docker国内仓库   
 
@@ -1666,19 +1252,13 @@ docker国内仓库
 
  
 
-Docker 镜像 
+#### Docker 镜像 
 
-  Docker 镜像是 Docker 容器运行时的只读模板，每一个镜像由一系列的层 (layers) 组成。Docker 使用  UnionFS 来将这些层联合到单独的镜像中。UnionFS  允许独立文件系统中的文件和文件夹(称之为分支)被透明覆盖，形成一个单独连贯的文件系统。正因为有了这些层的存在，Docker  是如此的轻量。当你改变了一个 Docker  镜像，比如升级到某个程序到新的版本，一个新的层会被创建。因此，不用替换整个原先的镜像或者重新建立(在使用虚拟机的时候你可能会这么做)，只是一个新的层被添加或升级了。现在你不用重新发布整个镜像，只需要升级，层使得分发 Docker 镜像变得简单和快速。 
-
- 
-
-  ﻿在 Docker 的术语里，一个只读层被称为镜像，一个镜像是永久不会变的。
+  Docker 镜像是 Docker 容器运行时的`只读模板`，每一个镜像由一系列的层 (layers) 组成。Docker 使用  UnionFS 来将这些层联合到单独的镜像中。UnionFS  允许独立文件系统中的文件和文件夹(称之为分支)被透明覆盖，形成一个单独连贯的文件系统。正因为有了这些层的存在，Docker  是如此的轻量。当你改变了一个 Docker  镜像，比如升级到某个程序到新的版本，一个新的层会被创建。因此，不用替换整个原先的镜像或者重新建立(在使用虚拟机的时候你可能会这么做)，只是一个新的层被添加或升级了。现在你不用重新发布整个镜像，只需要升级，层使得分发 Docker 镜像变得简单和快速。 在 Docker 的术语里，一个只读层被称为镜像，一个镜像是永久不会变的。
 
   由于 Docker 使用一个统一文件系统，Docker 进程认为整个文件系统是以读写方式挂载的。 但是所有的变更都发生顶层的可写层，而下层的原始的只读镜像文件并未变化。由于镜像不可写，所以镜像是无状态的。
 
-﻿每一个镜像都可能依赖于由一个或多个下层的组成的另一个镜像。下层那个镜像是上层镜像的父镜像。
-
-​    
+﻿每一个镜像都可能依赖于由一个或多个下层的组成的另一个镜像。下层那个镜像是上层镜像的父镜像。    
 
 镜像的大体分类方式：这不是规定
 
@@ -1714,8 +1294,6 @@ Docker 镜像
 
    mysql的docker镜像
 
-   
-
    都可以当作基础镜像来使用：下载镜像-->运行成容器-->安装应用-->打包成镜像-->交付上线
 
  
@@ -1748,7 +1326,7 @@ centos7+nginx+vsftpd  镜像
 
  
 
-镜像ID：
+#### 镜像ID
 
 所有镜像都是通过一个 64 位十六进制字符串 （内部是一个 256 bit 的值）来标识的。 为简化使用，前 12 个字符可以组成一个短ID，可以在命令行中使用。短ID还是有一定的碰撞机率，所以服务器总是返回长ID。
 
@@ -1764,45 +1342,27 @@ centos7+nginx+vsftpd  镜像
 
   
 
-Docker 容器
+#### Docker 容器
 
   Docker 容器和文件夹很类似，一个Docker容器包含了所有的某个应用运行所需要的环境。每一个 Docker 容器都是从 Docker  镜像创建的。Docker 容器可以运行、开始、停止、移动和删除。每一个 Docker 容器都是独立和安全的应用平台，Docker 容器是  Docker 的运行部分。 
 
-
-
 ## docker镜像命名解析
 
-Docker镜像命名解析
+#### Docker镜像命名解析
 
-镜像是Docker最核心的技术之一，也是应用发布的标准格式。无论你是用docker pull image，或者是在
+镜像是Docker最核心的技术之一，也是应用发布的标准格式。无论你是用docker pull image，或者是在Dockerfile里面写FROM image，从Docker官方Registry下载镜像应该是Docker操作里面最频繁的动作之一了。那么docker镜像是如何命名的，这也是Docker里面比较容易令人混淆的一块概念：Registry，Repository, Tag and Image。
 
-Dockerfile里面写FROM image，从Docker官方Registry下载镜像应该是Docker操作里面最频繁的动作之一
-
-了。那么docker镜像是如何命名的，这也是Docker里面比较容易令人混淆的一块概念：Registry，Repository, Tag and Image。
-
- 
-
-docker.io/centos:7
-
- 
+docker.io/centos:7 
 
 下面是在本地机器运行docker images的输出结果：
 
-﻿
-
 常说的"ubuntu"镜像其实不是一个镜像名称，而是代表了一个名为ubuntu的Repository，同时在这个Repository下面有一系列打了tag的Image，Image的标记是一个GUID，为了方便也可以通过Repository:tag来引用。
-
- 
 
 docker.io/centos:7
 
 registry/repository:tag
 
- 
-
-那么Registry又是什么呢？Registry存储镜像数据，并且提供拉取和上传镜像的功能。Registry中镜像是通过
-
-Repository来组织的，而每个Repository又包含了若干个Image。
+那么Registry又是什么呢？Registry存储镜像数据，并且提供拉取和上传镜像的功能。Registry中镜像是通过Repository来组织的，而每个Repository又包含了若干个Image。
 
 • Registry包含一个或多个Repository
 
@@ -1810,15 +1370,15 @@ Repository来组织的，而每个Repository又包含了若干个Image。
 
 • Image用GUID表示，有一个或多个Tag与之关联
 
- 
-
 下面这条命令使用的是一个镜像比较完整的名称，也就是所谓的GUID命名方式
 
+```
 \# docker push 192.168.245.136:5000/busybox
+```
 
  
 
-Image[:tag]
+#### Image[:tag]
 
 当一个镜像的名称不足以分辨这个镜像所代表的含义时，你可以通过tag将版本信息添加到run命令中，以执行特
 
@@ -1838,8 +1398,6 @@ Tag an image into a repository  #给镜像打标签入库
 
 --help=false Print usage
 
- 
-
 给镜像打标签
 
 \#docker tag 11662b14f5e0 ubuntu:jdk1.7
@@ -1850,17 +1408,15 @@ Tag an image into a repository  #给镜像打标签入库
 
  
 
-一、Docker镜像
+一、**Docker镜像**
 
 要理解Docker镜像和docker容器之间的区别，确实不容易。
 
 假设Linux内核是第0层，那么无论怎么运行Docker，它都是运行于内核层之上的。这个Docker镜像，是一个只读的镜像，位于第1层，它不能被修改或不能保存状态。
 
-一个Docker镜像可以构建于另一个Docker镜像之上，这种层叠关系可以是多层的。第1层的镜像层我们称之为基础镜像（Base  Image），其他层的镜像（除了最顶层）我们称之为父层镜像（Parent  Image）。这些镜像继承了他们的父层镜像的所有属性和设置，并在Dockerfile中添加了自己的配置。
+一个Docker镜像可以构建于另一个Docker镜像之上，这种层叠关系可以是多层的。第1层的镜像层我们称之为`基础镜像`（Base  Image），其他层的镜像（除了最顶层）我们称之为`父层镜像`（Parent  Image）。这些镜像继承了他们的父层镜像的所有属性和设置，并在Dockerfile中添加了自己的配置。
 
 Docker镜像通过镜像ID进行识别。镜像ID是一个64字符的十六进制的字符串。但是当我们运行镜像时，通常我们不会使用镜像ID来引用镜像，而是使用镜像名来引用。
-
- 
 
 要列出本地所有有效的镜像，可以使用命令
 
@@ -1880,41 +1436,23 @@ Docker镜像通过镜像ID进行识别。镜像ID是一个64字符的十六进�
 
  
 
-二、Docker容器
+二、**Docker容器**
 
 Docker容器可以使用命令创建：
 
 \# docker run imagename
 
-它会在所有的镜像层之上增加一个可写层。这个可写层有运行在CPU上的进程，而且有两个不同的状态：运行态
+它会在所有的镜像层之上增加一个可写层。这个可写层有`运行在CPU上的进程`，而且有两个不同的状态：运行态（Running）和退出态 （Exited）。这就是Docker容器。当我们使用docker  run启动容器，Docker容器就进入运行态，当我们停止Docker容器时，它就进入退出态。
 
-（Running）和退出态 （Exited）。这就是Docker容器。当我们使用docker  run启动容器，Docker容器就进
+ 当我们有一个正在运行的Docker容器时，从运行态到停止态，我们对它所做的一切变更都会永久地写到容器的文件系统中。要切记，对容器的变更是写入到容器的文件系统的，而不是写入到Docker镜像中的。
 
-入运行态，当我们停止Docker容器时，它就进入退出态。
-
- 
-
-当我们有一个正在运行的Docker容器时，从运行态到停止态，我们对它所做的一切变更都会永久地写到容器的文
-
-件系统中。要切记，对容器的变更是写入到容器的文件系统的，而不是写入到Docker镜像中的。
-
-我们可以用同一个镜像启动多个Docker容器，这些容器启动后都是活动的，彼此还是相互隔离的。我们对其中一
-
-个容器所做的变更只会局限于那个容器本身。
-
- 
+我们可以用同一个镜像启动多个Docker容器，这些容器启动后都是活动的，彼此还是相互隔离的。我们对其中一个容器所做的变更只会局限于那个容器本身。
 
 如果对容器的底层镜像进行修改，那么当前正在运行的容器是不受影响的，不会发生自动更新现象。
 
-如果想更新容器到其镜像的新版本，那么必须当心，确保我们是以正确的方式构建了数据结构，否则我们可能会
+如果想更新容器到其镜像的新版本，那么必须当心，确保我们是以正确的方式构建了数据结构，否则我们可能会导致损失容器中所有数据的后果。
 
-导致损失容器中所有数据的后果。
-
-64字符的十六进制的字符串来定义容器ID，它是容器的唯一标识符。容器之间的交互是依靠容器ID识别的，由于
-
-容器ID的字符太长，我们通常只需键入容器ID的前4个字符即可。当然，我们还可以使用容器名，但显然用4字符
-
-的容器ID更为简便。
+64字符的十六进制的字符串来定义容器ID，它是容器的唯一标识符。容器之间的交互是依靠容器ID识别的，由于容器ID的字符太长，我们通常只需键入容器ID的前4个字符即可。当然，我们还可以使用容器名，但显然用4字符的容器ID更为简便。
 
  
 
@@ -1922,37 +1460,29 @@ Docker容器可以使用命令创建：
 
 namespace 
 
- 
+名字空间是 Linux 内核一个强大的特性。每个容器都有自己单独的名字空间，运行在其中的应用都像是在独立的操作系统中运行一样。名字空间保证了容器之间彼此互不响。
 
-名字空间是 Linux 内核一个强大的特性。每个容器都有自己单独的名字空间，运行在其中的应用都像是在独立的操作系统中运行一样。名字空间保证了容器之间彼此互不影响。
-
- 
-
-1. pid 名字空间
+1. **pid 名字空间**
 
 不同用户的进程就是通过 pid 名字空间隔离开的，且不同名字空间中可以有相同 pid。所有的 LXC 进程在 Docker中的父进程为Docker进程，每个 LXC 进程具有不同的名字空间。同时由于允许嵌套，因此可以很方便的实现嵌套的 Docker 容器。
 
-2. net 名字空间
+2. **net 名字空间**
 
 有 了 pid 名字空间, 每个名字空间中的 pid 能够相互隔离，但是网络端口还是共享 host 的端口。网络隔离是通过 net 名字空间实现的，每个 net 名字空间有独立的 网络设备, IP 地址, 路由表, /proc/net 目录。这样每个容器的网络就能隔离开来。Docker  默认采用 veth 的方式，将容器中的虚拟网卡同 host 上的一 个Docker 网桥 docker0 连接在一起。
 
-3. ipc 名字空间  
+3. **ipc 名字空间**  
 
-容器中进程交互还是采用了 Linux 常见的进程间交互方法(interprocess communication - IPC),  包括信号量、消息队列和共享内存、socket、管道等。然而同 VM 不同的是，容器的进程间交互实际上还是 host 上具有相同 pid  名字空间中的进程间交互，因此需要在 IPC 资源申请时加入名字空间信息，每个 IPC 资源有一个唯一的 32 位 id。 
+容器中进程交互还是采用了 Linux 常见的进程间交互方法(interprocess communication - IPC),  包括`信号量`、`消息队列`和`共享内存`、`socket`、`管道`等。然而同 VM 不同的是，容器的进程间交互实际上还是 host 上具有相同 pid  名字空间中的进程间交互，因此需要在 IPC 资源申请时加入名字空间信息，每个 IPC 资源有一个唯一的 32 位 id。 
 
-4. mnt名字空间
+4. **mnt名字空间**
 
-类似 change root，将一个进程放到一个特定的目录执行。mnt 名字空间允许不同名字空间的进程看到的文件结构不
+类似 change root，将一个进程放到一个特定的目录执行。mnt 名字空间允许不同名字空间的进程看到的文件结构不同，这样每个名字空间  中的进程所看到的文件目录就被隔离开了。同 chroot 不同，每个名字空间中的容器在 /proc/mounts 的信息只包含所在名字空间的  mount point。
 
-同，这样每个名字空间  中的进程所看到的文件目录就被隔离开了。同 chroot 不同，每个名字空间中的容器在 /
-
-proc/mounts 的信息只包含所在名字空间的  mount point。
-
-5. uts 名字空间
+5. **uts 名字空间**
 
 UTS("UNIX Time-sharing System") 名字空间允许每个容器拥有独立的 hostname 和 domain name, 使其在网络上可以被视作一个独立的节点而非主机上的一个进程。
 
-6. user 名字空间
+6. **user 名字空间**
 
 每个容器可以有不同的用户和组 id, 也就是说可以在容器内用容器内部的用户执行程序而非主机上的用户。
 
@@ -1962,75 +1492,77 @@ UTS("UNIX Time-sharing System") 名字空间允许每个容器拥有独立的 ho
 
  
 
-搜索镜像：
+### 搜索镜像
 
   这种方法只能用于官方镜像库
 
   搜索基于 centos 操作系统的镜像
 
-  \# docker search centos
+```
+ \# docker search centos
+```
 
- 
-
-  按星级搜索镜像：     
+  **按星级搜索镜像**：     
 
   查找 star 数至少为 100 的镜像，默认不加 s 选项找出所有相关 ubuntu 镜像：     
 
-  \# docker search ubuntu -f stars=100   
+```
+  \# docker search ubuntu -f stars=100      
+```
 
-   
+### 拉取镜像
 
-拉取镜像：
-
+```
   \# docker pull centos
+```
 
- 
+### 查看本地镜像 
 
-查看本地镜像：  
+```
+ \# docker image list 
+```
 
-  \# docker image list
+### 查看镜像详情：
 
-  
+```
+ \# docker image inspect 镜像id
+```
 
-查看镜像详情：
-
-  \# docker image inspect 镜像id
-
-  
-
-删除镜像：
+### 删除镜像：
 
   删除一个或多个，多个之间用空格隔开，可以使用镜像名称或id
 
-  \# docker rmi daocloud.io/library/mysql
-
- 
+```
+ \# docker rmi daocloud.io/library/mysql
+```
 
   强制删除：--force
 
   如果镜像正在被使用中可以使用--force强制删除   
 
-  \# docker rmi docker.io/ubuntu:latest --force
+```
+ \# docker rmi docker.io/ubuntu:latest --force
+```
 
- 
+### 删除所有镜像
 
-删除所有镜像
-
+```
   \# docker rmi $(docker images -q)
+```
 
- 
+### 只查看所有镜像的id
 
-只查看所有镜像的id
-
+```
   \# docker images -q 
+```
 
- 
-
-查看镜像制作的过程
+### 查看镜像制作的过程
 
   相当于dockfile
 
-  \# docker history daocloud.io/ubuntu
+```
+ \# docker history daocloud.io/ubuntu
+```
 
  
 
@@ -2040,7 +1572,9 @@ UTS("UNIX Time-sharing System") 名字空间允许每个容器拥有独立的 ho
 
 创建新容器但不启动：
 
+```
 \# docker create -it daocloud.io/library/centos:5 /bin/bash
+```
 
  
 
@@ -2052,27 +1586,23 @@ UTS("UNIX Time-sharing System") 名字空间允许每个容器拥有独立的 ho
 
 ﻿   如果执行成功，说明CentOS 容器已经被启动，并且应该已经得到了 bash 提示符。
 
-  -i  
+  -i  捕获标准输入输出
 
-​    捕获标准输入输出
-
-  -t  
-
-​    分配一个终端或控制台
+  -t  分配一个终端或控制台
 
   --restart=always  
 
 ​    容器随docker engine自启动，因为在重启docker的时候默认容器都会被关闭  
 
-​    也适用于create选项
-
-​     
+​    也适用于create选项  
 
   --rm
 
 ​    默认情况下，每个容器在退出时，它的文件系统也会保存下来，这样一方面调试会方便些，因为你可以通过查看日志等方式来确定最终状态。另一方面，也可以保存容器所产生的数据。
 
-​    但是当你仅仅需要短暂的运行一个容器，并且这些数据不需要保存，你可能就希望Docker能在容器结束时自动清理其所产生的数据。这个时候就需要--rm参数了。注意：--rm 和 -d不能共用
+​    但是当你仅仅需要短暂的运行一个容器，并且这些数据不需要保存，你可能就希望Docker能在容器结束时自动清理其所产生的数据。这个时候就需要--rm参数了。
+
+> 注意：--rm 和 -d不能共用
 
  
 
@@ -2080,9 +1610,7 @@ UTS("UNIX Time-sharing System") 名字空间允许每个容器拥有独立的 ho
 
 --name= Assign a name to the container   
 
-​         --为容器分配一个名字，如果没有指定，docker会自动分配一个随机名称
-
-​         是#docker run子命令的参数
+--为容器分配一个名字，如果没有指定，docker会自动分配一个随机名称是#docker run子命令的参数
 
  
 
@@ -2102,17 +1630,13 @@ UTS("UNIX Time-sharing System") 名字空间允许每个容器拥有独立的 ho
 
 如果你在执行docker run时没有指定--name，那么deamon会自动生成一个随机字符串UUID。
 
-但是对于一个容器来说有个name会非常方便，当你需要连接其它容器时或者类似需要区分其它容器时，使用容
-
-器名称可以简化操作。无论容器运行在前台或者后台，这个名字都是有效的。
+但是对于一个容器来说有个name会非常方便，当你需要连接其它容器时或者类似需要区分其它容器时，使用容器名称可以简化操作。无论容器运行在前台或者后台，这个名字都是有效的。
 
  
 
-保存容器PID equivalent：
+**保存容器PID equivalent**
 
-如果在使用Docker时有自动化的需求，你可以将containerID输出到指定的文件中（PIDfile），类似于某些应用
-
-程序将自身ID输出到文件中，方便后续脚本操作。
+如果在使用Docker时有自动化的需求，你可以将containerID输出到指定的文件中（PIDfile），类似于某些应用程序将自身ID输出到文件中，方便后续脚本操作。
 
 --cidfile="": Write the container ID to the file
 
@@ -2132,25 +1656,19 @@ UTS("UNIX Time-sharing System") 名字空间允许每个容器拥有独立的 ho
 
  
 
-查看容器：
+**查看容器**
 
   只查看运行状态的容器：
 
   \#docker ps
 
- 
-
   \#docker ps -a
 
-  -a  查看所有容器
-
-  
+  -a  查看所有容器 
 
   只查看所有容器id:
 
   \# docker ps -a -q
-
- 
 
   列出最近一次启动的容器(了解)
 
@@ -2158,19 +1676,15 @@ UTS("UNIX Time-sharing System") 名字空间允许每个容器拥有独立的 ho
 
  
 
-查看容器详细信息：
+**查看容器详细信息**
 
 inspect  Return low-level information on a container or image
 
 用于查看容器的配置信息，包含容器名、环境变量、运行命令、主机配置、网络配置和数据卷配置等。
 
- 
-
 目标：
 
 查找某一个运行中容器的id，然后使用docker inspect命令查看容器的信息。
-
- 
 
 提示：
 
@@ -2178,43 +1692,11 @@ inspect  Return low-level information on a container or image
 
 [root@master ~]# docker inspect d95   //d95是我机器上运行的一个容器ID的前3个字符
 
-[
-
-  {
-
-​    "Id": "d95a220a498e352cbfbc098c949fc528dbf5a5c911710b108ea3a9b4aa3a4761",
-
-​    "Created": "2017-07-08T03:59:16.18225183Z",
-
-​    "Path": "bash",
-
-​    "Args": [],
-
-​    "State": {
-
-​      "Status": "exited",
-
-​      "Running": false,
-
-​      "Paused": false,
-
-​      "Restarting": false,
-
-​      "OOMKilled": false,
-
-​      "Dead": false,
-
-​      "Pid": 0,
-
-容器信息很多，这里只粘贴了一部分
-
- 
-
 比如：容器里在安装ip或ifconfig命令之前，查看网卡IP显示容器IP地址和端口号，如果输出是空的说明没有配置IP地址（不同的Docker容器可以通过此IP地址互相访问）
 
 \# docker inspect --format='{{.NetworkSettings.IPAddress}}'  容器id
 
-列出所有绑定的端口:
+**列出所有绑定的端口**:
 
 \# docker inspect --format='{{range $p, $conf := .NetworkSettings.Ports}} {{$p}} -> 
 
@@ -2232,7 +1714,7 @@ b220fabf815a
 
  
 
-找出特殊的端口映射:
+**找出特殊的端口映射**
 
 比如找出容器里22端口所映射的docker本机的端口：
 
@@ -2246,37 +1728,40 @@ tcp") 0).HostPort}}' b220fabf815a
 
 20020
 
- 
 
- 
 
-启动容器：
+**启动容器**
 
+```
 \# docker start  name
+```
 
  
 
-关闭容器：
+**关闭容器**
 
-\# docker stop  name
+```
+# docker stop  name
 
 \# docker kill   name    --强制终止容器
+```
 
  
 
-杀死所有running状态的容器
+**杀死所有running状态的容器**
 
-\# docker kill $(docker ps  -q)  
+```
+\# docker kill $(docker ps  -q) 
+```
+
+> stop和kill的区别：
+>
+>   docker stop命令给容器中的进程发送SIGTERM信号，默认行为是会导致容器退出，当然，容器内程序可以捕获该信号并自行处理，例如可以选择忽略。而docker kill则是给容器的进程发送SIGKILL信号，该信号将会使容器必然退出。 
+>
 
  
 
-stop和kill的区别：
-
-  docker stop命令给容器中的进程发送SIGTERM信号，默认行为是会导致容器退出，当然，容器内程序可以捕获该信号并自行处理，例如可以选择忽略。而docker kill则是给容器的进程发送SIGKILL信号，该信号将会使容器必然退出。 
-
- 
-
-删除容器：
+**删除容器**
 
   \# docker rm 容器id或名称
 
@@ -2284,27 +1769,21 @@ stop和kill的区别：
 
   
 
-  根据格式删除所有容器：
+**根据格式删除所有容器**
 
-  \# docker rm $(docker ps -qf status=exited)
+  \# docker rm $(docker ps -qf status=exited) 
 
-​    
+**重启容器**
 
-重启容器：
+\#docker restart name 
 
-\#docker restart name
-
- 
-
-暂停容器：
+**暂停容器**
 
 pause  --暂停容器内的所有进程，
 
-  通过docker stats可以观察到此时的资源使用情况是固定不变的，通过docker logs -f也观察不到日志的进一步输出。
+通过docker stats可以观察到此时的资源使用情况是固定不变的，通过docker logs -f也观察不到日志的进一步输出。
 
- 
-
-恢复容器：
+**恢复容器**
 
 unpause  --恢复容器内暂停的进程，与pause参数相对应
 
@@ -2314,7 +1793,7 @@ unpause  --恢复容器内暂停的进程，与pause参数相对应
 
  
 
-让容器运行在后台：
+**让容器运行在后台**
 
 ﻿如果在docker run后面追加-d=true或者-d，那么容器将会运行在后台模式。此时所有I/O数据只能通过网络资源或者共享卷组来进行交互。因为容器不再监听你执行docker run的这个终端命令行窗口。但你可以通过执行
 
@@ -2322,9 +1801,8 @@ docker attach来重新附着到该容器的回话中。
 
  
 
-注：
-
-  容器运行在后台模式下，是不能使用--rm选项的(老版本是这样，新版本已经可以同时生效)
+> 注：容器运行在后台模式下，是不能使用--rm选项的(老版本是这样，新版本已经可以同时生效)
+>
 
  
 
@@ -2390,7 +1868,7 @@ port
 
  
 
-连接容器：   
+**连接容器**：  
 
 方法1.attach
 
@@ -2550,8 +2028,6 @@ port
 
 将容器的文件系统打包成tar文件,也就是把正在运行的容器直接导出为tar包的镜像文件
 
- 
-
 export   
 
   Export a container's filesystem as a tar archive
@@ -2582,11 +2058,12 @@ import
 
  
 
-注意：
-
-  如果导入镜像时没有起名字，随后可以单独起名字(没有名字和tag)，可以手动加tag
-
-  \# docker tag 镜像ID mycentos:7  
+> 注意：
+>
+>   如果导入镜像时没有起名字，随后可以单独起名字(没有名字和tag)，可以手动加tag
+>
+>   \# docker tag 镜像ID mycentos:7  
+>
 
  
 
@@ -2622,10 +2099,6 @@ root@4ddf4638572d:/app# exit
 
 \# docker commit 4ddf4638572d wing/helloworld:v2
 
- 
-
-\~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 例子：
 
 \# docker commit -m "my images version1" -a "wing" 108a85b1ed99 daocloud.io/ubuntu:v2
@@ -2644,9 +2117,7 @@ root@4ddf4638572d:/app# exit
 
   ﻿-p，–pause=true        提交时暂停容器运行
 
- 
 
- 
 
 Init 层的存在，是为了避免执行 docker commit 时，把 Docker 自己对 /etc/hosts 等文件做的修改，也一起提交掉。
 
@@ -2676,11 +2147,12 @@ load
 
  
 
-注：
-
-  1.tar文件的名称和保存的镜像名称没有关系
-
-  2.导入的镜像如果没有名称，自己打tag起名字
+> 注：
+>
+>   1.tar文件的名称和保存的镜像名称没有关系
+>
+>   2.导入的镜像如果没有名称，自己打tag起名字
+>
 
   
 
@@ -2698,11 +2170,7 @@ load
 
 虽然可以自己制作 rootfs(见'容器文件系统那些事儿')，但Docker 提供了一种更便捷的方式，叫作 Dockerfile
 
- 
-
-docker build命令用于根据给定的Dockerfile和上下文以构建Docker镜像。
-
- 
+docker build命令用于根据给定的Dockerfile和上下文以构建Docker镜像。 
 
 docker build语法：
 
@@ -2710,7 +2178,7 @@ docker build语法：
 
  
 
-\1. 选项说明
+1. 选项说明
 
 --build-arg，设置构建时的变量
 
@@ -2742,7 +2210,7 @@ docker build语法：
 
  
 
-\2. PATH | URL | -说明：
+2. PATH | URL | -说明：
 
 给出命令执行的上下文。
 
@@ -3069,9 +2537,6 @@ CONTAINER ID     IMAGE        COMMAND       CREATED
 \# curl http://localhost:4000
 
 <h3>Hello World!</h3><b>Hostname:</b> 4ddf4638572d<br/>
-
- 
-
 \~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
  
@@ -3174,12 +2639,6 @@ Helm
 
   \# docker pull daocloud.io/library/registry:latest
 
- 
-
- 
-
- 
-
 运行容器：                  
 
   \# docker run --name "pri_registry" --restart=always -d -p 5000:5000 daocloud.io/library/registry 
@@ -3210,7 +2669,7 @@ Helm
 
 ﻿连接容器查看端口状态：
 
-  ﻿# docker exec -it  1f444285bed8  /bin/sh    //这里是sh 不是bash
+docker exec -it  1f444285bed8  /bin/sh    //这里是sh 不是bash
 
   / # netstat -lnp                       //查看5000端口是否开启
 
@@ -3320,7 +2779,7 @@ Helm
 
  
 
-# ***\*部署docker web ui应用\****
+# 部署docker web ui应用
 
 下载并运行容器：
 
@@ -3340,7 +2799,7 @@ Helm
 
  
 
-# ***\*docker资源限制\****
+# docker资源限制
 
 在使用 docker 运行容器时，一台主机上可能会运行几百个容器，这些容器虽然互相隔离，但是底层却使用着相同的 CPU、内存和磁盘资源。如果不对容器使用的资源进行限制，那么容器之间会互相影响，小的来说会导致容器资源使用不公平；大的来说，可能会导致主机和集群资源耗尽，服务完全不可用。
 
@@ -3356,147 +2815,97 @@ CPU 和内存的资源限制已经是比较成熟和易用，能够满足大部�
 
 资源限制一方面可以让我们为容器（应用）设置合理的 CPU、内存等资源，方便管理；另外一方面也能有效地预防恶意的攻击和异常，对容器来说是非常重要的功能。如果你需要在生产环境使用容器，请务必要花时间去做这件事情。
 
-## ***\*系统压力测试工具stress\****
+## 系统压力测试工具stress
 
-  stress是一个linux下的压力测试工具，专门为那些想要测试自己的系统，完全高负荷和监督这些设备运行的用户。
-
- 
+  stress是一个linux下的压力测试工具，专门为那些想要测试自己的系统，完全高负荷和监督这些设备运行的用户。 
 
 :(){:|:&};:
 
- 
-
 安装：
 
+```
   \# yum install stress -y
-
- 
+```
 
 测试场景举例
 
- 
-
 测试CPU负荷 
 
-\# stress -c 4
+```
+# stress -c 4
+```
 
 增加4个cpu进程，处理sqrt()函数函数，以提高系统CPU负荷
 
- 
-
 内存测试
 
-\# stress –i 4 –vm 10 –vm-bytes 1G –vm-hang 100 –timeout 100s
+```
+# stress –i 4 –vm 10 –vm-bytes 1G –vm-hang 100 –timeout 100s
+```
 
 新增4个io进程，10个内存分配进程，每次分配大小1G，分配后不释放，测试100S
 
- 
-
 磁盘I/O测试
 
-\# stress –d 1 --hdd-bytes 3G
+```
+# stress –d 1 --hdd-bytes 3G
+```
 
 新增1个写进程，每次写3G文件块
 
- 
-
 硬盘测试（不删除）
 
-\# stress –i 1 –d 10 --hdd-bytes 3G –hdd-noclean
+```
+# stress –i 1 –d 10 --hdd-bytes 3G –hdd-noclean
+```
 
 新增1个IO进程，10个写进程，每次写入3G文件块，且不清除，会逐步将硬盘耗尽。
 
- 
-
-\~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
- 
-
 stress各主用参数说明（-表示后接一个中划线，--表示后接2个中划线，均可用于stress后接参数，不同表达方式）：
 
- 
+> -？
+>
+> --help 显示帮助信息
+>
+> --version 显示软件版本信息
+>
+> -t secs:
+>
+> --timeout secs指定运行多少秒
+>
+> --backoff usecs 等待usecs微秒后才开始运 
+>
+> -c forks 
+>
+> --cpu forks 产生多个处理sqrt()函数的CPU进程
+>
+> -m forks
+>
+> --vm forks:产生多个处理malloc()内存分配函数的进程，后接进程数量
+>
+> -i forks
+>
+> --io forks:产生多个处理sync()函数的磁盘I/O进程
+>
+> --vm-bytes bytes：指定内存的byte数，默认值是1 
+>
+> --vm-hang:表示malloc分配的内存多少时间后在free()释放 
+>
+> -d :
+>
+> --hdd:写进程，写入固定大小，通过mkstemp()函数写入当前目录
+>
+> --hdd-bytes bytes:指定写的byte数，默认1G
+>
+> --hdd-noclean:不要将写入随机ascii数据的文件unlink，则写入的文件不删除，会保留在硬盘空间。
 
--？
-
- 
-
---help 显示帮助信息
-
- 
-
---version 显示软件版本信息
-
- 
-
--t secs:
-
- 
-
---timeout secs指定运行多少秒
-
- 
-
---backoff usecs 等待usecs微秒后才开始运行
-
- 
-
--c forks:
-
- 
-
---cpu forks 产生多个处理sqrt()函数的CPU进程
-
- 
-
--m forks
-
- 
-
---vm forks:产生多个处理malloc()内存分配函数的进程，后接进程数量
-
- 
-
--i forks
-
- 
-
---io forks:产生多个处理sync()函数的磁盘I/O进程
-
- 
-
---vm-bytes bytes：指定内存的byte数，默认值是1
-
- 
-
---vm-hang:表示malloc分配的内存多少时间后在free()释放掉
-
- 
-
--d :
-
- 
-
---hdd:写进程，写入固定大小，通过mkstemp()函数写入当前目录
-
- 
-
---hdd-bytes bytes:指定写的byte数，默认1G
-
- 
-
---hdd-noclean:不要将写入随机ascii数据的文件unlink，则写入的文件不删除，会保留在硬盘空间。
-
- 
-
- 
-
-## ***\*cpu资源限制\****
+## cpu资源限制
 
 CPU 资源
 
   主机上的进程会通过时间分片机制使用 CPU，CPU 的量化单位是频率，也就是每秒钟能执行的运算次数。为容器限制 CPU 资源并不能改变 CPU 的运行频率，而是改变每个容器能使用的 CPU 时间片。理想状态下，CPU 应该一直处于运算状态（并且进程需要的计算量不会超过 CPU 的处理能力）。
 
-### ***\*限制CPU Share\****
+### 限制CPU Share
 
 什么是cpu share:
 
@@ -3596,13 +3005,7 @@ stress: dbug: [1] --> hogcpu worker 1 [9] forked
 
 两个容器分别启动了四个 stress 进程，第一个容器 stress 进程 CPU 使用率都在 54% 左右，第二个容器 stress 进程 CPU 使用率在 25% 左右，比例关系大致为 2：1，符合之前的预期。
 
- 
-
- 
-
- 
-
-### ***\*限制CPU 核数\*******\*（重点）\****
+### 限制CPU 核数（重点）
 
 限制容器能使用的 CPU 核数
 
@@ -3650,17 +3053,15 @@ See 'docker run --help'.
 
  
 
-如果多个容器都设置了 --cpus ，并且它们之和超过主机的 CPU 核数，并不会导致容器失败或者退出，这些容器之间会竞争使用 CPU，具体分配的 CPU 数量取决于主机运行情况和容器的 CPU share 值。也就是说 --cpus 只能保证在 CPU 资源充足的情况下容器最多能使用的 CPU 数，docker 并不能保证在任何情况下容器都能使用这么多的 CPU（因为这根本是不可能的）。   
+如果多个容器都设置了 --cpus ，并且它们之和超过主机的 CPU 核数，并不会导致容器失败或者退出，这些容器之间会竞争使用 CPU，具体分配的 CPU 数量取决于主机运行情况和容器的 CPU share 值。也就是说 --cpus 只能保证在 CPU 资源充足的情况下容器最多能使用的 CPU 数，docker 并不能保证在任何情况下容器都能使用这么多的 CPU（因为这根本是不可能的）。    
 
-  
-
-### ***\*CPU 绑定\****
+### CPU 绑定
 
 限制容器运行在某些 CPU 核
 
  
 
-***\*注\****：
+注：
 
 一般并不推荐在生产中这样使用
 
@@ -3694,45 +3095,42 @@ stress: dbug: [1] --> hogcpu worker 1 [8] forked
 
  
 
-## ***\*mem资源限制\****
+## mem资源限制
 
 docker 默认没有对容器内存进行限制，容器可以使用主机提供的所有内存。
 
  
 
-不限制内存带来的问题：
+**不限制内存带来的问题**
 
 这是非常危险的事情，如果某个容器运行了恶意的内存消耗软件，或者代码有内存泄露，很可能会导致主机内存耗尽，因此导致服务不可用。可以为每个容器设置内存使用的上限，一旦超过这个上限，容器会被杀死，而不是耗尽主机的内存。
 
  
 
-限制内存带来的问题：
+**限制内存带来的问题**
 
 限制内存上限虽然能保护主机，但是也可能会伤害到容器里的服务。如果为服务设置的内存上限太小，会导致服务还在正常工作的时候就被 OOM 杀死；如果设置的过大，会因为调度器算法浪费内存。
 
  
 
-合理做法：
-
-\1. 为应用做内存压力测试，理解正常业务需求下使用的内存情况，然后才能进入生产环境使用
-
-\2. 一定要限制容器的内存使用上限，尽量保证主机的资源充足，一旦通过监控发现资源不足，就进行扩容或者对容器进行迁移如果可以（内存资源充足的情况）
-
-\3. 尽量不要使用 swap，swap 的使用会导致内存计算复杂，对调度器非常不友好
+> 合理做法：
+>
+> 1. 为应用做内存压力测试，理解正常业务需求下使用的内存情况，然后才能进入生产环境使用
+>
+> 2. 一定要限制容器的内存使用上限，尽量保证主机的资源充足，一旦通过监控发现资源不足，就进行扩容或者对容器进行迁移如果可以（内存资源充足的情况）
+>
+> 3. 尽量不要使用 swap，swap 的使用会导致内存计算复杂，对调度器非常不友好
+>
 
  
 
-docker 限制容器内存使用量:
+**docker 限制容器内存使用量**
 
 docker 启动参数中，和内存限制有关的包括（参数的值一般是内存大小，也就是一个正数，后面跟着内存单位 b、k、m、g，分别对应 bytes、KB、MB、和 GB）：
-
- 
 
 -m --memory：
 
   容器能使用的最大内存大小，最小值为 4m
-
- 
 
 --memory-swap：
 
@@ -3745,8 +3143,6 @@ docker 启动参数中，和内存限制有关的包括（参数的值一般是�
 如果 --memory-swap 为 0，或者和 --memory 的值相同，那么容器能使用两倍于内存的 swap 大小，如果 --memory 对应的值是 200M，那么容器可以使用 400M swap
 
 如果 --memory-swap 的值为 -1，那么不限制 swap 的使用，也就是说主机有多少 swap，容器都可以使用
-
- 
 
 --memory-swappiness：
 
@@ -3824,7 +3220,7 @@ stress: FAIL: [1] (451) failed run completed in 0s
 
   
 
-## ***\*io\**** ***\*资源限制\*******\*(了解)\****
+## io资源限制
 
 对于磁盘来说，考量的参数是容量和读写速度，因此对容器的磁盘限制也应该从这两个维度出发。目前 docker 支持对磁盘的读写速度进行限制，但是并没有方法能限制容器能使用的磁盘容量（一旦磁盘 mount 到容器里，容器就能够使用磁盘的所有容量）。
 
@@ -3900,7 +3296,7 @@ root@6c048edef769:/# dd iflag=direct,nonblock if=/dev/sda of=/dev/null bs=5M cou
 
  
 
-# ***\*端口转发\****
+# 端口转发
 
 daocloud官网查看mysql使用方案，并进行测试
 
@@ -3982,10 +3378,6 @@ MySQL [(none)]>
 
  
 
- 
-
-\~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 -P:
 
 当使用-P标记时，Docker 会随机映射一个 49000~49900 的端口到内部容器开放的网络端口。如下：
@@ -4044,7 +3436,7 @@ redisdb:6379>
 
  
 
-# ***\*容器卷\****
+# 容器卷
 
 新卷只能在容器创建过程当中挂载
 
@@ -4074,7 +3466,7 @@ redisdb:6379>
 
 如果是文件共享，数据不能同步更新
 
-## ***\*Volume（数据卷\*******\*-扩展\*******\*）\****
+## Volume
 
 容器技术使用了 rootfs 机制和 Mount Namespace，构建出了一个同宿主机完全隔离开的文件系统环境。这时候，就需要考虑这样两个问题：
 
@@ -4148,11 +3540,7 @@ mount --bind /home /test，会将 /home 挂载到 /test 上。其实相当于将
 
  
 
-这个 /test 目录里的内容，既然挂载在容器 rootfs 的可读写层，它会不会被 docker commit 提交掉呢？
-
- 
-
-也不会。
+这个 /test 目录里的内容，既然挂载在容器 rootfs 的可读写层，它会不会被 docker commit 提交掉呢？也不会。
 
  
 
@@ -4232,15 +3620,13 @@ Docker 容器"全景图"：
 
  
 
-# ***\*部署centos7容器应用\****
+# 部署centos7容器应用
 
-镜像下载：
+**镜像下载**
 
 \# docker pull daocloud.io/library/centos:latest
 
- 
-
-包管理:
+**包管理**
 
 默认情况下，为了减小镜像的尺寸，在构建 CentOS 镜像时用了yum的nodocs选项。 如果您安装一个包后发现文件缺失，请在/etc/yum.conf中注释掉tsflogs=nodocs并重新安装您的包。 
 
@@ -4366,9 +3752,9 @@ CMD ["/usr/sbin/init"]
 
 \# ssh docker -p 2222  //docker为我宿主机的主机名称
 
-# ***\*docker网络\****
+# docker网络
 
-## ***\*容器网络分类\****
+## 容器网络分类
 
 注：
 
@@ -4446,9 +3832,9 @@ docker: Error response from daemon: user specified IP address is supported on us
 
  
 
-## ***\*异主容器互联\****
+## 异主容器互联
 
-### ***\*方式1、路由方式\****
+### 方式1、路由方式
 
 ​              
 
@@ -4480,7 +3866,7 @@ docker 128上：
 
  
 
-### ***\*方式2、\*******\*open vswitch\****
+### 方式2、open vswitch
 
 如果要在生产和测试环境大规模采用docker技术，首先就需要解决不同物理机建的docker容器互联问题。
 
@@ -4658,7 +4044,7 @@ client     192.168.1.9---docker(nginx 80)
 
 ﻿虚拟网卡绑定kbr0后下载容器启动测试：
 
-﻿# cat /etc/sysconfig/docker-network 
+cat /etc/sysconfig/docker-network 
 
 \# /etc/sysconfig/docker-network
 
@@ -4676,7 +4062,7 @@ DOCKER_NETWORK_OPTIONS="-b=kbr0"
 
  
 
-# ***\*何为进程\****
+# 何为进程
 
 假如要写一个计算加法的小程序，这个程序需要的输入来自于一个文件，计算完成后的结果则输出到另一个文件中。
 
@@ -4714,9 +4100,9 @@ DOCKER_NETWORK_OPTIONS="-b=kbr0"
 
  
 
-# ***\*深入理解NameSpace\****
+# 深入理解NameSpace
 
-## ***\*何为Namespace机制\****
+## 何为Namespace机制
 
 Linux 容器中用来实现"隔离"的技术手段：Namespace。Namespace 技术实际上修改了应用进程看待整个计算机"视图"，即它的"视线"被操作系统做了限制，只能"看到"某些指定的内容。但对于宿主机来说，这些被"隔离"了的进程跟其他进程并没有太大区别。
 
@@ -4772,7 +4158,7 @@ PID  USER  TIME COMMAND
 
  
 
-## ***\*Namespace的使用方式\****
+## Namespace的使用方式
 
 其实只是 Linux 创建新进程的一个可选参数。
 
@@ -4818,7 +4204,7 @@ PID  USER  TIME COMMAND
 
  
 
-## ***\*再次对比容器和虚拟机\****
+## 再次对比容器和虚拟机
 
 谈到为"进程划分一个独立空间"的思想，相信你一定会联想到虚拟机。而且，你应该还看过一张虚拟机和容器的对比图。
 
@@ -4874,11 +4260,11 @@ Docker 项目比虚拟机更受欢迎的原因。是因为，使用虚拟化技�
 
 所以说，"敏捷"和"高性能"是容器相较于虚拟机最大的优势，也是它能够在 PaaS 这种更细粒度的资源管理平台上大行其道的重要原因。
 
-## ***\*Namespace 隔离机制的不足\****
+## Namespace 隔离机制的不足
 
 基于 Linux Namespace 的隔离机制相比于虚拟化技术的不足之处：
 
-\1. 最主要的问题是：隔离得不彻底。
+1. 最主要的问题是：隔离得不彻底。
 
 既然容器只是运行在宿主机上的一种特殊的进程，那么多个容器之间使用的就还是同一个宿主机的操作系统内核。
 
@@ -4892,19 +4278,19 @@ Docker 项目比虚拟机更受欢迎的原因。是因为，使用虚拟化技�
 
  
 
-\2. 在 Linux 内核中，有很多资源和对象是不能被 Namespace 化的，最典型的例子就是：时间。
+2. 在 Linux 内核中，有很多资源和对象是不能被 Namespace 化的，最典型的例子就是：时间。
 
 如果你的容器中的程序使用 settimeofday(2) 系统调用修改了时间，整个宿主机的时间都会被随之修改，这显然不符合用户的预期。相比于在虚拟机里面可以随便折腾的自由度，在容器里部署应用的时候，"什么能做，什么不能做"，就是用户必须考虑的一个问题。
 
  
 
-\3. 因为共享宿主机内核的事实，容器给应用暴露出来的攻击面是相当大的，应用"越狱"的难度自然也比虚拟机低得多。
+3. 因为共享宿主机内核的事实，容器给应用暴露出来的攻击面是相当大的，应用"越狱"的难度自然也比虚拟机低得多。
 
 尽管实践中可以使用 Seccomp 等技术，对容器内部发起的所有系统调用进行过滤和甄别来进行安全加固，但这种方法因为多了一层对系统调用的过滤，一定会拖累容器的性能。何况，默认情况下，谁也不知道到底该开启哪些系统调用，禁止哪些系统调用。
 
 所以，生产环境中，没有人敢把运行在物理机上的 Linux 容器直接暴露到公网上。当然，基于虚拟化或者独立内核技术的容器实现，则可以比较好地在隔离与性能之间做出平衡。
 
-## ***\*动手实现namespace隔离\****
+## 动手实现namespace隔离
 
 通过理解docker exec 操作深入Linux Namespace工作原理
 
@@ -5098,7 +4484,7 @@ Docker 还专门提供了一个参数，可以启动一个容器并"加入"到�
 
  
 
-# ***\*深入理解cgroups\****
+# 深入理解cgroups
 
 重申docker本质：
 
@@ -5338,9 +4724,9 @@ Cgroups 对资源的限制能力也有很多不完善的地方，被提及最多
 
  
 
-# ***\*深入理解容器文件系统\****
+# 深入理解容器文件系统
 
-## ***\*理解Mount Namespace\****
+## 理解Mount Namespace
 
 问题：
 
@@ -5462,7 +4848,7 @@ wing注：
 
 上面的问题是怎么回事呢？下回分解：）
 
-## ***\*容器进程对挂载点的认知\****
+## 容器进程对挂载点的认知
 
 书接上回：
 
@@ -5546,7 +4932,7 @@ none on /tmp type tmpfs (rw,relatime)
 
  
 
-## ***\*理解chroot\****
+## 理解chroot
 
 在 Linux 操作系统里，有一个名为 chroot 的命令可以帮助你在 shell 中方便地完成这个工作。顾名思义，它的作用就是帮你"change root file system"，即改变进程的根目录到你指定的位置。
 
@@ -5604,7 +4990,7 @@ none on /tmp type tmpfs (rw,relatime)
 
  
 
-### ***\*理解chroot\****
+### 理解chroot
 
   即 change root directory (更改 root 目录)。在 linux 系统中，系统默认的目录结构都是以 /，即以根 (root) 开始的。而在使用 chroot 之后，系统的目录结构将以指定的位置作为 / 位置。
 
@@ -5692,7 +5078,7 @@ $ sudo chroot rootfs /bin/sh
 
  
 
-## ***\*rootfs（根文件系统）\****
+## rootfs（根文件系统）
 
 实际上，Mount Namespace 正是基于对 chroot 的不断改良才被发明出来的，它也是 Linux 操作系统里的第一个 Namespace。
 
@@ -5770,7 +5156,7 @@ rootfs 只是一个操作系统所包含的文件、配置和目录，并不包�
 
 这种深入到操作系统级别的运行环境一致性，打通了应用在本地开发和远端执行环境之间难以逾越的鸿沟。
 
-## ***\*UnionFS详解\****
+## UnionFS详解
 
 每开发一个应用，或者升级一下现有的应用，都要重复制作一次 rootfs 吗？
 
@@ -5880,9 +5266,9 @@ rootfs 只是一个操作系统所包含的文件、配置和目录，并不包�
 
  
 
-## ***\*OverlayFS\****
+## OverlayFS
 
-### ***\*Overlayfs的基本特性\****
+### Overlayfs的基本特性
 
   Overlayfs是一种类似aufs的一种堆叠文件系统，于2014年正式合入Linux-3.18主线内核，目前其功能已经基本稳定（虽然还存在一些特性尚未实现）且被逐渐推广，特别在容器技术中更是势头难挡。
 
@@ -5948,7 +5334,7 @@ upper dir和各lower dir这几个不同的目录并不完全等价，存在层�
 
  
 
-### ***\*overlayfs的应用场景\****
+### overlayfs的应用场景
 
 overlayfs特性带来的好处和应用场景
 
@@ -5978,17 +5364,15 @@ overlayfs特性带来的好处和应用场景
 
  
 
-### ***\*Overlay和Overlay2\****
+### Overlay和Overlay2
 
 以docker容器为例来介绍overlay的两种应用方式：Overlay和Overlay2.
 
- 
+1. Docker容器将镜像层（image layer）作为lower dir
 
-\1. Docker容器将镜像层（image layer）作为lower dir
+2. 将容器层（container layer）作为upper dir
 
-\2. 将容器层（container layer）作为upper dir
-
-\3. 最后挂载到容器merge挂载点，即容器的根目录下。
+3. 最后挂载到容器merge挂载点，即容器的根目录下。
 
  
 
@@ -5996,7 +5380,7 @@ overlayfs特性带来的好处和应用场景
 
  
 
-\1. Overlay Driver
+1. Overlay Driver
 
  
 
@@ -6014,9 +5398,9 @@ Overlay Driver
 
 黄色框中的部分是镜像层和容器层的组织方式
 
-\1. 各个镜像层中，每下一层中的文件以硬链接的方式出现在它的上一层中，以此类推，最终挂载overlayfs的lower dir为最上层镜像层目录imager layer N。
+1. 各个镜像层中，每下一层中的文件以硬链接的方式出现在它的上一层中，以此类推，最终挂载overlayfs的lower dir为最上层镜像层目录imager layer N。
 
-\2. 与此同时，容器的writable dir作为upper dir，挂载成为容器的rootfs。
+2. 与此同时，容器的writable dir作为upper dir，挂载成为容器的rootfs。
 
  
 
@@ -6024,7 +5408,7 @@ Overlay Driver
 
  
 
-\2. Overlay2 Driver
+2. Overlay2 Driver
 
 Overlay2挂载方式如下。
 
@@ -6038,7 +5422,7 @@ Overlay2 Driver
 
 Overlay2的挂载方式比Overlay的要简单许多，它基于内核overlayfs的Multiple lower layers特性实现，不再需要硬链接，直接将镜像层的各个目录设置为overlayfs的各个lower layer即可（Overlayfs最多支持500层lower dir），对比Overlay Driver将减少inode的使用。
 
-### ***\*overlay2的缺陷\*******\*（课外阅读）\****
+### overlay2的缺陷
 
 注：
 
@@ -6046,7 +5430,7 @@ Overlay2的挂载方式比Overlay的要简单许多，它基于内核overlayfs�
 
  
 
-\0. Mount Overlayfs之后就不允许在对原lower dir和upper dir进行操作
+0. Mount Overlayfs之后就不允许在对原lower dir和upper dir进行操作
 
  
 
@@ -6054,7 +5438,7 @@ Overlay2的挂载方式比Overlay的要简单许多，它基于内核overlayfs�
 
  
 
-\1. Copy-up
+1. Copy-up
 
  
 
@@ -6062,7 +5446,7 @@ Overlayfs的lower layer文件写时复制机制让某一个用户在修改来自
 
  
 
-\2. Rename directory（POSIX标准支持问题）
+2. Rename directory（POSIX标准支持问题）
 
  
 
@@ -6070,7 +5454,7 @@ Overlayfs的lower layer文件写时复制机制让某一个用户在修改来自
 
  
 
-\3. Hard link break（POSIX标准支持问题）
+3. Hard link break（POSIX标准支持问题）
 
  
 
@@ -6078,7 +5462,7 @@ Overlayfs的lower layer文件写时复制机制让某一个用户在修改来自
 
  
 
-\4. Unconstant st_dev&st_ino（POSIX标准支持问题）
+4. Unconstant st_dev&st_ino（POSIX标准支持问题）
 
  
 
@@ -6086,7 +5470,7 @@ Overlayfs的lower layer文件写时复制机制让某一个用户在修改来自
 
  
 
-\5. File descriptor change（POSIX标准支持问题）
+5. File descriptor change（POSIX标准支持问题）
 
  
 
@@ -6098,7 +5482,7 @@ Overlayfs的lower layer文件写时复制机制让某一个用户在修改来自
 
  
 
-### ***\*观察容器启动前后存储目录变化情况\****
+### 观察容器启动前后存储目录变化情况
 
 分别查看镜像的详细信息和运行成容器之后的容器详细信息
 
@@ -6132,7 +5516,7 @@ merged目录:
 
  
 
-### ***\*AuFS详解\*******\*（课外阅读）\****
+### AuFS详解
 
 Docker 项目如何使用 Union File System ？
 
@@ -6385,3 +5769,462 @@ ExecStart=/usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
 \# docker info | grep Root
 
 Docker Root Dir: /data
+
+
+
+
+
+这篇文章希望能够帮助读者深入理解Docker的命令，还有容器（container）和镜像（image）之间的区别，并深入探讨容器和运行中的容器之间的区别。
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-9928dd12dbe39852.webp)
+
+当我对Docker技术还是一知半解的时候，我发现理解Docker的命令非常困难。于是，我花了几周的时间来学习Docker的工作原理，更确切地说，是关于Docker`统一文件系统（the union file system）`的知识，然后回过头来再看Docker的命令，一切变得顺理成章，简单极了。
+
+**题外话**：就我个人而言，掌握一门技术并合理使用它的最好办法就是深入理解这项技术背后的工作原理。通常情况下，一项新技术的诞生常常会伴随着媒体的大肆宣传和炒作，这使得用户很难看清技术的本质。更确切地说，新技术总是会发明一些新的术语或者隐喻词来帮助宣传，这在初期是非常有帮助的，但是这给技术的原理蒙上了一层砂纸，不利于用户在后期掌握技术的真谛。
+
+Git就是一个很好的例子。我之前不能够很好的使用Git，于是我花了一段时间去学习Git的原理，直到这时，我才真正明白了Git的用法。我坚信只有真正理解Git内部原理的人才能够掌握这个工具。
+
+### Image Definition
+
+`镜像（Image）`就是一堆`只读层（read-only layer）`的统一视角，也许这个定义有些难以理解，下面的这张图能够帮助读者理解镜像的定义。  
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-93b4b1297690120d.webp)
+
+从左边我们看到了多个只读层，它们重叠在一起。除了最下面一层，其它层都会有一个指针指向下一层。这些层是Docker内部的实现细节，并且能够在主机（译者注：运行Docker的机器）的文件系统上访问到。统一文件系统（union file system）技术能够将不同的层整合成一个文件系统，为这些层提供了一个统一的视角，这样就隐藏了多层的存在，在用户的角度看来，只存在一个文件系统。我们可以在图片的右边看到这个视角的形式。
+
+你可以在你的主机文件系统上找到有关这些层的文件。需要注意的是，在一个运行中的容器内部，这些层是不可见的。在我的主机上，我发现它们存在于`/var/lib/docker/aufs`目录下。
+
+```text
+sudo tree -L 1 /var/lib/docker/
+/var/lib/docker/
+
+├─aufs
+├─containers
+├─graph
+├─init
+├─linkgraph.db
+├─repositories-aufs
+├─tmp
+├─trust
+└─volumes
+
+```
+
+### Container Definition
+
+容器（container）的定义和镜像（image）几乎一模一样，也是一堆层的统一视角，唯一区别在于容器的最上面那一层是可读可写的。
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-01ffe82748c5e719.webp)
+
+细心的读者可能会发现，容器的定义并没有提及容器是否在运行，没错，这是故意的。正是这个发现帮助我理解了很多困惑。
+
+**`要点`**：容器 = 镜像 + 读写层。并且容器的定义并没有提及是否要运行容器。
+
+接下来，我们将会讨论运行态容器。
+
+### Running Container Definition
+
+一个运行态容器（running container）被定义为一个可读写的统一文件系统加上隔离的进程空间和包含其中的进程。下面这张图片展示了一个运行中的容器。
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-d6e418005e731d78.webp)
+
+正是文件系统隔离技术使得Docker成为了一个前途无量的技术。一个容器中的进程可能会对文件进行修改、删除、创建，这些改变都将作用于可读写层（read-write layer）。下面这张图展示了这个行为。
+
+![4.png]
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-ff6237a5abb563fd.webp)
+
+我们可以通过运行以下命令来验证我们上面所说的：
+
+```
+docker run ubuntu touch happiness.txt
+
+```
+
+即便是这个ubuntu容器不再运行，我们依旧能够在主机的文件系统上找到这个新文件。
+
+```
+find / -name happiness.txt
+/var/lib/docker/aufs/diff/860a7b...889/happiness.txt
+
+```
+
+### Image Layer Definition
+
+为了将零星的数据整合起来，我们提出了镜像层（image layer）这个概念。下面的这张图描述了一个镜像层，通过图片我们能够发现一个层并不仅仅包含文件系统的改变，它还能包含了其他重要信息。
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-a3b8b5f195fb2419.webp)
+
+**元数据（metadata）**就是关于这个层的额外信息，它不仅能够让Docker获取运行和构建时的信息，还包括父层的层次信息。需要注意，只读层和读写层都包含元数据。
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-4d6f084b95273b3e.webp)
+
+除此之外，每一层都包括了一个指向父层的指针。如果一个层没有这个指针，说明它处于最底层。
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-79fca03500c9108b.webp)
+
+**Metadata Location:**
+我发现在我自己的主机上，镜像层（image layer）的元数据被保存在名为”json”的文件中，比如说：
+
+```
+/var/lib/docker/graph/e809f156dc985.../json
+
+```
+
+e809f156dc985...就是这层的id
+
+一个容器的元数据好像是被分成了很多文件，但或多或少能够在/var/lib/docker/containers/<id>目录下找到<id>就是一个可读层的id。这个目录下的文件大多是运行时的数据，比如说网络，日志等等。
+
+### 全局理解（Tying It All Together）
+
+现在，让我们结合上面提到的实现细节来理解Docker的命令。
+
+#### docker create <image-id>
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-057b3f5f162a914f.webp)
+
+docker create 命令为指定的镜像（image）添加了一个`可读写层`，构成了一个新的容器。注意，这个容器并没有运行。
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-ccf67c88b55f5e5a.webp)
+
+#### docker start <container-id>
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-9ae9a1699070a761.webp)
+
+Docker start命令为容器文件系统创建了一个`进程隔离空间`。注意，每一个容器只能够有一个进程隔离空间。
+
+#### docker run <image-id>
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-81586f268f952794.webp)
+
+看到这个命令，读者通常会有一个疑问：docker start 和 docker run命令有什么区别。
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-fa0a855330fa4242.webp)
+
+从图片可以看出，docker run 命令先是利用镜像创建了一个容器，然后运行这个容器。这个命令非常的方便，并且隐藏了两个命令的细节，但从另一方面来看，这容易让用户产生误解。
+
+题外话：继续我们之前有关于Git的话题，我认为docker run命令类似于git pull命令。git pull命令就是git fetch 和 git merge两个命令的组合，同样的，docker run就是docker create和docker start两个命令的组合。
+
+#### docker ps
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-92cc5ec42996b13e.webp)
+
+docker ps 命令会列出所有运行中的容器。这隐藏了非运行态容器的存在，如果想要找出这些容器，我们需要使用下面这个命令。
+
+#### docker ps –a
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-18381e6c686f5080.webp)
+
+docker ps –a命令会列出所有的容器，不管是运行的，还是停止的。
+
+#### docker images
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-209a8b09260bf41e.webp)
+
+docker images命令会列出了所有顶层（top-level）镜像。实际上，在这里我们没有办法区分一个镜像和一个只读层，所以我们提出了top-level镜像。只有创建容器时使用的镜像或者是直接pull下来的镜像能被称为顶层（top-level）镜像，并且每一个顶层镜像下面都隐藏了多个镜像层。
+
+#### docker images –a
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-8a0ae1fe6d475c6e.webp)
+
+docker images –a命令列出了所有的镜像，也可以说是列出了所有的可读层。如果你想要查看某一个image-id下的所有层，可以使用docker history来查看。
+
+#### docker stop <container-id>
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-c05f9c64d3389946.webp)
+
+docker stop命令会向运行中的容器发送一个SIGTERM的信号，然后停止所有的进程。
+
+#### docker kill <container-id>
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-46fa7f006eec99e7.webp)
+
+docker kill 命令向所有运行在容器中的进程发送了一个不友好的SIGKILL信号。
+
+#### docker pause <container-id>
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-13639a052eeccedc.webp)
+
+docker stop和docker kill命令会发送UNIX的信号给运行中的进程，docker pause命令则不一样，它利用了`cgroups`的特性将运行中的进程空间暂停。具体的内部原理你可以在这里找到：[](https://link.jianshu.com/?t=https%3A%2F%2Fwww.kernel.org%2Fdoc%2FDocumentation%2Fcgroups%2Ffreezer-subsystem.txt)[https://www.kernel.org/doc/Doc ... m.txt](https://link.jianshu.com/?t=https%3A%2F%2Fwww.kernel.org%2Fdoc%2FDocumentation%2Fcgroups%2Ffreezer-subsystem.txt)，但是这种方式的不足之处在于发送一个SIGTSTP信号对于进程来说不够简单易懂，以至于不能够让所有进程暂停。
+
+#### docker rm <container-id>
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-5b7cd5a71501c69c.webp)
+
+docker rm命令会移除构成容器的可读写层。注意，这个命令只能对非运行态容器执行。
+
+#### docker rmi <image-id>
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-9af724f8652b3cf7.webp)
+
+docker rmi 命令会移除构成镜像的一个只读层。你只能够使用docker rmi来移除最顶层（top level layer）（也可以说是镜像），你也可以使用-f参数来强制删除中间的只读层。
+
+#### docker commit <container-id>
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-2ba257c35f7f5ac3.webp)
+
+docker commit命令将容器的可读写层转换为一个只读层，这样就把一个容器转换成了不可变的镜像。
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-b8c790c420191d03.webp)
+
+#### docker build
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-136504ab2e90ebd8.webp)
+
+docker build命令非常有趣，它会反复的执行多个命令。
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-23639d034088ac25.webp)
+
+我们从上图可以看到，build命令根据Dockerfile文件中的FROM指令获取到镜像，然后重复地1）run（create和start）、2）修改、3）commit。在循环中的每一步都会生成一个新的层，因此许多新的层会被创建。
+
+#### docker exec <running-container-id>
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-0bc5fb808f00b6d5.webp)
+
+`docker exec 命令会在运行中的容器执行一个新进程`。
+
+#### docker inspect <container-id> or <image-id>
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-7fb2d9fa5844c4af.webp)
+
+docker inspect命令会提取出容器或者镜像最顶层的元数据。
+
+#### docker save <image-id>
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-c8ccfcc21d76f582.webp)
+
+docker save命令会创建一个镜像的压缩文件，这个文件能够在另外一个主机的Docker上使用。和export命令不同，这个命令为每一个层都保存了它们的元数据。这个命令只能对镜像生效。
+
+#### docker export <container-id>
+
+[![export.jpg]
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-22371dea380abc40.webp)
+
+docker export命令创建一个tar文件，并且移除了元数据和不必要的层，将多个层整合成了一个层，只保存了当前统一视角看到的内容（译者注：expoxt后的容器再import到Docker中，通过docker images –tree命令只能看到一个镜像；而save后的镜像则不同，它能够看到这个镜像的历史镜像）。
+
+#### docker history <image-id>
+
+![image](Docker%E5%85%A8%E8%A7%A3.assets/3167229-a9b56118f21e733f.webp)
+
+docker history命令递归地输出指定镜像的历史镜像。
+
+
+
+# Copy On Write机制
+
+
+
+在读《Redis设计与实现》关于哈希表扩容的时候，发现这么一段话：
+
+> 执行BGSAVE命令或者BGREWRITEAOF命令的过程中，Redis需要创建当前服务器进程的子进程，而大多数操作系统都采用**写时复制（copy-on-write）来优化子进程的使用效率**，所以在子进程存在期间，服务器会提高负载因子的阈值，从而避免在子进程存在期间进行哈希表扩展操作，避免不必要的内存写入操作，最大限度地节约内存。
+
+触及到知识的盲区了，于是就去搜了一下copy-on-write写时复制这个技术究竟是怎么样的。发现涉及的东西蛮多的，也挺难读懂的。于是就写下这篇笔记来记录一下我学习copy-on-write的过程。
+
+# 一、Linux下的copy-on-write
+
+在说明Linux下的copy-on-write机制前，我们首先要知道两个函数：`fork()`和`exec()`。需要注意的是`exec()`并不是一个特定的函数, 它是**一组函数的统称**, 它包括了`execl()`、`execlp()`、`execv()`、`execle()`、`execve()`、`execvp()`。
+
+## 1.1简单来用用fork
+
+首先我们来看一下`fork()`函数是什么鬼：
+
+> fork is an operation whereby a process creates a copy of itself.
+
+fork是类Unix操作系统上**创建进程**的主要方法。fork用于**创建子进程**(等同于当前进程的副本)。
+
+- 新的进程要通过老的进程复制自身得到，这就是fork！
+
+如果接触过Linux，我们会知道Linux下**init进程是所有进程的爹**(相当于Java中的Object对象)
+
+- Linux的进程都通过init进程或init的子进程fork(vfork)出来的。
+
+下面以例子说明一下fork吧：
+
+```c
+#include <unistd.h>  
+#include <stdio.h>  
+ 
+int main ()   
+{   
+    pid_t fpid; //fpid表示fork函数返回的值  
+    int count=0;
+	
+	// 调用fork，创建出子进程  
+    fpid=fork();
+
+	// 所以下面的代码有两个进程执行！
+    if (fpid < 0)   
+        printf("创建进程失败!/n");   
+    else if (fpid == 0) {  
+        printf("我是子进程，由父进程fork出来/n");   
+        count++;  
+    }  
+    else {  
+        printf("我是父进程/n");   
+        count++;  
+    }  
+    printf("统计结果是: %d/n",count);  
+    return 0;  
+}  
+```
+
+得到的结果输出为：
+
+```c
+我是子进程，由父进程fork出来
+
+统计结果是: 1
+
+我是父进程
+
+统计结果是: 1
+```
+
+解释一下：
+
+- fork作为一个函数被调用。这个函数会有**两次返回**，将**子进程的PID返回给父进程，0返回给子进程**。(如果小于0，则说明创建子进程失败)。
+- 再次说明：当前进程调用`fork()`，会创建一个跟当前进程完全相同的子进程(除了pid)，所以子进程同样是会执行`fork()`之后的代码。
+
+所以说：
+
+- 父进程在执行if代码块的时候，`fpid变量`的值是子进程的pid
+- 子进程在执行if代码块的时候，`fpid变量`的值是0
+
+## 1.2再来看看exec()函数
+
+从上面我们已经知道了fork会创建一个子进程。**子进程的是父进程的副本**。
+
+exec函数的作用就是：**装载一个新的程序**（可执行映像）覆盖**当前进程**内存空间中的映像，**从而执行不同的任务**。
+
+- exec系列函数在执行时会**直接替换掉当前进程的地址空间**。
+
+我去画张图来理解一下：
+
+
+
+![exec函数的作用](Docker%E5%85%A8%E8%A7%A3.assets/166c94cfc1728f4e)
+
+
+
+参考资料：
+
+- 程序员必备知识——fork和exec函数详解[blog.csdn.net/bad_good_ma…](https://link.juejin.im/?target=https%3A%2F%2Fblog.csdn.net%2Fbad_good_man%2Farticle%2Fdetails%2F49364947)
+- linux中fork（）函数详解（原创！！实例讲解）：[blog.csdn.net/jason314/ar…](https://link.juejin.im/?target=https%3A%2F%2Fblog.csdn.net%2Fjason314%2Farticle%2Fdetails%2F5640969)
+- linux c语言 fork() 和 exec 函数的简介和用法：[blog.csdn.net/nvd11/artic…](https://link.juejin.im/?target=https%3A%2F%2Fblog.csdn.net%2Fnvd11%2Farticle%2Fdetails%2F8856278)
+- Linux下Fork与Exec使用：[www.cnblogs.com/hicjiajia/a…](https://link.juejin.im/?target=https%3A%2F%2Fwww.cnblogs.com%2Fhicjiajia%2Farchive%2F2011%2F01%2F20%2F1940154.html)
+- Linux 系统调用 —— fork()内核源码剖析：[blog.csdn.net/chen8927040…](https://link.juejin.im/?target=https%3A%2F%2Fblog.csdn.net%2Fchen892704067%2Farticle%2Fdetails%2F76596225)
+
+## 1.3回头来看Linux下的COW是怎么一回事
+
+> fork()会产生一个和父进程完全相同的子进程(除了pid)
+
+如果按**传统**的做法，会**直接**将父进程的数据拷贝到子进程中，拷贝完之后，父进程和子进程之间的数据段和堆栈是**相互独立的**。
+
+
+
+![父进程的数据拷贝到子进程中](Docker%E5%85%A8%E8%A7%A3.assets/166c94cfc1818295)
+
+
+
+但是，以我们的使用经验来说：往往子进程都会执行`exec()`来做自己想要实现的功能。
+
+- 所以，如果按照上面的做法的话，创建子进程时复制过去的数据是没用的(因为子进程执行`exec()`，原有的数据会被清空)
+
+既然很多时候复制给子进程的数据是无效的，于是就有了**Copy On Write**这项技术了，原理也很简单：
+
+- fork创建出的子进程，**与父进程共享内存空间**。也就是说，如果子进程**不对内存空间进行写入操作的话，内存空间中的数据并不会复制给子进程**，这样创建子进程的速度就很快了！(不用复制，直接引用父进程的物理空间)。
+- 并且如果在fork函数返回之后，子进程**第一时间**exec一个新的可执行映像，那么也不会浪费时间和内存空间了。
+
+另外的表达方式：
+
+> 在fork之后exec之前两个进程**用的是相同的物理空间**（内存区），子进程的代码段、数据段、堆栈都是指向父进程的物理空间，也就是说，两者的虚拟空间不同，但其对应的**物理空间是同一个**。
+
+> 当父子进程中**有更改相应段的行为发生时**，再**为子进程相应的段分配物理空间**。
+
+> 如果不是因为exec，内核会给子进程的数据段、堆栈段分配相应的物理空间（至此两者有各自的进程空间，互不影响），而代码段继续共享父进程的物理空间（两者的代码完全相同）。
+
+> 而如果是因为exec，由于两者执行的代码不同，子进程的代码段也会分配单独的物理空间。
+
+Copy On Write技术**实现原理：**
+
+> fork()之后，kernel把父进程中所有的内存页的权限都设为read-only，然后子进程的地址空间指向父进程。当父子进程都只读内存时，相安无事。当其中某个进程写内存时，CPU硬件检测到内存页是read-only的，于是触发页异常中断（page-fault），陷入kernel的一个中断例程。中断例程中，kernel就会**把触发的异常的页复制一份**，于是父子进程各自持有独立的一份。
+
+Copy On Write技术**好处**是什么？
+
+- COW技术可**减少**分配和复制大量资源时带来的**瞬间延时**。
+- COW技术可减少**不必要的资源分配**。比如fork进程时，并不是所有的页面都需要复制，父进程的**代码段和只读数据段都不被允许修改，所以无需复制**。
+
+Copy On Write技术**缺点**是什么？
+
+- 如果在fork()之后，父子进程都还需要继续进行写操作，**那么会产生大量的分页错误(页异常中断page-fault)**，这样就得不偿失。
+
+几句话总结Linux的Copy On Write技术：
+
+- fork出的子进程共享父进程的物理空间，当父子进程**有内存写入操作时**，read-only内存页发生中断，**将触发的异常的内存页复制一份**(其余的页还是共享父进程的)。
+- fork出的子进程功能实现和父进程是一样的。如果有需要，我们会用`exec()`把当前进程映像替换成新的进程文件，完成自己想要实现的功能。
+
+参考资料：
+
+- Linux进程基础：[www.cnblogs.com/vamei/archi…](https://link.juejin.im/?target=http%3A%2F%2Fwww.cnblogs.com%2Fvamei%2Farchive%2F2012%2F09%2F20%2F2694466.html)
+- Linux写时拷贝技术(copy-on-write)[www.cnblogs.com/biyeymyhjob…](https://link.juejin.im/?target=http%3A%2F%2Fwww.cnblogs.com%2Fbiyeymyhjob%2Farchive%2F2012%2F07%2F20%2F2601655.html)
+- 当你在 Linux 上启动一个进程时会发生什么？[zhuanlan.zhihu.com/p/33159508](https://link.juejin.im/?target=https%3A%2F%2Fzhuanlan.zhihu.com%2Fp%2F33159508)
+- Linux fork()所谓的写时复制(COW)到最后还是要先复制再写吗？[www.zhihu.com/question/26…](https://link.juejin.im/?target=https%3A%2F%2Fwww.zhihu.com%2Fquestion%2F265400460)
+- 写时拷贝（copy－on－write） COW技术[blog.csdn.net/u012333003/…](https://link.juejin.im/?target=https%3A%2F%2Fblog.csdn.net%2Fu012333003%2Farticle%2Fdetails%2F25117457)
+- Copy-On-Write 写时复制原理[blog.csdn.net/ppppppppp20…](https://link.juejin.im/?target=https%3A%2F%2Fblog.csdn.net%2Fppppppppp2009%2Farticle%2Fdetails%2F22750939)
+
+## 二、解释一下Redis的COW
+
+基于上面的基础，我们应该已经了解COW这么一项技术了。
+
+下面我来说一下我对《Redis设计与实现》那段话的理解：
+
+- Redis在持久化时，如果是采用BGSAVE命令或者BGREWRITEAOF的方式，那Redis会**fork出一个子进程来读取数据，从而写到磁盘中**。
+- 总体来看，Redis还是读操作比较多。如果子进程存在期间，发生了大量的写操作，那可能就会出现**很多的分页错误(页异常中断page-fault)**，这样就得耗费不少性能在复制上。
+- 而在**rehash阶段上，写操作是无法避免**的。所以Redis在fork出子进程之后，**将负载因子阈值提高**，尽量减少写操作，避免不必要的内存写入操作，最大限度地节约内存。
+
+参考资料：
+
+- fork()后copy on write的一些特性：[zhoujianshi.github.io/articles/20…](https://link.juejin.im/?target=https%3A%2F%2Fzhoujianshi.github.io%2Farticles%2F2017%2Ffork()%E5%90%8Ecopy%20on%20write%E7%9A%84%E4%B8%80%E4%BA%9B%E7%89%B9%E6%80%A7%2Findex.html)
+- 写时复制：[miao1007.github.io/gitbook/jav…](https://link.juejin.im/?target=https%3A%2F%2Fmiao1007.github.io%2Fgitbook%2Fjava%2Fjuc%2Fcow%2F)
+
+# 三、文件系统的COW
+
+下面来看看文件系统中的COW是啥意思：
+
+Copy-on-write在对数据进行修改的时候，**不会直接在原来的数据位置上进行操作**，而是重新找个位置修改，这样的好处是一旦系统突然断电，重启之后不需要做Fsck。好处就是能**保证数据的完整性，掉电的话容易恢复**。
+
+- 比如说：要修改数据块A的内容，先把A读出来，写到B块里面去。如果这时候断电了，原来A的内容还在！
+
+参考资料：
+
+- 文件系统中的 copy-on-write 模式有什么具体的好处？[www.zhihu.com/question/19…](https://link.juejin.im/?target=https%3A%2F%2Fwww.zhihu.com%2Fquestion%2F19782224%2Fanswers%2Fcreated)
+- 新一代 Linux 文件系统 btrfs 简介:[www.ibm.com/developerwo…](https://link.juejin.im/?target=https%3A%2F%2Fwww.ibm.com%2Fdeveloperworks%2Fcn%2Flinux%2Fl-cn-btrfs%2F)
+
+# 最后
+
+最后我们再来看一下写时复制的思想(摘录自维基百科)：
+
+> 写入时复制（英语：Copy-on-write，简称COW）是一种计算机程序设计领域的优化策略。其核心思想是，如果有多个调用者（callers）同时请求相同资源（如内存或磁盘上的数据存储），他们会共同获取相同的指针指向相同的资源，直到某个调用者试图修改资源的内容时，系统才会真正复制一份专用副本（private copy）给该调用者，而其他调用者所见到的最初的资源仍然保持不变。这过程对其他的调用者都是透明的（transparently）。此作法主要的优点是如果调用者没有修改该资源，就不会有副本（private copy）被建立，因此多个调用者只是读取操作时可以共享同一份资源。
+
+至少从本文我们可以总结出：
+
+- Linux通过Copy On Write技术极大地**减少了Fork的开销**。
+- 文件系统通过Copy On Write技术一定程度上保证**数据的完整性**。
+
+其实在Java里边，也有Copy On Write技术。
+
+
+
+![Java中的COW](Docker%E5%85%A8%E8%A7%A3.assets/166c94cfc1b8a75f)
+
+
+
+这部分留到下一篇来说，敬请期待~
+
+如果大家有更好的理解方式或者文章有错误的地方还请大家不吝在评论区留言，大家互相学习交流~~~
+
+参考资料：
+
+- 写时复制，写时拷贝，写时分裂，Copy on write：[my.oschina.net/dubenju/blo…](https://link.juejin.im/?target=https%3A%2F%2Fmy.oschina.net%2Fdubenju%2Fblog%2F815836)
+- 不会产奶的COW(Copy-On-Write)[www.jianshu.com/p/b2fb2ee5e…](https://link.juejin.im/?target=https%3A%2F%2Fwww.jianshu.com%2Fp%2Fb2fb2ee5e3a0)

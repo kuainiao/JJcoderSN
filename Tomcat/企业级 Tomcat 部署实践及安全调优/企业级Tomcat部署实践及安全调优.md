@@ -1,4 +1,4 @@
-# 业级 Tomcat 部署实践及安全调优
+# Tomcat 部署实践及安全调优
 
 ## 一、Tomcat简介
 
@@ -12,7 +12,7 @@ Tomcat和Nginx、Apache(httpd)、lighttpd等Web服务器一样，具有处理HTM
 
 Tomcat官网： [http://tomcat.apache.org](http://tomcat.apache.org/)
 
-## 二、Tomcat 好帮手---JDK  
+## 二、JDK  
 
 JDK是 Java 语言的软件开发工具包，主要用于移动设备、嵌入式设备上的java应用程序。JDK是整个java开发的核心，它包含了JAVA的运行环境（JVM+Java系统类库）和JAVA工具。
 
