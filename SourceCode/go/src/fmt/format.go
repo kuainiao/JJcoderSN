@@ -19,7 +19,7 @@ const (
 	unsigned = false
 )
 
-// flags placed in a separate struct for easy clearing.
+// 标志放置在单​​独的结构中以便于清除。
 type fmtFlags struct {
 	widPresent  bool
 	precPresent bool

@@ -3,10 +3,9 @@
 // license that can be found in the LICENSE file.
 
 /*
-	Package unsafe contains operations that step around the type safety of Go programs.
+	不安全的软件包包含绕过Go程序的类型安全的操作。
 
-	Packages that import unsafe may be non-portable and are not protected by the
-	Go 1 compatibility guidelines.
+	导入不安全的软件包可能是不可移植的，并且不受Go 1兼容性准则的保护。
 */
 package unsafe
 

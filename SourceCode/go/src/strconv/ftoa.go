@@ -2,11 +2,11 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Binary to decimal floating point conversion.
-// Algorithm:
-//   1) store mantissa in multiprecision decimal
-//   2) shift decimal by exponent
-//   3) read digits out & format
+// 二进制到十进制浮点转换。
+// 算法：
+// 1）将尾数存储为多精度十进制
+// 2）将十进制按指数移位
+// 3）读取数字并格式化
 
 package strconv
 

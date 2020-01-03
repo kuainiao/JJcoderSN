@@ -6,25 +6,23 @@ package strconv
 
 import "errors"
 
-// lower(c) is a lower-case letter if and only if
-// c is either that lower-case letter or the equivalent upper-case letter.
-// Instead of writing c == 'x' || c == 'X' one can write lower(c) == 'x'.
-// Note that lower of non-letters can produce other non-letters.
+// 仅当 c是该小写字母或等效的大写字母时，lower（c）是一个小写字母。 而不是写c =='x'|| c =='X'可以写lower（c）=='x'。 
+// 请注意，较低的非字母会产生其他非字母。
 func lower(c byte) byte {
 	return c | ('x' - 'X')
 }
 
-// ErrRange indicates that a value is out of range for the target type.
+// ErrRange指示值超出目标类型的范围。
 var ErrRange = errors.New("value out of range")
 
-// ErrSyntax indicates that a value does not have the right syntax for the target type.
+// ErrSyntax表示某个值的目标类型语法不正确。
 var ErrSyntax = errors.New("invalid syntax")
 
-// A NumError records a failed conversion.
+// NumError记录转换失败。
 type NumError struct {
-	Func string // the failing function (ParseBool, ParseInt, ParseUint, ParseFloat)
+	Func string // 失败的函数（ParseBool，ParseInt，ParseUint，ParseFloat）
 	Num  string // the input
-	Err  error  // the reason the conversion failed (e.g. ErrRange, ErrSyntax, etc.)
+	Err  error  // 转换失败的原因（例如ErrRange，ErrSyntax等）
 }
 
 func (e *NumError) Error() string {
@@ -51,12 +49,12 @@ func bitSizeError(fn, str string, bitSize int) *NumError {
 
 const intSize = 32 << (^uint(0) >> 63)
 
-// IntSize is the size in bits of an int or uint value.
+// IntSize是int或uint值的大小（以位为单位）。
 const IntSize = intSize
 
 const maxUint64 = 1<<64 - 1
 
-// ParseUint is like ParseInt but for unsigned numbers.
+// ParseUint类似于ParseInt，但用于无符号数字。
 func ParseUint(s string, base int, bitSize int) (uint64, error) {
 	const fnParseUint = "ParseUint"
 
@@ -69,10 +67,10 @@ func ParseUint(s string, base int, bitSize int) (uint64, error) {
 	s0 := s
 	switch {
 	case 2 <= base && base <= 36:
-		// valid base; nothing to do
+		// 有效基数；无需处理
 
 	case base == 0:
-		// Look for octal, hex prefix.
+		// 查找八进制十六进制前缀。
 		base = 10
 		if s[0] == '0' {
 			switch {

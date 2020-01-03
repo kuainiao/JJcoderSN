@@ -2,12 +2,11 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Multiprecision decimal numbers.
-// For floating-point formatting only; not general purpose.
-// Only operations are assign and (binary) left/right shift.
-// Can do binary floating point in multiprecision decimal precisely
-// because 2 divides 10; cannot do decimal floating point
-// in multiprecision binary precisely.
+// 多精度十进制数字。
+// 仅用于浮点格式；不是通用的。
+// 仅分配操作和（二进制）左/右移位。
+// 可以精确地在多精度十进制中执行二进制浮点
+// 因为2除以10;不能精确地在多精度二进制中执行十进制浮点数。
 
 package strconv
 

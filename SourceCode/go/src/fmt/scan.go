@@ -15,43 +15,28 @@ import (
 	"unicode/utf8"
 )
 
-// ScanState represents the scanner state passed to custom scanners.
-// Scanners may do rune-at-a-time scanning or ask the ScanState
-// to discover the next space-delimited token.
+// ScanState表示传递给自定义扫描仪的扫描仪状态。扫描程序可以一次扫描符文，或要求ScanState查找下一个以空格分隔的令牌。
 type ScanState interface {
-	// ReadRune reads the next rune (Unicode code point) from the input.
-	// If invoked during Scanln, Fscanln, or Sscanln, ReadRune() will
-	// return EOF after returning the first '\n' or when reading beyond
-	// the specified width.
+	// ReadRune从输入中读取下一个符文（Unicode代码点）。如果在Scanln，Fscanln或Sscanln中调用，
+	// 则ReadRune（）将返回第一个'\n'后或读取超出指定宽度时返回EOF。
 	ReadRune() (r rune, size int, err error)
-	// UnreadRune causes the next call to ReadRune to return the same rune.
+	// UnreadRune导致对ReadRune的下一次调用返回相同的符文。
 	UnreadRune() error
-	// SkipSpace skips space in the input. Newlines are treated appropriately
-	// for the operation being performed; see the package documentation
-	// for more information.
+	// SkipSpace跳过输入中的空间。对于执行的操作，对换行符进行了适当的处理；有关更多信息，请参见软件包文档。
 	SkipSpace()
-	// Token skips space in the input if skipSpace is true, then returns the
-	// run of Unicode code points c satisfying f(c).  If f is nil,
-	// !unicode.IsSpace(c) is used; that is, the token will hold non-space
-	// characters. Newlines are treated appropriately for the operation being
-	// performed; see the package documentation for more information.
-	// The returned slice points to shared data that may be overwritten
-	// by the next call to Token, a call to a Scan function using the ScanState
-	// as input, or when the calling Scan method returns.
+	// 如果skipSpace为true，则令牌会跳过输入中的空间，然后返回满足f(c)的Unicode代码点c的运行。
+	// 如果f为nil，!unicode.IsSpace(c）;也就是说，令牌将包含非空格字符。对于要执行的操作，换行符被适当地处理；
+	// 有关更多信息，请参见软件包文档。返回的切片指向共享数据，下次调用Token，
+	// 使用ScanState作为输入调用Scan函数或调用Scan方法返回时，可能会覆盖共享数据。
 	Token(skipSpace bool, f func(rune) bool) (token []byte, err error)
-	// Width returns the value of the width option and whether it has been set.
-	// The unit is Unicode code points.
+	// Width返回width选项的值以及是否已设置。单位是Unicode代码点。
 	Width() (wid int, ok bool)
-	// Because ReadRune is implemented by the interface, Read should never be
-	// called by the scanning routines and a valid implementation of
-	// ScanState may choose always to return an error from Read.
+	// 因为ReadRune由接口实现，所以扫描例程绝对不应调用Read，并且ScanState的有效实现可以选择始终从Read返回错误。
 	Read(buf []byte) (n int, err error)
 }
 
-// Scanner is implemented by any value that has a Scan method, which scans
-// the input for the representation of a value and stores the result in the
-// receiver, which must be a pointer to be useful. The Scan method is called
-// for any argument to Scan, Scanf, or Scanln that implements it.
+// 扫描程序由任何具有Scan方法的值实现，该方法会扫描输入以表示值，并将结果存储在接收者中，接收者必须是一个有用的指针。
+// 对于实现该方法的Scan，Scanf或Scanln的任何参数，调用Scan方法。
 type Scanner interface {
 	Scan(state ScanState, verb rune) error
 }
@@ -64,8 +49,7 @@ func Scan(a ...interface{}) (n int, err error) {
 	return Fscan(os.Stdin, a...)
 }
 
-// Scanln is similar to Scan, but stops scanning at a newline and
-// after the final item there must be a newline or EOF.
+// Scanln与Scan类似，但是在换行符处停止扫描，并且在最后一项之后必须有换行符或EOF。
 func Scanln(a ...interface{}) (n int, err error) {
 	return Fscanln(os.Stdin, a...)
 }

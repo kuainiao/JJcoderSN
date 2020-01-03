@@ -61,19 +61,16 @@ SERVER_CLOSED_CONNECTION_ERROR = "Connection closed by server."
 
 class Token(object):
     """
-    Literal strings in Redis commands, such as the command names and any
-    hard-coded arguments are wrapped in this class so we know not to apply
-    and encoding rules on them.
+    Redis命令中的文字字符串（例如命令名称和任何硬编码的参数）都包装在此类中，因此我们知道不要对它们应用规则并对其进行编码。
     """
 
     _cache = {}
 
     @classmethod
     def get_token(cls, value):
-        "Gets a cached token object or creates a new one if not already cached"
+        "获取缓存的令牌对象或创建一个新的令牌对象（如果尚未缓存）"
 
-        # Use try/except because after running for a short time most tokens
-        # should already be cached
+        # 使用try / except，因为在短时间运行之后，大多数令牌应该已经被缓存了
         try:
             return cls._cache[value]
         except KeyError:
@@ -95,7 +92,7 @@ class Token(object):
 
 
 class Encoder(object):
-    "Encode strings to bytes and decode bytes to strings"
+    "将字符串编码为字节并将字节解码为字符串"
 
     def __init__(self, encoding, encoding_errors, decode_responses):
         self.encoding = encoding
@@ -103,7 +100,7 @@ class Encoder(object):
         self.decode_responses = decode_responses
 
     def encode(self, value):
-        "Return a bytestring representation of the value"
+        "返回值的字节串表示"
         if isinstance(value, Token):
             return value.encoded_value
         elif isinstance(value, bytes):
@@ -120,7 +117,7 @@ class Encoder(object):
         return value
 
     def decode(self, value, force=False):
-        "Return a unicode string from the byte representation"
+        "从字节表示形式返回unicode字符串"
         if (self.decode_responses or force) and isinstance(value, bytes):
             value = value.decode(self.encoding, self.encoding_errors)
         return value
@@ -138,7 +135,7 @@ class BaseParser(object):
     }
 
     def parse_error(self, response):
-        "Parse an error response"
+        "解析错误响应"
         error_code = response.split(' ')[0]
         if error_code in self.EXCEPTION_CLASSES:
             response = response[len(error_code) + 1:]
@@ -154,7 +151,7 @@ class SocketBuffer(object):
         self._sock = socket
         self.socket_read_size = socket_read_size
         self._buffer = BytesIO()
-        # number of bytes written to the buffer from the socket
+        # 从套接字写入缓冲区的字节数
         self.bytes_written = 0
         # number of bytes read from the buffer
         self.bytes_read = 0
@@ -172,7 +169,7 @@ class SocketBuffer(object):
         try:
             while True:
                 data = recv(self._sock, socket_read_size)
-                # an empty string indicates the server shutdown the socket
+                # 空字符串表示服务器已关闭套接字
                 if isinstance(data, bytes) and len(data) == 0:
                     raise socket.error(SERVER_CLOSED_CONNECTION_ERROR)
                 buf.write(data)
@@ -191,8 +188,8 @@ class SocketBuffer(object):
                                   (e.args,))
 
     def read(self, length):
-        length = length + 2  # make sure to read the \r\n terminator
-        # make sure we've read enough data from the socket
+        length = length + 2  # 确保阅读\ r \ n终止符
+        # 确保我们已经从套接字读取了足够的数据
         if length > self.length:
             self._read_from_socket(length - self.length)
 
@@ -200,8 +197,7 @@ class SocketBuffer(object):
         data = self._buffer.read(length)
         self.bytes_read += len(data)
 
-        # purge the buffer when we've consumed it all so it doesn't
-        # grow forever
+        # 当我们用完缓冲区时清除缓冲区，这样它就不会永远增长
         if self.bytes_read == self.bytes_written:
             self.purge()
 
@@ -212,15 +208,14 @@ class SocketBuffer(object):
         buf.seek(self.bytes_read)
         data = buf.readline()
         while not data.endswith(SYM_CRLF):
-            # there's more data in the socket that we need
+            # 套接字中还有更多我们需要的数据
             self._read_from_socket()
             buf.seek(self.bytes_read)
             data = buf.readline()
 
         self.bytes_read += len(data)
 
-        # purge the buffer when we've consumed it all so it doesn't
-        # grow forever
+        # 当我们用完缓冲区时清除缓冲区，这样它就不会永远增长
         if self.bytes_read == self.bytes_written:
             self.purge()
 
@@ -248,7 +243,7 @@ class SocketBuffer(object):
 
 
 class PythonParser(BaseParser):
-    "Plain Python parsing class"
+    "纯Python解析类"
     def __init__(self, socket_read_size):
         self.socket_read_size = socket_read_size
         self.encoder = None
@@ -262,7 +257,7 @@ class PythonParser(BaseParser):
             pass
 
     def on_connect(self, connection):
-        "Called when the socket connects"
+        "套接字连接时调用"
         self._sock = connection._sock
         self._buffer = SocketBuffer(self._sock, self.socket_read_size)
         self.encoder = connection.encoder
@@ -406,17 +401,14 @@ class HiredisParser(BaseParser):
             else:
                 self._reader.feed(buffer)
             response = self._reader.gets()
-        # if an older version of hiredis is installed, we need to attempt
-        # to convert ResponseErrors to their appropriate types.
+        # 如果安装了较旧版本的hiredis，则需要尝试将ResponseErrors转换为相应的类型。
         if not HIREDIS_SUPPORTS_CALLABLE_ERRORS:
             if isinstance(response, ResponseError):
                 response = self.parse_error(response.args[0])
             elif isinstance(response, list) and response and \
                     isinstance(response[0], ResponseError):
                 response[0] = self.parse_error(response[0].args[0])
-        # if the response is a ConnectionError or the response is a list and
-        # the first item is a ConnectionError, raise it as something bad
-        # happened
+        # 如果响应是ConnectionError或响应是列表，并且第一项是ConnectionError，则在发生错误时引发它
         if isinstance(response, ConnectionError):
             raise response
         elif isinstance(response, list) and response and \
@@ -432,7 +424,7 @@ else:
 
 
 class Connection(object):
-    "Manages TCP communication to and from a Redis server"
+    "管理与Redis服务器之间的TCP通信"
     description_format = "Connection<host=%(host)s,port=%(port)s,db=%(db)s>"
 
     def __init__(self, host='localhost', port=6379, db=0, password=None,
@@ -477,7 +469,7 @@ class Connection(object):
         self._connect_callbacks = []
 
     def connect(self):
-        "Connects to the Redis server if not already connected"
+        "连接到Redis服务器（如果尚未连接）"
         if self._sock:
             return
         try:
@@ -496,8 +488,7 @@ class Connection(object):
             self.disconnect()
             raise
 
-        # run any user callbacks. right now the only internal callback
-        # is for pubsub channel/pattern resubscription
+        # 运行任何用户回调。现在唯一的内部回调是用于pubsub频道/模式的重新订阅
         for callback in self._connect_callbacks:
             callback(self)
 
@@ -552,16 +543,16 @@ class Connection(object):
                 (exception.args[0], self.host, self.port, exception.args[1])
 
     def on_connect(self):
-        "Initialize the connection, authenticate and select a database"
+        "初始化连接，认证并选择数据库"
         self._parser.on_connect(self)
 
-        # if a password is specified, authenticate
+        # 如果指定了密码，请进行身份验证
         if self.password:
             self.send_command('AUTH', self.password)
             if nativestr(self.read_response()) != 'OK':
                 raise AuthenticationError('Invalid Password')
 
-        # if a database is specified, switch to it
+        # 如果指定了数据库，请切换到该数据库
         if self.db:
             self.send_command('SELECT', self.db)
             if nativestr(self.read_response()) != 'OK':

@@ -6,83 +6,40 @@ package time
 
 import "errors"
 
-// These are predefined layouts for use in Time.Format and time.Parse.
-// The reference time used in the layouts is the specific time:
-//	Mon Jan 2 15:04:05 MST 2006
-// which is Unix time 1136239445. Since MST is GMT-0700,
-// the reference time can be thought of as
-//	01/02 03:04:05PM '06 -0700
-// To define your own format, write down what the reference time would look
-// like formatted your way; see the values of constants like ANSIC,
-// StampMicro or Kitchen for examples. The model is to demonstrate what the
-// reference time looks like so that the Format and Parse methods can apply
-// the same transformation to a general time value.
-//
-// Some valid layouts are invalid time values for time.Parse, due to formats
-// such as _ for space padding and Z for zone information.
-//
-// Within the format string, an underscore _ represents a space that may be
-// replaced by a digit if the following number (a day) has two digits; for
-// compatibility with fixed-width Unix time formats.
-//
-// A decimal point followed by one or more zeros represents a fractional
-// second, printed to the given number of decimal places. A decimal point
-// followed by one or more nines represents a fractional second, printed to
-// the given number of decimal places, with trailing zeros removed.
-// When parsing (only), the input may contain a fractional second
-// field immediately after the seconds field, even if the layout does not
-// signify its presence. In that case a decimal point followed by a maximal
-// series of digits is parsed as a fractional second.
-//
-// Numeric time zone offsets format as follows:
-//	-0700  ±hhmm
-//	-07:00 ±hh:mm
-//	-07    ±hh
-// Replacing the sign in the format with a Z triggers
-// the ISO 8601 behavior of printing Z instead of an
-// offset for the UTC zone. Thus:
-//	Z0700  Z or ±hhmm
-//	Z07:00 Z or ±hh:mm
-//	Z07    Z or ±hh
-//
-// The recognized day of week formats are "Mon" and "Monday".
-// The recognized month formats are "Jan" and "January".
-//
-// The formats 2, _2, and 02 are unpadded, space-padded, and zero-padded
-// day of month. The formats __2 and 002 are space-padded and zero-padded
-// three-character day of year; there is no unpadded day of year format.
-//
-// Text in the format string that is not recognized as part of the reference
-// time is echoed verbatim during Format and expected to appear verbatim
-// in the input to Parse.
-//
-// The executable example for Time.Format demonstrates the working
-// of the layout string in detail and is a good reference.
-//
-// Note that the RFC822, RFC850, and RFC1123 formats should be applied
-// only to local times. Applying them to UTC times will use "UTC" as the
-// time zone abbreviation, while strictly speaking those RFCs require the
-// use of "GMT" in that case.
-// In general RFC1123Z should be used instead of RFC1123 for servers
-// that insist on that format, and RFC3339 should be preferred for new protocols.
-// RFC3339, RFC822, RFC822Z, RFC1123, and RFC1123Z are useful for formatting;
-// when used with time.Parse they do not accept all the time formats
-// permitted by the RFCs.
-// The RFC3339Nano format removes trailing zeros from the seconds field
-// and thus may not sort correctly once formatted.
+// 这些是在Time.Format和time.Parse中使用的预定义布局。
+// 布局中使用的参考时间是特定时间：Mon Jan 2 15:04:05 MST 2006 这是Unix时间1136239445。
+// 由于MST是GMT-0700，所以可以考虑参考时间as 01/02 03:04:05 PM '06 -0700
+// 要定义您自己的格式，请写下参考时间的样子像格式化您的方式；有关示例，请参见ANSIC， StampMicro或Kitchen等常量的值。
+// 该模型将演示参考时间的外观，以便Format和Parse方法可以将相同的转换应用于常规时间值。
+// 由于格式，某些有效的布局对于time.Parse来说是无效的时间值，例如_表示空格填充，Z表示区域信息。在格式字符串中，
+// 下划线_表示一个空格，如果以下数字（一天）有两位数字，则可以用数字代替。用于与固定宽度Unix时间格式的兼容性。
+// 小数点后跟一个或多个零表示小数秒，打印到给定的小数位数。小数点后跟一个或多个9代表小数秒，打印到给定的小数位数，
+// 并删除了尾随的零。解析（仅）时，即使布局不表示其存在，输入也可能在秒字段之后紧跟秒字段。
+// 在这种情况下，小数点后跟最大的//系列数字被解析为小数秒。
+// 数字时区偏移格式如下： -0700±hhmm  -07：00±hh：mm  -07±hh 用Z替换格式中的符号会触发ISO 8601打印Z的行为，
+// 而不是UTC区域的偏移量。因此： Z0700 Z或±hhmm  Z07：00 Z或±hh：mm  Z07 Z或±hh
+// 公认的星期几格式为“星期一”和“星期一”。 公认的月份格式为“ Jan”和“ January”。
+// 格式2，_2和02是每月的无填充，有空格和零填充。格式__2和002为空格填充和零填充一年中的三个字符；
+// 没有一年中未填充的日期格式。格式字符串中未被识别为参考时间的文本在Format期间逐字回显，并期望在Parse的输入中逐字出现。
+// Time.Format的可执行示例详细说明了布局字符串的工作方式是一个很好的参考。
+// 请注意，RFC822，RFC850和RFC1123格式应仅应用于本地时间。将它们应用于UTC时间将使用“ UTC”作为时区的缩写，而严格地说，
+// 在这种情况下，那些RFC要求使用“ GMT”。 对于坚持这种格式的服务器，通常应使用RFC1123Z代替RFC1123，
+// 对于新协议，应首选RFC3339。 RFC3339，RFC822，RFC822Z，RFC1123和RFC1123Z对于格式化非常有用；
+// 与time一起使用时，解析不接受RFC允许的所有时间格式。RFC3339Nano格式从秒字段中删除尾随零，因此一旦格式化可能无法正确排序。
+
 const (
 	ANSIC       = "Mon Jan _2 15:04:05 2006"
 	UnixDate    = "Mon Jan _2 15:04:05 MST 2006"
 	RubyDate    = "Mon Jan 02 15:04:05 -0700 2006"
 	RFC822      = "02 Jan 06 15:04 MST"
-	RFC822Z     = "02 Jan 06 15:04 -0700" // RFC822 with numeric zone
+	RFC822Z     = "02 Jan 06 15:04 -0700" // 带有数字区域的RFC822
 	RFC850      = "Monday, 02-Jan-06 15:04:05 MST"
 	RFC1123     = "Mon, 02 Jan 2006 15:04:05 MST"
-	RFC1123Z    = "Mon, 02 Jan 2006 15:04:05 -0700" // RFC1123 with numeric zone
+	RFC1123Z    = "Mon, 02 Jan 2006 15:04:05 -0700" // 带有数字区域的RFC1123
 	RFC3339     = "2006-01-02T15:04:05Z07:00"
 	RFC3339Nano = "2006-01-02T15:04:05.999999999Z07:00"
 	Kitchen     = "3:04PM"
-	// Handy time stamps.
+	// 方便的时间戳。
 	Stamp      = "Jan _2 15:04:05"
 	StampMilli = "Jan _2 15:04:05.000"
 	StampMicro = "Jan _2 15:04:05.000000"
@@ -133,7 +90,7 @@ const (
 	stdMask      = 1<<stdArgShift - 1 // mask out argument
 )
 
-// std0x records the std values for "01", "02", ..., "06".
+// std0x记录“ 01”，“ 02”，...，“ 06”的std值。
 var std0x = [...]int{stdZeroMonth, stdZeroDay, stdZeroHour12, stdZeroMinute, stdZeroSecond, stdYear}
 
 // startsWithLowerCase reports whether the string has a lower-case letter at the beginning.

@@ -4,15 +4,15 @@
 
 package strconv
 
-// decimal to binary floating point conversion.
-// Algorithm:
-//   1) Store input in multiprecision decimal.
-//   2) Multiply/divide decimal by powers of two until in range [0.5, 1)
-//   3) Multiply by 2^precision and round to get mantissa.
+// 十进制到二进制浮点转换。
+// 算法：
+// 1）将输入存储在多精度十进制中。
+// 2）将小数乘以/除以2的幂，直到在[0.5，1）
+// 3）乘以2^precision并舍入为尾数。
 
 import "math"
 
-var optimize = true // set to false to force slow-path conversions for testing
+var optimize = true // 设置为false以强制进行慢路径转换以进行测试
 
 func equalIgnoreCase(s1, s2 string) bool {
 	if len(s1) != len(s2) {

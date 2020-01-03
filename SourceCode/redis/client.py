@@ -29,11 +29,10 @@ SYM_EMPTY = b('')
 
 
 def list_or_args(keys, args):
-    # returns a single list combining keys and args
+    # 返回包含键和参数的单个列表
     try:
         iter(keys)
-        # a string or bytes instance can be iterated, but indicates
-        # keys wasn't passed as a list
+        # 可以迭代一个字符串或字节的实例，但表示未将个键作为列表传递
         if isinstance(keys, (basestring, bytes)):
             keys = [keys]
     except TypeError:
@@ -44,7 +43,7 @@ def list_or_args(keys, args):
 
 
 def timestamp_to_datetime(response):
-    "Converts a unix timestamp to a Python datetime object"
+    "将Unix时间戳转换为Python日期时间对象"
     if not response:
         return None
     try:
@@ -66,15 +65,14 @@ def dict_merge(*dicts):
 
 
 def parse_debug_object(response):
-    "Parse the results of Redis's DEBUG OBJECT command into a Python dict"
-    # The 'type' of the object is the first item in the response, but isn't
-    # prefixed with a name
+    "将Redis的DEBUG OBJECT命令的结果解析为Python dict"
+    # 对象的“类型”是响应中的第一项，但不带前缀
     response = nativestr(response)
     response = 'type:' + response
     response = dict([kv.split(':') for kv in response.split()])
 
-    # parse some expected int values from the string response
-    # note: this cmd isn't spec'd so these may not appear in all redis versions
+    # 从字符串响应中解析一些预期的int值
+    # 注意：未指定此cmd，因此这些值可能不会出现在所有redis版本中
     int_fields = ('refcount', 'serializedlength', 'lru', 'lru_seconds_idle')
     for field in int_fields:
         if field in response:
@@ -84,14 +82,14 @@ def parse_debug_object(response):
 
 
 def parse_object(response, infotype):
-    "Parse the results of an OBJECT command"
+    "解析OBJECT命令的结果"
     if infotype in ('idletime', 'refcount'):
         return int_or_none(response)
     return response
 
 
 def parse_info(response):
-    "Parse the result of Redis's INFO command into a Python dict"
+    "将Redis的INFO命令的结果解析为Python dict"
     info = {}
     response = nativestr(response)
 
@@ -117,7 +115,7 @@ def parse_info(response):
                 key, value = line.split(':', 1)
                 info[key] = get_value(value)
             else:
-                # if the line isn't splittable, append it to the "__raw__" key
+                # 如果行不可拆分，请将其附加到“ __raw__”键
                 info.setdefault('__raw__', []).append(line)
 
     return info
@@ -183,7 +181,7 @@ def parse_sentinel_get_master(response):
 
 
 def pairs_to_dict(response):
-    "Create a dict given a list of key/value pairs"
+    "给定键/值对列表，创建字典"
     it = iter(response)
     return dict(izip(it, it))
 
@@ -196,8 +194,7 @@ def pairs_to_dict_typed(response, type_info):
             try:
                 value = type_info[key](value)
             except:
-                # if for some reason the value can't be coerced, just use
-                # the string value
+                # 如果由于某种原因该值不能被强制，只需使用字符串值
                 pass
         result[key] = value
     return result
@@ -205,8 +202,7 @@ def pairs_to_dict_typed(response, type_info):
 
 def zset_score_pairs(response, **options):
     """
-    If ``withscores`` is specified in the options, return the response as
-    a list of (value, score) pairs
+   如果在选项中指定了“ withscores”，则将响应作为（值，得分）对的列表返回
     """
     if not response or not options.get('withscores'):
         return response
@@ -217,8 +213,7 @@ def zset_score_pairs(response, **options):
 
 def sort_return_tuples(response, **options):
     """
-    If ``groups`` is specified, return the response as a list of
-    n-element tuples with n being the value found in options['groups']
+    如果指定了“ groups”，则以n元素元组的列表形式返回响应，其中n为options ['groups']中的值
     """
     if not response or not options['groups']:
         return response
@@ -322,7 +317,7 @@ def parse_georadius_generic(response, **options):
 
     if not options['withdist'] and not options['withcoord']\
             and not options['withhash']:
-        # just a bunch of places
+        # 只是一堆地方
         return [nativestr(r) for r in response_list]
 
     cast = {
@@ -331,8 +326,7 @@ def parse_georadius_generic(response, **options):
         'withhash': int
     }
 
-    # zip all output results with each casting functino to get
-    # the properly native Python value.
+    # 将每个输出函数压缩所有输出结果，以获取正确的本机Python值。
     f = [nativestr]
     f += [cast[o] for o in ['withdist', 'withhash', 'withcoord'] if options[o]]
     return [
@@ -346,13 +340,11 @@ def parse_pubsub_numsub(response, **options):
 
 class StrictRedis(object):
     """
-    Implementation of the Redis protocol.
+    Redis协议的实现。
 
-    This abstract class provides a Python interface to all Redis commands
-    and an implementation of the Redis protocol.
+    该抽象类为所有Redis命令提供Python接口，并提供Redis协议的实现
 
-    Connection and Pipeline derive from this, implementing how
-    the commands are sent and received to the Redis server
+    连接和管道由此衍生，实现了如何将命令发送和接收到Redis服务器
     """
     RESPONSE_CALLBACKS = dict_merge(
         string_keys_to_dict(
@@ -373,7 +365,7 @@ class StrictRedis(object):
             float
         ),
         string_keys_to_dict(
-            # these return OK, or int if redis-server is >=1.3.4
+            # 这些返回OK，如果redis-server> = 1.3.4，则返回int
             'LPUSH RPUSH',
             lambda r: isinstance(r, (long, int)) and r or nativestr(r) == 'OK'
         ),

@@ -2,48 +2,32 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
-// Package time provides functionality for measuring and displaying time.
+// 打包时间提供了用于测量和显示时间的功能。
 //
-// The calendrical calculations always assume a Gregorian calendar, with
-// no leap seconds.
+// 日历计算始终采用公历，无leap秒。
 //
-// Monotonic Clocks
+// 单调时钟
 //
-// Operating systems provide both a “wall clock,” which is subject to
-// changes for clock synchronization, and a “monotonic clock,” which is
-// not. The general rule is that the wall clock is for telling time and
-// the monotonic clock is for measuring time. Rather than split the API,
-// in this package the Time returned by time.Now contains both a wall
-// clock reading and a monotonic clock reading; later time-telling
-// operations use the wall clock reading, but later time-measuring
-// operations, specifically comparisons and subtractions, use the
-// monotonic clock reading.
+// 操作系统既提供“挂钟”（进行时钟同步更改），又提供“单调时钟”（不受此限制）。一般规则是壁钟用于告知时间，
+// 单调时钟用于测量时间。 而不是拆分API，在此包中，time返回的是time。现在，它既包含墙上的时钟读数，又包含单调的时钟读数；
+// 稍后的时间操作将使用挂钟读数，但是稍后的时间测量操作（特别是比较和减法）将使用单调时钟读数。
 //
-// For example, this code always computes a positive elapsed time of
-// approximately 20 milliseconds, even if the wall clock is changed during
-// the operation being timed:
+// 例如，即使在计时操作期间更改了挂钟，此代码也始终会计算约20毫秒的正经过时间。
 //
 //	start := time.Now()
 //	... operation that takes 20 milliseconds ...
 //	t := time.Now()
 //	elapsed := t.Sub(start)
 //
-// Other idioms, such as time.Since(start), time.Until(deadline), and
-// time.Now().Before(deadline), are similarly robust against wall clock
-// resets.
+// 类似的其他用法，例如time.Since（start），time.Until（deadline）和 time.Now（）。Before（deadline），
+// 对挂钟重置同样具有健壮性。
 //
-// The rest of this section gives the precise details of how operations
-// use monotonic clocks, but understanding those details is not required
-// to use this package.
+// 本节的其余部分提供了有关操作如何使用单调时钟的精确详细信息，但不需要了解这些详细信息即可使用此程序包。
 //
-// The Time returned by time.Now contains a monotonic clock reading.
-// If Time t has a monotonic clock reading, t.Add adds the same duration to
-// both the wall clock and monotonic clock readings to compute the result.
-// Because t.AddDate(y, m, d), t.Round(d), and t.Truncate(d) are wall time
-// computations, they always strip any monotonic clock reading from their results.
-// Because t.In, t.Local, and t.UTC are used for their effect on the interpretation
-// of the wall time, they also strip any monotonic clock reading from their results.
-// The canonical way to strip a monotonic clock reading is to use t = t.Round(0).
+// 按时间返回的时间。现在包含单调时钟读数。如果时间t具有单调时钟读数，则t.Add将相同的持续时间添加到壁钟和单调时钟读数中，
+// 以计算结果。 因为t.AddDate（y，m，d），t.Round（d）和t.Truncate（d）是墙上时间计算，
+// 所以它们总是从结果中剥离任何单调时钟读数。因为使用t.In，t.Local和t.UTC来影响时间，
+// 所以它们还会从结果中剥离所有单调时钟读数。剥离单调时钟读数的典型方法是使用t = t.Round（0）。
 //
 // If Times t and u both contain monotonic clock readings, the operations
 // t.After(u), t.Before(u), t.Equal(u), and t.Sub(u) are carried out
@@ -1089,7 +1073,7 @@ func runtimeNano() int64
 // (Callers may want to use 0 as "time not set".)
 var startNano int64 = runtimeNano() - 1
 
-// Now returns the current local time.
+// 现在返回当前本地时间。
 func Now() Time {
 	sec, nsec, mono := now()
 	mono -= startNano
