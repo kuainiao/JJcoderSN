@@ -10,25 +10,21 @@ import (
 	"unsafe"
 )
 
-// A WaitGroup waits for a collection of goroutines to finish.
-// The main goroutine calls Add to set the number of
-// goroutines to wait for. Then each of the goroutines
-// runs and calls Done when finished. At the same time,
-// Wait can be used to block until all goroutines have finished.
+// WaitGroup等待goroutine的集合完成。
+// 主goroutine调用Add来设置等待的goroutine的数量。然后，每个goroutines运行并在完成后调用Done。
+// 同时，等待可以用来阻塞，直到所有goroutine完成。
 //
-// A WaitGroup must not be copied after first use.
+// 首次使用后，不得复制WaitGroup。
 type WaitGroup struct {
 	noCopy noCopy
 
-	// 64-bit value: high 32 bits are counter, low 32 bits are waiter count.
-	// 64-bit atomic operations require 64-bit alignment, but 32-bit
-	// compilers do not ensure it. So we allocate 12 bytes and then use
-	// the aligned 8 bytes in them as state, and the other 4 as storage
-	// for the sema.
+	// 64-bit value: 高32位是计数器，低32位是waiter计数。
+	// 64位原子操作需要64位对齐，但是32位编译器不能确保对齐。
+	// 因此，我们分配了12个字节，然后将其中对齐的8个字节用作状态，并将另外4个字节用于存储信号。
 	state1 [3]uint32
 }
 
-// state returns pointers to the state and sema fields stored within wg.state1.
+// state返回指向存储在wg.state1中的state和sema字段的指针。
 func (wg *WaitGroup) state() (statep *uint64, semap *uint32) {
 	if uintptr(unsafe.Pointer(&wg.state1))%8 == 0 {
 		return (*uint64)(unsafe.Pointer(&wg.state1)), &wg.state1[2]
@@ -37,25 +33,17 @@ func (wg *WaitGroup) state() (statep *uint64, semap *uint32) {
 	}
 }
 
-// Add adds delta, which may be negative, to the WaitGroup counter.
-// If the counter becomes zero, all goroutines blocked on Wait are released.
-// If the counter goes negative, Add panics.
+// Add将可能为负数的增量添加到WaitGroup计数器中。如果计数器变为零，则释放等待时阻塞的所有goroutine。如果计数器变为负数，请添加恐慌。
 //
-// Note that calls with a positive delta that occur when the counter is zero
-// must happen before a Wait. Calls with a negative delta, or calls with a
-// positive delta that start when the counter is greater than zero, may happen
-// at any time.
-// Typically this means the calls to Add should execute before the statement
-// creating the goroutine or other event to be waited for.
-// If a WaitGroup is reused to wait for several independent sets of events,
-// new Add calls must happen after all previous Wait calls have returned.
-// See the WaitGroup example.
+// 请注意，当计数器为零时发生增量为正的调用必须在等待之前发生。可能会在任何时候在计数器大于零时开始以负增量进行调用，或以正增量进行调用。
+// 通常，这意味着对Add的调用应在创建等待的goroutine或其他事件之前执行。
+// 如果将WaitGroup重用于等待几个独立的事件集，则必须在所有先前的Wait调用返回之后才进行新的Add调用。请参见WaitGroup示例。
 func (wg *WaitGroup) Add(delta int) {
 	statep, semap := wg.state()
 	if race.Enabled {
-		_ = *statep // trigger nil deref early
+		_ = *statep // 尽早触发nil deref
 		if delta < 0 {
-			// Synchronize decrements with Wait.
+			// 将减量与Wait同步。
 			race.ReleaseMerge(unsafe.Pointer(wg))
 		}
 		race.Disable()
@@ -65,9 +53,7 @@ func (wg *WaitGroup) Add(delta int) {
 	v := int32(state >> 32)
 	w := uint32(state)
 	if race.Enabled && delta > 0 && v == int32(delta) {
-		// The first increment must be synchronized with Wait.
-		// Need to model this as a read, because there can be
-		// several concurrent wg.counter transitions from 0.
+		// 第一个增量必须与Wait同步。需要将此模型建模为读取，因为从0开始可能会有多个并发的wg.counter转换。
 		race.Read(unsafe.Pointer(semap))
 	}
 	if v < 0 {
@@ -79,31 +65,28 @@ func (wg *WaitGroup) Add(delta int) {
 	if v > 0 || w == 0 {
 		return
 	}
-	// This goroutine has set counter to 0 when waiters > 0.
-	// Now there can't be concurrent mutations of state:
-	// - Adds must not happen concurrently with Wait,
-	// - Wait does not increment waiters if it sees counter == 0.
-	// Still do a cheap sanity check to detect WaitGroup misuse.
+	// 当waiter > 0时，此goroutine已将计数器设置为0。现在不能存在并发的状态突变：-不能与Wait同时发生加法，-如果看到counter ==，
+	// 则Wait不会使服务员递增0. 仍然进行廉价的完整性检查以检测WaitGroup的滥用。
 	if *statep != state {
 		panic("sync: WaitGroup misuse: Add called concurrently with Wait")
 	}
-	// Reset waiters count to 0.
+	// 重置waiter计数为0。
 	*statep = 0
 	for ; w != 0; w-- {
 		runtime_Semrelease(semap, false, 0)
 	}
 }
 
-// Done decrements the WaitGroup counter by one.
+// 完成将WaitGroup计数器减一。
 func (wg *WaitGroup) Done() {
 	wg.Add(-1)
 }
 
-// Wait blocks until the WaitGroup counter is zero.
+// 等待块，直到WaitGroup计数器为零。
 func (wg *WaitGroup) Wait() {
 	statep, semap := wg.state()
 	if race.Enabled {
-		_ = *statep // trigger nil deref early
+		_ = *statep // 尽早触发nil deref
 		race.Disable()
 	}
 	for {
@@ -111,7 +94,7 @@ func (wg *WaitGroup) Wait() {
 		v := int32(state >> 32)
 		w := uint32(state)
 		if v == 0 {
-			// Counter is 0, no need to wait.
+			// 计数器为0，无需等待。
 			if race.Enabled {
 				race.Enable()
 				race.Acquire(unsafe.Pointer(wg))
@@ -121,10 +104,8 @@ func (wg *WaitGroup) Wait() {
 		// Increment waiters count.
 		if atomic.CompareAndSwapUint64(statep, state, state+1) {
 			if race.Enabled && w == 0 {
-				// Wait must be synchronized with the first Add.
-				// Need to model this is as a write to race with the read in Add.
-				// As a consequence, can do the write only for the first waiter,
-				// otherwise concurrent Waits will race with each other.
+				// 等待必须与第一个添加同步。需要将其建模为与Add中的read竞争的写入。
+				// 因此，只能对第一个服务员进行写操作，否则并发等待将相互竞争。
 				race.Write(unsafe.Pointer(semap))
 			}
 			runtime_Semacquire(semap)
