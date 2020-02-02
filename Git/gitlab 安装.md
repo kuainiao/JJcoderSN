@@ -4,9 +4,9 @@
 
 
 
-## [#](http://www.liuwq.com/views/自动化工具/gitlab_install.html#gitlab-安装配置)Gitlab 安装配置
+## Gitlab 安装配置
 
-### [#](http://www.liuwq.com/views/自动化工具/gitlab_install.html#gitlab-安装脚本)gitlab 安装脚本
+### gitlab 安装脚本
 
 ```bash
 curl -s https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.rpm.sh | sudo bash

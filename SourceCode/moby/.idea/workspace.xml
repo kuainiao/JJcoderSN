@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="2ebadfa6-09e2-46f6-8297-00ee1b00c2ce" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/MongoDB数据库.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106140307112-257991728.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106140440190-1132493229.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106140932003-1386849701.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106140946346-1583437802.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106141025909-1190563513.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106141036237-258431155.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106141205628-1994652076.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106141337862-2036189439.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106141352596-1511440780.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106141415143-1288477019.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106141454581-697200462.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106141505581-1516716311.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106145148128-1854811460.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106145154284-397901575.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106145207237-1647029849.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106145221393-1674631191.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106145417862-997356969.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106145428909-502320189.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106145445471-876081667.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106150209471-1233466151.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106150523846-1535223046.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106150630018-1017846225.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106150636096-1641567859.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106150717440-244129239.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180106150727893-1156186779.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180108182310613-2083013963.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180108182407426-484765998.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180108183457535-611170065.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180108183559394-794158819.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180108183607176-300071779.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/1190037-20180108183621379-438094970.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/360截图18530423383748.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/assets/ContractedBlock.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/mongodb 数据导出.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../DBA/MongoDB 数据库/mongodb基本使用.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Git/gitlab 安装.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../Git/gitlab 安装.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Kubernets/k8s/Kubernetes架构3/Kubernetes架构.md" beforeDir="false" afterPath="$PROJECT_DIR$/../../Kubernets/k8s/Kubernetes架构3/Kubernetes架构.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../jjcoderDevOps学习之路.xmind" beforeDir="false" afterPath="$PROJECT_DIR$/../../jjcoderDevOps学习之路.xmind" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="GOROOT" path="/usr/local/go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectId" id="1VlKHWV1pLC7Ml9JY6I4UEi78TW" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="go.sdk.automatically.set" value="true" />
+    <property name="go.vendoring.notification.had.been.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../GoSource/src/github.com" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="GoApplicationRunConfiguration" factoryName="Go Application">
+      <module name="docker" />
+      <working_directory value="$PROJECT_DIR$/" />
+      <go_parameters value="-i" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/" />
+      <directory value="$PROJECT_DIR$/" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="GoTestRunConfiguration" factoryName="Go Test">
+      <module name="docker" />
+      <working_directory value="$PROJECT_DIR$/" />
+      <go_parameters value="-i" />
+      <framework value="gotest" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
